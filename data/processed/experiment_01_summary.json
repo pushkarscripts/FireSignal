@@ -1,0 +1,37 @@
+{
+  "experiment": "common_grid_01",
+  "period": {
+    "start": "2023-03-01",
+    "end": "2023-05-31"
+  },
+  "projection": "EPSG:6933",
+  "metric": "occupied_grid_cell_days",
+  "raw_detection_ratio": 8.4246961281494,
+  "grid_results": [
+    {
+      "grid_km": 1,
+      "modis_ogcd": 35952,
+      "viirs_ogcd": 236017,
+      "ratio": 6.564780818869604
+    },
+    {
+      "grid_km": 5,
+      "modis_ogcd": 25700,
+      "viirs_ogcd": 160672,
+      "ratio": 6.251828793774319
+    },
+    {
+      "grid_km": 10,
+      "modis_ogcd": 21814,
+      "viirs_ogcd": 125538,
+      "ratio": 5.754928027872009
+    }
+  ],
+  "limitations": [
+    "Not unique fire counts",
+    "No correction for observation opportunities",
+    "No statistical cross-sensor calibration",
+    "Zero-detection dates do not prove coverage",
+    "One three-month overlap sample only"
+  ]
+}

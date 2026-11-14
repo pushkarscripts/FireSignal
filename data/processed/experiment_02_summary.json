@@ -1,0 +1,18 @@
+{
+  "experiment": "daily_agreement_02",
+  "grid_km": 5,
+  "days": 92,
+  "pearson_r": 0.8841341322450199,
+  "spearman_rho": 0.9249970143083691,
+  "median_daily_ratio": 7.482157112208752,
+  "ratio_q25": 5.61569988510778,
+  "ratio_q75": 10.376175548589341,
+  "days_with_modis_positive": 92,
+  "limitations": [
+    "Only March-May 2023",
+    "Daily values include unverified observation coverage",
+    "No overpass-time matching",
+    "No confidence filtering",
+    "Correlation is not calibration or ground truth"
+  ]
+}

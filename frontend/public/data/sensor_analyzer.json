@@ -1,0 +1,52 @@
+{
+  "period": "2023-03-01 to 2023-05-31",
+  "region": "India",
+  "grid_comparison": [
+    {
+      "grid_km": 1,
+      "modis_ogcd": 35952,
+      "viirs_ogcd": 236017,
+      "ratio": 6.564780818869604
+    },
+    {
+      "grid_km": 5,
+      "modis_ogcd": 25700,
+      "viirs_ogcd": 160672,
+      "ratio": 6.251828793774319
+    },
+    {
+      "grid_km": 10,
+      "modis_ogcd": 21814,
+      "viirs_ogcd": 125538,
+      "ratio": 5.754928027872009
+    }
+  ],
+  "raw_ratio": 8.4246961281494,
+  "daily_agreement": {
+    "pearson": 0.8841341322450199,
+    "spearman": 0.9249970143083691,
+    "median_ratio": 7.482157112208752
+  },
+  "daily_change_agreement": {
+    "pearson": 0.4776,
+    "spearman": 0.5366,
+    "direction_agreement_pct": 65.93
+  },
+  "daynight": [
+    {
+      "period": "Daytime",
+      "modis_ogcd": 22588,
+      "viirs_ogcd": 127900,
+      "pearson": 0.8762,
+      "spearman": 0.9147
+    },
+    {
+      "period": "Nighttime",
+      "modis_ogcd": 3599,
+      "viirs_ogcd": 43755,
+      "pearson": 0.7316,
+      "spearman": 0.7934
+    }
+  ],
+  "calibration_status": "not_validated"
+}
