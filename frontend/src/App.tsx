@@ -1,5 +1,7 @@
 import HarmonizationResults from './HarmonizationResults'
 import HistoricalCalendar from './HistoricalCalendar'
+import RegionalHarmonizationResults from './RegionalHarmonizationResults'
+import RegionalFireIntelligence from './RegionalFireIntelligence'
 import SensorShiftAnalyzer from './SensorShiftAnalyzer'
 import { useEffect, useMemo, useState } from 'react'
 import {
@@ -95,6 +97,8 @@ function App() {
 
       <main className="mx-auto max-w-7xl px-6 py-10">
         <HistoricalCalendar />
+        <RegionalFireIntelligence />
+        <RegionalHarmonizationResults />
 
         <div className="mt-14 border-t border-white/10 pt-10">
         <p className="mb-2 text-sm font-medium text-orange-400">

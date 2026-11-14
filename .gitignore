@@ -32,3 +32,6 @@ Thumbs.db
 
 # Regenerable historical processing outputs
 data/historical/
+
+# Local administrative boundary source files
+data/boundaries/*.geojson

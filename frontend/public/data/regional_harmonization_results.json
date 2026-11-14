@@ -1,0 +1,1521 @@
+{
+  "title": "Regional 5 km OGCD cross-sensor held-out evaluation",
+  "status": "empirical_statistical_adjustment_not_physical_calibration",
+  "splits": {
+    "train": "2013-2021",
+    "validation": "2022-2023",
+    "test": "2024-2025"
+  },
+  "availability": {
+    "train": {
+      "paired": 2807,
+      "modis_only": 47,
+      "viirs_only": 477
+    },
+    "validation": {
+      "paired": 630,
+      "modis_only": 8,
+      "viirs_only": 106
+    },
+    "test": {
+      "paired": 623,
+      "modis_only": 12,
+      "viirs_only": 97
+    }
+  },
+  "method": {
+    "target": "MODIS regional monthly occupied grid-cell-days, not ground truth",
+    "pairing": "only months with both sensor detections; missing is not zero",
+    "national": "existing fitted national global and seasonal factors from H13",
+    "regional_global": "regional least-squares slope through origin, shrunk to national global factor",
+    "regional_seasonal": "regional calendar-month slopes shrunk to regional global slope",
+    "regional_shrinkage": 24,
+    "seasonal_shrinkage": 6,
+    "selection": "one model for all regions: lowest pooled validation MAE, RMSE tiebreak",
+    "sparse_threshold": 12
+  },
+  "selected_model": "regional_seasonal",
+  "validation_metrics": {
+    "raw_viirs": {
+      "n": 630,
+      "mae": 788.37,
+      "rmse": 1677.41,
+      "bias": 788.21
+    },
+    "national_global": {
+      "n": 630,
+      "mae": 70.65,
+      "rmse": 199.31,
+      "bias": 5.24
+    },
+    "national_seasonal": {
+      "n": 630,
+      "mae": 68.69,
+      "rmse": 175.0,
+      "bias": 5.94
+    },
+    "regional_global": {
+      "n": 630,
+      "mae": 52.32,
+      "rmse": 130.36,
+      "bias": 6.25
+    },
+    "regional_seasonal": {
+      "n": 630,
+      "mae": 38.24,
+      "rmse": 95.34,
+      "bias": 4.38
+    }
+  },
+  "test_metrics": {
+    "raw_viirs": {
+      "n": 623,
+      "mae": 822.77,
+      "rmse": 1815.15,
+      "bias": 822.7
+    },
+    "national_global": {
+      "n": 623,
+      "mae": 72.12,
+      "rmse": 178.83,
+      "bias": -1.88
+    },
+    "national_seasonal": {
+      "n": 623,
+      "mae": 70.98,
+      "rmse": 175.12,
+      "bias": -2.88
+    },
+    "regional_global": {
+      "n": 623,
+      "mae": 57.16,
+      "rmse": 138.42,
+      "bias": -7.82
+    },
+    "regional_seasonal": {
+      "n": 623,
+      "mae": 43.56,
+      "rmse": 107.65,
+      "bias": -10.81
+    }
+  },
+  "per_region_test": [
+    {
+      "region": "Andaman and Nicobar Islands",
+      "train_paired_months": 27,
+      "test_paired_months": 3,
+      "sparse_test": true,
+      "metrics": {
+        "raw_viirs": {
+          "n": 3,
+          "mae": 4.33,
+          "rmse": 5.0,
+          "bias": 4.33
+        },
+        "national_global": {
+          "n": 3,
+          "mae": 0.87,
+          "rmse": 0.96,
+          "bias": -0.51
+        },
+        "national_seasonal": {
+          "n": 3,
+          "mae": 0.89,
+          "rmse": 0.97,
+          "bias": -0.53
+        },
+        "regional_global": {
+          "n": 3,
+          "mae": 0.81,
+          "rmse": 0.98,
+          "bias": 0.0
+        },
+        "regional_seasonal": {
+          "n": 3,
+          "mae": 0.97,
+          "rmse": 1.14,
+          "bias": 0.15
+        }
+      },
+      "selected_improves_on_raw": true,
+      "selected_improves_on_national_seasonal": false
+    },
+    {
+      "region": "Andhra Pradesh",
+      "train_paired_months": 108,
+      "test_paired_months": 24,
+      "sparse_test": false,
+      "metrics": {
+        "raw_viirs": {
+          "n": 24,
+          "mae": 1253.62,
+          "rmse": 2059.71,
+          "bias": 1253.62
+        },
+        "national_global": {
+          "n": 24,
+          "mae": 75.22,
+          "rmse": 154.69,
+          "bias": 74.94
+        },
+        "national_seasonal": {
+          "n": 24,
+          "mae": 69.71,
+          "rmse": 144.07,
+          "bias": 69.42
+        },
+        "regional_global": {
+          "n": 24,
+          "mae": 48.47,
+          "rmse": 93.84,
+          "bias": 22.47
+        },
+        "regional_seasonal": {
+          "n": 24,
+          "mae": 36.52,
+          "rmse": 66.1,
+          "bias": 15.79
+        }
+      },
+      "selected_improves_on_raw": true,
+      "selected_improves_on_national_seasonal": true
+    },
+    {
+      "region": "Arunāchal Pradesh",
+      "train_paired_months": 105,
+      "test_paired_months": 23,
+      "sparse_test": false,
+      "metrics": {
+        "raw_viirs": {
+          "n": 23,
+          "mae": 106.78,
+          "rmse": 142.07,
+          "bias": 106.43
+        },
+        "national_global": {
+          "n": 23,
+          "mae": 22.71,
+          "rmse": 35.18,
+          "bias": -21.71
+        },
+        "national_seasonal": {
+          "n": 23,
+          "mae": 23.45,
+          "rmse": 36.04,
+          "bias": -21.76
+        },
+        "regional_global": {
+          "n": 23,
+          "mae": 12.82,
+          "rmse": 18.33,
+          "bias": 1.85
+        },
+        "regional_seasonal": {
+          "n": 23,
+          "mae": 11.77,
+          "rmse": 18.39,
+          "bias": 4.38
+        }
+      },
+      "selected_improves_on_raw": true,
+      "selected_improves_on_national_seasonal": true
+    },
+    {
+      "region": "Assam",
+      "train_paired_months": 107,
+      "test_paired_months": 23,
+      "sparse_test": false,
+      "metrics": {
+        "raw_viirs": {
+          "n": 23,
+          "mae": 412.43,
+          "rmse": 644.92,
+          "bias": 412.43
+        },
+        "national_global": {
+          "n": 23,
+          "mae": 81.9,
+          "rmse": 182.01,
+          "bias": -66.83
+        },
+        "national_seasonal": {
+          "n": 23,
+          "mae": 84.48,
+          "rmse": 184.14,
+          "bias": -68.44
+        },
+        "regional_global": {
+          "n": 23,
+          "mae": 49.98,
+          "rmse": 82.73,
+          "bias": 4.74
+        },
+        "regional_seasonal": {
+          "n": 23,
+          "mae": 36.48,
+          "rmse": 55.21,
+          "bias": 0.55
+        }
+      },
+      "selected_improves_on_raw": true,
+      "selected_improves_on_national_seasonal": true
+    },
+    {
+      "region": "Bihār",
+      "train_paired_months": 103,
+      "test_paired_months": 23,
+      "sparse_test": false,
+      "metrics": {
+        "raw_viirs": {
+          "n": 23,
+          "mae": 488.83,
+          "rmse": 766.21,
+          "bias": 488.74
+        },
+        "national_global": {
+          "n": 23,
+          "mae": 40.72,
+          "rmse": 73.89,
+          "bias": -20.98
+        },
+        "national_seasonal": {
+          "n": 23,
+          "mae": 41.58,
+          "rmse": 78.95,
+          "bias": -24.28
+        },
+        "regional_global": {
+          "n": 23,
+          "mae": 38.14,
+          "rmse": 67.74,
+          "bias": -15.5
+        },
+        "regional_seasonal": {
+          "n": 23,
+          "mae": 28.61,
+          "rmse": 52.34,
+          "bias": -17.83
+        }
+      },
+      "selected_improves_on_raw": true,
+      "selected_improves_on_national_seasonal": true
+    },
+    {
+      "region": "Chandīgarh",
+      "train_paired_months": 1,
+      "test_paired_months": 1,
+      "sparse_test": true,
+      "metrics": {
+        "raw_viirs": {
+          "n": 1,
+          "mae": 0.0,
+          "rmse": 0.0,
+          "bias": 0.0
+        },
+        "national_global": {
+          "n": 1,
+          "mae": 0.81,
+          "rmse": 0.81,
+          "bias": -0.81
+        },
+        "national_seasonal": {
+          "n": 1,
+          "mae": 0.85,
+          "rmse": 0.85,
+          "bias": -0.85
+        },
+        "regional_global": {
+          "n": 1,
+          "mae": 0.8,
+          "rmse": 0.8,
+          "bias": -0.8
+        },
+        "regional_seasonal": {
+          "n": 1,
+          "mae": 0.8,
+          "rmse": 0.8,
+          "bias": -0.8
+        }
+      },
+      "selected_improves_on_raw": false,
+      "selected_improves_on_national_seasonal": true
+    },
+    {
+      "region": "Chhattīsgarh",
+      "train_paired_months": 108,
+      "test_paired_months": 24,
+      "sparse_test": false,
+      "metrics": {
+        "raw_viirs": {
+          "n": 24,
+          "mae": 2279.46,
+          "rmse": 3509.71,
+          "bias": 2279.46
+        },
+        "national_global": {
+          "n": 24,
+          "mae": 143.14,
+          "rmse": 279.57,
+          "bias": 133.2
+        },
+        "national_seasonal": {
+          "n": 24,
+          "mae": 147.04,
+          "rmse": 274.84,
+          "bias": 126.49
+        },
+        "regional_global": {
+          "n": 24,
+          "mae": 101.16,
+          "rmse": 164.13,
+          "bias": -20.38
+        },
+        "regional_seasonal": {
+          "n": 24,
+          "mae": 56.68,
+          "rmse": 87.33,
+          "bias": -8.52
+        }
+      },
+      "selected_improves_on_raw": true,
+      "selected_improves_on_national_seasonal": true
+    },
+    {
+      "region": "Delhi",
+      "train_paired_months": 58,
+      "test_paired_months": 14,
+      "sparse_test": false,
+      "metrics": {
+        "raw_viirs": {
+          "n": 14,
+          "mae": 14.07,
+          "rmse": 18.97,
+          "bias": 14.07
+        },
+        "national_global": {
+          "n": 14,
+          "mae": 1.79,
+          "rmse": 2.01,
+          "bias": 0.7
+        },
+        "national_seasonal": {
+          "n": 14,
+          "mae": 1.6,
+          "rmse": 1.84,
+          "bias": 0.56
+        },
+        "regional_global": {
+          "n": 14,
+          "mae": 1.38,
+          "rmse": 1.61,
+          "bias": -0.35
+        },
+        "regional_seasonal": {
+          "n": 14,
+          "mae": 1.28,
+          "rmse": 1.52,
+          "bias": -0.48
+        }
+      },
+      "selected_improves_on_raw": true,
+      "selected_improves_on_national_seasonal": true
+    },
+    {
+      "region": "Dādra and Nagar Haveli and Damān and Diu",
+      "train_paired_months": 14,
+      "test_paired_months": 4,
+      "sparse_test": true,
+      "metrics": {
+        "raw_viirs": {
+          "n": 4,
+          "mae": 3.25,
+          "rmse": 4.15,
+          "bias": 3.25
+        },
+        "national_global": {
+          "n": 4,
+          "mae": 0.65,
+          "rmse": 0.68,
+          "bias": -0.38
+        },
+        "national_seasonal": {
+          "n": 4,
+          "mae": 0.59,
+          "rmse": 0.6,
+          "bias": -0.32
+        },
+        "regional_global": {
+          "n": 4,
+          "mae": 0.66,
+          "rmse": 0.69,
+          "bias": -0.42
+        },
+        "regional_seasonal": {
+          "n": 4,
+          "mae": 0.66,
+          "rmse": 0.69,
+          "bias": -0.41
+        }
+      },
+      "selected_improves_on_raw": true,
+      "selected_improves_on_national_seasonal": false
+    },
+    {
+      "region": "Goa",
+      "train_paired_months": 60,
+      "test_paired_months": 12,
+      "sparse_test": false,
+      "metrics": {
+        "raw_viirs": {
+          "n": 12,
+          "mae": 27.92,
+          "rmse": 29.18,
+          "bias": 27.92
+        },
+        "national_global": {
+          "n": 12,
+          "mae": 3.49,
+          "rmse": 3.97,
+          "bias": 3.44
+        },
+        "national_seasonal": {
+          "n": 12,
+          "mae": 3.39,
+          "rmse": 3.86,
+          "bias": 3.31
+        },
+        "regional_global": {
+          "n": 12,
+          "mae": 1.61,
+          "rmse": 1.93,
+          "bias": 1.17
+        },
+        "regional_seasonal": {
+          "n": 12,
+          "mae": 1.38,
+          "rmse": 1.66,
+          "bias": 0.78
+        }
+      },
+      "selected_improves_on_raw": true,
+      "selected_improves_on_national_seasonal": true
+    },
+    {
+      "region": "Gujarāt",
+      "train_paired_months": 108,
+      "test_paired_months": 24,
+      "sparse_test": false,
+      "metrics": {
+        "raw_viirs": {
+          "n": 24,
+          "mae": 626.0,
+          "rmse": 813.63,
+          "bias": 626.0
+        },
+        "national_global": {
+          "n": 24,
+          "mae": 56.23,
+          "rmse": 105.71,
+          "bias": -10.94
+        },
+        "national_seasonal": {
+          "n": 24,
+          "mae": 52.83,
+          "rmse": 103.38,
+          "bias": -12.63
+        },
+        "regional_global": {
+          "n": 24,
+          "mae": 66.42,
+          "rmse": 133.22,
+          "bias": -51.58
+        },
+        "regional_seasonal": {
+          "n": 24,
+          "mae": 67.63,
+          "rmse": 129.9,
+          "bias": -60.77
+        }
+      },
+      "selected_improves_on_raw": true,
+      "selected_improves_on_national_seasonal": false
+    },
+    {
+      "region": "Haryāna",
+      "train_paired_months": 106,
+      "test_paired_months": 24,
+      "sparse_test": false,
+      "metrics": {
+        "raw_viirs": {
+          "n": 24,
+          "mae": 368.0,
+          "rmse": 688.65,
+          "bias": 367.92
+        },
+        "national_global": {
+          "n": 24,
+          "mae": 20.86,
+          "rmse": 33.76,
+          "bias": 1.03
+        },
+        "national_seasonal": {
+          "n": 24,
+          "mae": 18.74,
+          "rmse": 29.75,
+          "bias": 0.12
+        },
+        "regional_global": {
+          "n": 24,
+          "mae": 35.71,
+          "rmse": 60.13,
+          "bias": 24.71
+        },
+        "regional_seasonal": {
+          "n": 24,
+          "mae": 28.71,
+          "rmse": 48.5,
+          "bias": 21.28
+        }
+      },
+      "selected_improves_on_raw": true,
+      "selected_improves_on_national_seasonal": false
+    },
+    {
+      "region": "Himāchal Pradesh",
+      "train_paired_months": 85,
+      "test_paired_months": 22,
+      "sparse_test": false,
+      "metrics": {
+        "raw_viirs": {
+          "n": 22,
+          "mae": 216.23,
+          "rmse": 374.34,
+          "bias": 216.23
+        },
+        "national_global": {
+          "n": 22,
+          "mae": 19.97,
+          "rmse": 50.76,
+          "bias": -11.09
+        },
+        "national_seasonal": {
+          "n": 22,
+          "mae": 24.09,
+          "rmse": 62.26,
+          "bias": -15.39
+        },
+        "regional_global": {
+          "n": 22,
+          "mae": 19.31,
+          "rmse": 48.64,
+          "bias": -9.75
+        },
+        "regional_seasonal": {
+          "n": 22,
+          "mae": 22.2,
+          "rmse": 55.04,
+          "bias": -11.06
+        }
+      },
+      "selected_improves_on_raw": true,
+      "selected_improves_on_national_seasonal": true
+    },
+    {
+      "region": "Jammu and Kashmīr",
+      "train_paired_months": 95,
+      "test_paired_months": 24,
+      "sparse_test": false,
+      "metrics": {
+        "raw_viirs": {
+          "n": 24,
+          "mae": 134.79,
+          "rmse": 202.46,
+          "bias": 134.79
+        },
+        "national_global": {
+          "n": 24,
+          "mae": 10.42,
+          "rmse": 19.38,
+          "bias": -5.73
+        },
+        "national_seasonal": {
+          "n": 24,
+          "mae": 11.46,
+          "rmse": 25.05,
+          "bias": -7.52
+        },
+        "regional_global": {
+          "n": 24,
+          "mae": 9.71,
+          "rmse": 14.57,
+          "bias": 2.76
+        },
+        "regional_seasonal": {
+          "n": 24,
+          "mae": 10.21,
+          "rmse": 15.51,
+          "bias": 2.1
+        }
+      },
+      "selected_improves_on_raw": true,
+      "selected_improves_on_national_seasonal": true
+    },
+    {
+      "region": "Jhārkhand",
+      "train_paired_months": 108,
+      "test_paired_months": 24,
+      "sparse_test": false,
+      "metrics": {
+        "raw_viirs": {
+          "n": 24,
+          "mae": 843.29,
+          "rmse": 1303.66,
+          "bias": 843.29
+        },
+        "national_global": {
+          "n": 24,
+          "mae": 66.09,
+          "rmse": 129.13,
+          "bias": 57.86
+        },
+        "national_seasonal": {
+          "n": 24,
+          "mae": 65.32,
+          "rmse": 123.73,
+          "bias": 57.05
+        },
+        "regional_global": {
+          "n": 24,
+          "mae": 32.11,
+          "rmse": 50.85,
+          "bias": -8.23
+        },
+        "regional_seasonal": {
+          "n": 24,
+          "mae": 24.37,
+          "rmse": 39.63,
+          "bias": -6.02
+        }
+      },
+      "selected_improves_on_raw": true,
+      "selected_improves_on_national_seasonal": true
+    },
+    {
+      "region": "Karnātaka",
+      "train_paired_months": 108,
+      "test_paired_months": 23,
+      "sparse_test": false,
+      "metrics": {
+        "raw_viirs": {
+          "n": 23,
+          "mae": 1288.13,
+          "rmse": 1893.92,
+          "bias": 1288.13
+        },
+        "national_global": {
+          "n": 23,
+          "mae": 78.16,
+          "rmse": 127.35,
+          "bias": 40.52
+        },
+        "national_seasonal": {
+          "n": 23,
+          "mae": 81.1,
+          "rmse": 126.6,
+          "bias": 36.25
+        },
+        "regional_global": {
+          "n": 23,
+          "mae": 87.37,
+          "rmse": 119.24,
+          "bias": -9.53
+        },
+        "regional_seasonal": {
+          "n": 23,
+          "mae": 57.45,
+          "rmse": 82.15,
+          "bias": -16.64
+        }
+      },
+      "selected_improves_on_raw": true,
+      "selected_improves_on_national_seasonal": true
+    },
+    {
+      "region": "Kerala",
+      "train_paired_months": 68,
+      "test_paired_months": 17,
+      "sparse_test": false,
+      "metrics": {
+        "raw_viirs": {
+          "n": 17,
+          "mae": 90.82,
+          "rmse": 141.84,
+          "bias": 90.82
+        },
+        "national_global": {
+          "n": 17,
+          "mae": 4.83,
+          "rmse": 7.53,
+          "bias": 1.86
+        },
+        "national_seasonal": {
+          "n": 17,
+          "mae": 4.74,
+          "rmse": 7.69,
+          "bias": 1.33
+        },
+        "regional_global": {
+          "n": 17,
+          "mae": 4.61,
+          "rmse": 7.23,
+          "bias": 1.07
+        },
+        "regional_seasonal": {
+          "n": 17,
+          "mae": 4.59,
+          "rmse": 7.3,
+          "bias": 0.46
+        }
+      },
+      "selected_improves_on_raw": true,
+      "selected_improves_on_national_seasonal": true
+    },
+    {
+      "region": "Ladākh",
+      "train_paired_months": 5,
+      "test_paired_months": 1,
+      "sparse_test": true,
+      "metrics": {
+        "raw_viirs": {
+          "n": 1,
+          "mae": 0.0,
+          "rmse": 0.0,
+          "bias": 0.0
+        },
+        "national_global": {
+          "n": 1,
+          "mae": 0.81,
+          "rmse": 0.81,
+          "bias": -0.81
+        },
+        "national_seasonal": {
+          "n": 1,
+          "mae": 0.81,
+          "rmse": 0.81,
+          "bias": -0.81
+        },
+        "regional_global": {
+          "n": 1,
+          "mae": 0.67,
+          "rmse": 0.67,
+          "bias": -0.67
+        },
+        "regional_seasonal": {
+          "n": 1,
+          "mae": 0.67,
+          "rmse": 0.67,
+          "bias": -0.67
+        }
+      },
+      "selected_improves_on_raw": false,
+      "selected_improves_on_national_seasonal": true
+    },
+    {
+      "region": "Madhya Pradesh",
+      "train_paired_months": 106,
+      "test_paired_months": 24,
+      "sparse_test": false,
+      "metrics": {
+        "raw_viirs": {
+          "n": 24,
+          "mae": 2764.21,
+          "rmse": 4755.68,
+          "bias": 2764.21
+        },
+        "national_global": {
+          "n": 24,
+          "mae": 131.55,
+          "rmse": 286.22,
+          "bias": -58.23
+        },
+        "national_seasonal": {
+          "n": 24,
+          "mae": 127.57,
+          "rmse": 309.48,
+          "bias": -40.22
+        },
+        "regional_global": {
+          "n": 24,
+          "mae": 106.18,
+          "rmse": 200.61,
+          "bias": 52.11
+        },
+        "regional_seasonal": {
+          "n": 24,
+          "mae": 86.56,
+          "rmse": 179.95,
+          "bias": 28.42
+        }
+      },
+      "selected_improves_on_raw": true,
+      "selected_improves_on_national_seasonal": true
+    },
+    {
+      "region": "Mahārāshtra",
+      "train_paired_months": 104,
+      "test_paired_months": 24,
+      "sparse_test": false,
+      "metrics": {
+        "raw_viirs": {
+          "n": 24,
+          "mae": 2075.96,
+          "rmse": 3471.06,
+          "bias": 2075.96
+        },
+        "national_global": {
+          "n": 24,
+          "mae": 230.98,
+          "rmse": 321.35,
+          "bias": -35.5
+        },
+        "national_seasonal": {
+          "n": 24,
+          "mae": 222.27,
+          "rmse": 315.87,
+          "bias": -43.49
+        },
+        "regional_global": {
+          "n": 24,
+          "mae": 217.77,
+          "rmse": 332.77,
+          "bias": -139.13
+        },
+        "regional_seasonal": {
+          "n": 24,
+          "mae": 169.32,
+          "rmse": 276.96,
+          "bias": -134.11
+        }
+      },
+      "selected_improves_on_raw": true,
+      "selected_improves_on_national_seasonal": true
+    },
+    {
+      "region": "Manipur",
+      "train_paired_months": 78,
+      "test_paired_months": 16,
+      "sparse_test": false,
+      "metrics": {
+        "raw_viirs": {
+          "n": 16,
+          "mae": 300.88,
+          "rmse": 563.81,
+          "bias": 300.88
+        },
+        "national_global": {
+          "n": 16,
+          "mae": 95.21,
+          "rmse": 223.54,
+          "bias": -92.04
+        },
+        "national_seasonal": {
+          "n": 16,
+          "mae": 96.54,
+          "rmse": 224.0,
+          "bias": -93.05
+        },
+        "regional_global": {
+          "n": 16,
+          "mae": 45.61,
+          "rmse": 96.34,
+          "bias": -21.33
+        },
+        "regional_seasonal": {
+          "n": 16,
+          "mae": 28.62,
+          "rmse": 63.3,
+          "bias": -14.89
+        }
+      },
+      "selected_improves_on_raw": true,
+      "selected_improves_on_national_seasonal": true
+    },
+    {
+      "region": "Meghālaya",
+      "train_paired_months": 66,
+      "test_paired_months": 14,
+      "sparse_test": false,
+      "metrics": {
+        "raw_viirs": {
+          "n": 14,
+          "mae": 355.79,
+          "rmse": 583.5,
+          "bias": 355.79
+        },
+        "national_global": {
+          "n": 14,
+          "mae": 70.19,
+          "rmse": 174.0,
+          "bias": -63.0
+        },
+        "national_seasonal": {
+          "n": 14,
+          "mae": 71.3,
+          "rmse": 174.67,
+          "bias": -64.62
+        },
+        "regional_global": {
+          "n": 14,
+          "mae": 38.6,
+          "rmse": 72.9,
+          "bias": 2.09
+        },
+        "regional_seasonal": {
+          "n": 14,
+          "mae": 27.1,
+          "rmse": 45.84,
+          "bias": 2.74
+        }
+      },
+      "selected_improves_on_raw": true,
+      "selected_improves_on_national_seasonal": true
+    },
+    {
+      "region": "Mizoram",
+      "train_paired_months": 55,
+      "test_paired_months": 14,
+      "sparse_test": false,
+      "metrics": {
+        "raw_viirs": {
+          "n": 14,
+          "mae": 218.0,
+          "rmse": 404.99,
+          "bias": 218.0
+        },
+        "national_global": {
+          "n": 14,
+          "mae": 162.31,
+          "rmse": 367.35,
+          "bias": -161.3
+        },
+        "national_seasonal": {
+          "n": 14,
+          "mae": 163.24,
+          "rmse": 367.67,
+          "bias": -162.31
+        },
+        "regional_global": {
+          "n": 14,
+          "mae": 70.53,
+          "rmse": 150.51,
+          "bias": -49.49
+        },
+        "regional_seasonal": {
+          "n": 14,
+          "mae": 31.98,
+          "rmse": 69.49,
+          "bias": -22.28
+        }
+      },
+      "selected_improves_on_raw": true,
+      "selected_improves_on_national_seasonal": true
+    },
+    {
+      "region": "Nāgāland",
+      "train_paired_months": 69,
+      "test_paired_months": 16,
+      "sparse_test": false,
+      "metrics": {
+        "raw_viirs": {
+          "n": 16,
+          "mae": 156.06,
+          "rmse": 256.97,
+          "bias": 156.06
+        },
+        "national_global": {
+          "n": 16,
+          "mae": 40.01,
+          "rmse": 71.98,
+          "bias": -39.24
+        },
+        "national_seasonal": {
+          "n": 16,
+          "mae": 40.73,
+          "rmse": 72.44,
+          "bias": -40.0
+        },
+        "regional_global": {
+          "n": 16,
+          "mae": 19.57,
+          "rmse": 31.16,
+          "bias": 14.55
+        },
+        "regional_seasonal": {
+          "n": 16,
+          "mae": 24.3,
+          "rmse": 45.52,
+          "bias": 24.03
+        }
+      },
+      "selected_improves_on_raw": true,
+      "selected_improves_on_national_seasonal": true
+    },
+    {
+      "region": "Odisha",
+      "train_paired_months": 108,
+      "test_paired_months": 24,
+      "sparse_test": false,
+      "metrics": {
+        "raw_viirs": {
+          "n": 24,
+          "mae": 1898.67,
+          "rmse": 3266.97,
+          "bias": 1898.67
+        },
+        "national_global": {
+          "n": 24,
+          "mae": 125.43,
+          "rmse": 264.34,
+          "bias": 102.01
+        },
+        "national_seasonal": {
+          "n": 24,
+          "mae": 116.33,
+          "rmse": 251.67,
+          "bias": 95.0
+        },
+        "regional_global": {
+          "n": 24,
+          "mae": 76.8,
+          "rmse": 112.98,
+          "bias": -11.64
+        },
+        "regional_seasonal": {
+          "n": 24,
+          "mae": 54.72,
+          "rmse": 85.86,
+          "bias": -7.35
+        }
+      },
+      "selected_improves_on_raw": true,
+      "selected_improves_on_national_seasonal": true
+    },
+    {
+      "region": "Puducherry",
+      "train_paired_months": 26,
+      "test_paired_months": 4,
+      "sparse_test": true,
+      "metrics": {
+        "raw_viirs": {
+          "n": 4,
+          "mae": 1.5,
+          "rmse": 2.24,
+          "bias": 1.5
+        },
+        "national_global": {
+          "n": 4,
+          "mae": 1.12,
+          "rmse": 1.24,
+          "bias": -1.12
+        },
+        "national_seasonal": {
+          "n": 4,
+          "mae": 1.12,
+          "rmse": 1.25,
+          "bias": -1.12
+        },
+        "regional_global": {
+          "n": 4,
+          "mae": 0.93,
+          "rmse": 1.05,
+          "bias": -0.93
+        },
+        "regional_seasonal": {
+          "n": 4,
+          "mae": 0.9,
+          "rmse": 0.98,
+          "bias": -0.9
+        }
+      },
+      "selected_improves_on_raw": true,
+      "selected_improves_on_national_seasonal": true
+    },
+    {
+      "region": "Punjab",
+      "train_paired_months": 108,
+      "test_paired_months": 23,
+      "sparse_test": false,
+      "metrics": {
+        "raw_viirs": {
+          "n": 23,
+          "mae": 927.74,
+          "rmse": 2160.98,
+          "bias": 927.48
+        },
+        "national_global": {
+          "n": 23,
+          "mae": 172.67,
+          "rmse": 441.05,
+          "bias": -162.87
+        },
+        "national_seasonal": {
+          "n": 23,
+          "mae": 168.33,
+          "rmse": 403.03,
+          "bias": -162.53
+        },
+        "regional_global": {
+          "n": 23,
+          "mae": 224.37,
+          "rmse": 446.41,
+          "bias": 15.24
+        },
+        "regional_seasonal": {
+          "n": 23,
+          "mae": 158.17,
+          "rmse": 330.32,
+          "bias": -23.82
+        }
+      },
+      "selected_improves_on_raw": true,
+      "selected_improves_on_national_seasonal": true
+    },
+    {
+      "region": "Rājasthān",
+      "train_paired_months": 107,
+      "test_paired_months": 24,
+      "sparse_test": false,
+      "metrics": {
+        "raw_viirs": {
+          "n": 24,
+          "mae": 643.5,
+          "rmse": 900.45,
+          "bias": 643.5
+        },
+        "national_global": {
+          "n": 24,
+          "mae": 48.64,
+          "rmse": 68.96,
+          "bias": -3.09
+        },
+        "national_seasonal": {
+          "n": 24,
+          "mae": 40.89,
+          "rmse": 57.06,
+          "bias": 1.91
+        },
+        "regional_global": {
+          "n": 24,
+          "mae": 47.95,
+          "rmse": 72.28,
+          "bias": -13.77
+        },
+        "regional_seasonal": {
+          "n": 24,
+          "mae": 47.62,
+          "rmse": 66.76,
+          "bias": -25.04
+        }
+      },
+      "selected_improves_on_raw": true,
+      "selected_improves_on_national_seasonal": false
+    },
+    {
+      "region": "Sikkim",
+      "train_paired_months": 31,
+      "test_paired_months": 7,
+      "sparse_test": true,
+      "metrics": {
+        "raw_viirs": {
+          "n": 7,
+          "mae": 10.71,
+          "rmse": 20.34,
+          "bias": 10.71
+        },
+        "national_global": {
+          "n": 7,
+          "mae": 1.8,
+          "rmse": 2.64,
+          "bias": -0.81
+        },
+        "national_seasonal": {
+          "n": 7,
+          "mae": 1.78,
+          "rmse": 2.61,
+          "bias": -0.85
+        },
+        "regional_global": {
+          "n": 7,
+          "mae": 1.62,
+          "rmse": 2.29,
+          "bias": -0.49
+        },
+        "regional_seasonal": {
+          "n": 7,
+          "mae": 1.69,
+          "rmse": 2.54,
+          "bias": -0.42
+        }
+      },
+      "selected_improves_on_raw": true,
+      "selected_improves_on_national_seasonal": true
+    },
+    {
+      "region": "Tamil Nādu",
+      "train_paired_months": 108,
+      "test_paired_months": 24,
+      "sparse_test": false,
+      "metrics": {
+        "raw_viirs": {
+          "n": 24,
+          "mae": 506.29,
+          "rmse": 812.04,
+          "bias": 505.46
+        },
+        "national_global": {
+          "n": 24,
+          "mae": 44.45,
+          "rmse": 64.34,
+          "bias": 25.62
+        },
+        "national_seasonal": {
+          "n": 24,
+          "mae": 41.4,
+          "rmse": 60.34,
+          "bias": 22.99
+        },
+        "regional_global": {
+          "n": 24,
+          "mae": 27.1,
+          "rmse": 42.54,
+          "bias": -15.08
+        },
+        "regional_seasonal": {
+          "n": 24,
+          "mae": 27.14,
+          "rmse": 42.88,
+          "bias": -20.86
+        }
+      },
+      "selected_improves_on_raw": true,
+      "selected_improves_on_national_seasonal": true
+    },
+    {
+      "region": "Telangāna",
+      "train_paired_months": 106,
+      "test_paired_months": 24,
+      "sparse_test": false,
+      "metrics": {
+        "raw_viirs": {
+          "n": 24,
+          "mae": 1351.38,
+          "rmse": 1958.82,
+          "bias": 1351.38
+        },
+        "national_global": {
+          "n": 24,
+          "mae": 118.83,
+          "rmse": 181.44,
+          "bias": 114.62
+        },
+        "national_seasonal": {
+          "n": 24,
+          "mae": 117.21,
+          "rmse": 177.31,
+          "bias": 113.8
+        },
+        "regional_global": {
+          "n": 24,
+          "mae": 57.25,
+          "rmse": 90.42,
+          "bias": 25.28
+        },
+        "regional_seasonal": {
+          "n": 24,
+          "mae": 36.9,
+          "rmse": 61.76,
+          "bias": 13.11
+        }
+      },
+      "selected_improves_on_raw": true,
+      "selected_improves_on_national_seasonal": true
+    },
+    {
+      "region": "Tripura",
+      "train_paired_months": 45,
+      "test_paired_months": 9,
+      "sparse_test": true,
+      "metrics": {
+        "raw_viirs": {
+          "n": 9,
+          "mae": 126.78,
+          "rmse": 191.99,
+          "bias": 126.78
+        },
+        "national_global": {
+          "n": 9,
+          "mae": 76.01,
+          "rmse": 139.58,
+          "bias": -75.69
+        },
+        "national_seasonal": {
+          "n": 9,
+          "mae": 77.02,
+          "rmse": 140.71,
+          "bias": -76.81
+        },
+        "regional_global": {
+          "n": 9,
+          "mae": 37.36,
+          "rmse": 74.31,
+          "bias": -33.32
+        },
+        "regional_seasonal": {
+          "n": 9,
+          "mae": 27.92,
+          "rmse": 52.88,
+          "bias": -24.02
+        }
+      },
+      "selected_improves_on_raw": true,
+      "selected_improves_on_national_seasonal": true
+    },
+    {
+      "region": "Uttar Pradesh",
+      "train_paired_months": 107,
+      "test_paired_months": 23,
+      "sparse_test": false,
+      "metrics": {
+        "raw_viirs": {
+          "n": 23,
+          "mae": 1576.65,
+          "rmse": 2185.92,
+          "bias": 1576.65
+        },
+        "national_global": {
+          "n": 23,
+          "mae": 70.96,
+          "rmse": 107.04,
+          "bias": -10.12
+        },
+        "national_seasonal": {
+          "n": 23,
+          "mae": 69.97,
+          "rmse": 105.76,
+          "bias": -1.57
+        },
+        "regional_global": {
+          "n": 23,
+          "mae": 75.29,
+          "rmse": 113.67,
+          "bias": -24.67
+        },
+        "regional_seasonal": {
+          "n": 23,
+          "mae": 56.34,
+          "rmse": 97.54,
+          "bias": -24.16
+        }
+      },
+      "selected_improves_on_raw": true,
+      "selected_improves_on_national_seasonal": true
+    },
+    {
+      "region": "Uttarākhand",
+      "train_paired_months": 102,
+      "test_paired_months": 19,
+      "sparse_test": false,
+      "metrics": {
+        "raw_viirs": {
+          "n": 19,
+          "mae": 563.68,
+          "rmse": 883.38,
+          "bias": 563.26
+        },
+        "national_global": {
+          "n": 19,
+          "mae": 27.27,
+          "rmse": 46.96,
+          "bias": -11.97
+        },
+        "national_seasonal": {
+          "n": 19,
+          "mae": 31.48,
+          "rmse": 60.6,
+          "bias": -18.51
+        },
+        "regional_global": {
+          "n": 19,
+          "mae": 28.28,
+          "rmse": 44.06,
+          "bias": -0.26
+        },
+        "regional_seasonal": {
+          "n": 19,
+          "mae": 34.05,
+          "rmse": 56.41,
+          "bias": 2.85
+        }
+      },
+      "selected_improves_on_raw": true,
+      "selected_improves_on_national_seasonal": false
+    },
+    {
+      "region": "West Bengal",
+      "train_paired_months": 107,
+      "test_paired_months": 24,
+      "sparse_test": false,
+      "metrics": {
+        "raw_viirs": {
+          "n": 24,
+          "mae": 589.79,
+          "rmse": 804.05,
+          "bias": 589.79
+        },
+        "national_global": {
+          "n": 24,
+          "mae": 51.24,
+          "rmse": 77.98,
+          "bias": 50.87
+        },
+        "national_seasonal": {
+          "n": 24,
+          "mae": 51.19,
+          "rmse": 77.79,
+          "bias": 50.94
+        },
+        "regional_global": {
+          "n": 24,
+          "mae": 22.51,
+          "rmse": 35.72,
+          "bias": 9.2
+        },
+        "regional_seasonal": {
+          "n": 24,
+          "mae": 16.88,
+          "rmse": 26.41,
+          "bias": -2.33
+        }
+      },
+      "selected_improves_on_raw": true,
+      "selected_improves_on_national_seasonal": true
+    }
+  ],
+  "region_summary": {
+    "test_regions": 35,
+    "regions_with_at_least_12_test_pairs": 28,
+    "sparse_regions": 7,
+    "robust_regions_improved_vs_raw": 28,
+    "robust_regions_improved_vs_national_seasonal": 24
+  },
+  "limitations": [
+    "MODIS is a comparison target, not independent fire ground truth.",
+    "Not physical sensor calibration, burned area, or individual fire counts.",
+    "Missing region-months excluded; coverage and non-detections not independently verified.",
+    "Regions differ in area, detection counts, and number of paired months.",
+    "Pooled errors are weighted by available region-months, not equal regions.",
+    "Time-dependent and spatially correlated pairs make metrics descriptive.",
+    "Test results must not be used to retune models.",
+    "Regional boundary snapshot represents 2011, not time-varying boundaries."
+  ]
+}
