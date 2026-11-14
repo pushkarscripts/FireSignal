@@ -3,7 +3,8 @@ import HistoricalCalendar from './HistoricalCalendar'
 import RegionalHarmonizationResults from './RegionalHarmonizationResults'
 import RegionalFireIntelligence from './RegionalFireIntelligence'
 import SensorShiftAnalyzer from './SensorShiftAnalyzer'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { FireSignalIcon } from './FireSignalLogo'
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import {
   Activity, ArrowRight, BookOpen, CalendarDays,
   Compass, ExternalLink, Flame, Globe2, Layers,
@@ -13,6 +14,8 @@ import {
   CartesianGrid, Legend, Line, LineChart,
   ResponsiveContainer, Tooltip, XAxis, YAxis
 } from 'recharts'
+
+const GeographicObservatory = lazy(() => import('./GeographicObservatory'))
 
 type DailyRecord = {
   date: string
@@ -197,25 +200,23 @@ function App() {
         Skip to main content
       </a>
 
-      {/* Header — Dark Observatory Brand & Responsive View Navigation */}
+      {/* Header — Brand & Responsive View Navigation */}
       <header className="sticky top-0 z-40 border-b border-[#252D34] bg-[#0B0E11]/90 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3.5 sm:px-6 sm:py-4 lg:px-8">
           <a
             href="#observatory"
             onClick={(e) => handleNavClick('observatory', e)}
-            className="group flex items-center gap-3 rounded-lg p-1 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F0A34A] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0B0E11]"
+            className="group flex items-center gap-3 rounded-xl p-1 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F0A34A] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0B0E11]"
+            aria-label="FireSignal Home"
           >
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#F0A34A]/30 bg-[#F0A34A]/10 text-[#F0A34A] transition group-hover:border-[#F0A34A]/60 group-hover:bg-[#F0A34A]/15">
-              <Flame size={20} />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-lg font-bold tracking-tight text-[#E8EDF0]">FireSignal</span>
-                <span className="rounded border border-[#252D34] bg-[#1B2127] px-1.5 py-0.5 text-[10px] font-mono font-medium text-[#9BA8B2]">2.0</span>
-              </div>
-              <p className="text-[11px] font-mono uppercase tracking-wider text-[#9BA8B2]">
-                Earth Observation / India
-              </p>
+            <FireSignalIcon size={38} className="transition group-hover:scale-105" />
+            <div className="flex flex-col">
+              <span className="text-xl font-bold tracking-tight text-[#E8EDF0] leading-tight">
+                Fire<span className="text-[#F0A34A]">Signal</span>
+              </span>
+              <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-[#9BA8B2] leading-none mt-0.5">
+                Satellite Fire Intelligence
+              </span>
             </div>
           </a>
 
@@ -523,6 +524,27 @@ function App() {
                 </div>
               </div>
             </div>
+
+            {/* GEOGRAPHIC OBSERVATORY (D6.16) */}
+            <Suspense
+              fallback={
+                <div className="rounded-3xl border border-[#252D34] bg-[#11161B] p-10 text-center shadow-sm">
+                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-[#F0A34A]/40 bg-[#F0A34A]/10 text-[#F0A34A] animate-pulse">
+                    <Satellite size={24} />
+                  </div>
+                  <h3 className="mt-4 text-lg font-semibold text-[#E8EDF0]">Loading Geographic Observatory…</h3>
+                  <p className="mt-1 text-xs text-[#9BA8B2] max-w-md mx-auto">
+                    Compiling 36 ADM1 equal-area boundaries and multi-decade monthly satellite detection records across India.
+                  </p>
+                </div>
+              }
+            >
+              <GeographicObservatory
+                onNavigateToHistorical={() => {
+                  handleNavClick('historical-patterns')
+                }}
+              />
+            </Suspense>
 
             {/* WHAT FIRESIGNAL MEASURES (SCIENTIFIC EXPLANATION) */}
             <div className="rounded-2xl border border-[#252D34] bg-[#11161B] p-6 sm:p-8 lg:p-10">
@@ -995,53 +1017,96 @@ function App() {
         )}
       </main>
 
-      {/* Semantic Accessible Footer */}
-      <footer className="mt-24 border-t border-[#252D34] bg-[#080B0E] py-14">
+      {/* Redesigned Compact Modern Footer */}
+      <footer className="mt-20 border-t border-[#252D34] bg-[#0A0D10] py-10 sm:py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#F0A34A]/30 bg-[#F0A34A]/10 text-[#F0A34A]">
-                <Flame size={18} />
+          <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
+            {/* Left: Brand Lockup */}
+            <a
+              href="#observatory"
+              onClick={(e) => handleNavClick('observatory', e)}
+              className="flex items-center gap-3 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F0A34A] rounded-lg"
+              aria-label="FireSignal Observatory Home"
+            >
+              <FireSignalIcon size={32} />
+              <div className="flex flex-col">
+                <span className="text-base font-bold tracking-tight text-[#E8EDF0] leading-tight">
+                  Fire<span className="text-[#F0A34A]">Signal</span>
+                </span>
+                <span className="text-[10px] font-mono uppercase tracking-wider text-[#9BA8B2] leading-none mt-0.5">
+                  Earth Observation · India
+                </span>
               </div>
-              <div>
-                <p className="text-sm font-semibold text-[#E8EDF0]">FireSignal 2.0 — Dark Observatory</p>
-                <p className="text-xs text-[#9BA8B2]">NASA MODIS + VIIRS Satellite Fire Intelligence for India</p>
-              </div>
-            </div>
+            </a>
 
-            <nav aria-label="Footer Navigation" className="flex flex-wrap items-center gap-6 text-sm text-[#9BA8B2]">
-              {navLinks.map((link) => {
-                const isActive = currentView === link.id
-                return (
-                  <a
-                    key={link.id}
-                    href={link.href}
-                    onClick={(e) => handleNavClick(link.id, e)}
-                    className={`transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F0A34A] ${
-                      isActive ? 'text-[#F0A34A] font-semibold' : 'hover:text-[#E8EDF0]'
-                    }`}
-                  >
-                    {link.label}
-                  </a>
-                )
-              })}
+            {/* Navigation Destinations & Links */}
+            <nav aria-label="Footer Navigation" className="flex flex-wrap items-center justify-center gap-5 sm:gap-6 text-xs sm:text-sm text-[#9BA8B2]">
+              <a
+                href="#observatory"
+                onClick={(e) => handleNavClick('observatory', e)}
+                className={`transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F0A34A] ${
+                  currentView === 'observatory' ? 'text-[#F0A34A] font-semibold' : 'hover:text-[#E8EDF0]'
+                }`}
+              >
+                Observatory
+              </a>
+              <a
+                href="#historical-patterns"
+                onClick={(e) => handleNavClick('historical-patterns', e)}
+                className={`transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F0A34A] ${
+                  currentView === 'historical-patterns' ? 'text-[#F0A34A] font-semibold' : 'hover:text-[#E8EDF0]'
+                }`}
+              >
+                Historical Patterns
+              </a>
+              <a
+                href="#sensor-laboratory"
+                onClick={(e) => handleNavClick('sensor-laboratory', e)}
+                className={`transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F0A34A] ${
+                  currentView === 'sensor-laboratory' ? 'text-[#F0A34A] font-semibold' : 'hover:text-[#E8EDF0]'
+                }`}
+              >
+                Sensor Laboratory
+              </a>
+              <a
+                href="#research-methods"
+                onClick={(e) => handleNavClick('research-methods', e)}
+                className={`transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F0A34A] ${
+                  currentView === 'research-methods' ? 'text-[#F0A34A] font-semibold' : 'hover:text-[#E8EDF0]'
+                }`}
+              >
+                Research & Methods
+              </a>
               <a
                 href="https://github.com/pushkarscripts/FireSignal/blob/main/METHODOLOGY.md"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-[#F0A34A] transition hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F0A34A]"
+                className="inline-flex items-center gap-1 text-[#9BA8B2] transition hover:text-[#F0A34A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F0A34A]"
               >
-                Methodology <ExternalLink size={13} />
+                <span>Methodology</span>
+                <ExternalLink size={12} />
+              </a>
+              <a
+                href="https://github.com/pushkarscripts/FireSignal"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-[#9BA8B2] transition hover:text-[#F0A34A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F0A34A]"
+              >
+                <span>GitHub</span>
+                <ExternalLink size={12} />
               </a>
             </nav>
           </div>
 
-          <div className="mt-8 border-t border-[#252D34] pt-8 text-center text-xs text-[#9BA8B2] sm:flex sm:justify-between sm:text-left">
-            <p>
-              Data courtesy NASA FIRMS. Occupied Grid-Cell-Days (OGCD) calculated on EPSG:6933. Not validated as physical fire severity or ground fire occurrence.
+          {/* Bottom Bar: Prominent Space Apps 2026 Credit */}
+          <div className="mt-8 border-t border-[#252D34]/80 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#9BA8B2]">
+            <p className="text-center sm:text-left">
+              Made with <span className="text-[#F0A34A] text-sm leading-none" aria-label="love">♥</span> by{' '}
+              <span className="font-medium text-[#E8EDF0]">Pushkar</span> for{' '}
+              <span className="font-medium text-[#E8EDF0]">NASA Space Apps Challenge 2026</span>
             </p>
-            <p className="mt-2 sm:mt-0 font-mono">
-              FireSignal Research Prototype
+            <p className="font-mono text-[11px] text-[#9BA8B2]">
+              Data courtesy NASA FIRMS (MODIS & VIIRS)
             </p>
           </div>
         </div>
