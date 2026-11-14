@@ -1,53 +1,140 @@
-# 🔥 FireSignal
+﻿# FireSignal
 
-### Making satellite fire observations easier to compare.
+**Harmonizing MODIS and VIIRS Fire Hotspot Observations**
 
-**FireSignal** is an interactive scientific dashboard exploring differences between NASA MODIS and VIIRS active-fire hotspot observations.
+FireSignal is an interactive scientific platform developed for
+the NASA Space Apps Challenge 2026 challenge,
+"Harmonization of MODIS and VIIRS Hot Spots."
 
-Developed for the **2026 NASA Space Apps Challenge — Harmonization of MODIS and VIIRS Hot Spots**.
+It explores historical active-fire hotspot observations
+across India and evaluates statistical methods for making
+MODIS and VIIRS activity measurements more comparable.
 
-**[Explore Live Dashboard](https://firesignal.vercel.app/)** | **[Scientific Methodology](METHODOLOGY.md)**
+**Live application:** https://firesignal.vercel.app/
 
----
+**Scientific methodology:** [METHODOLOGY.md](METHODOLOGY.md)
 
-## The Problem
+## The problem
 
-NASA's MODIS and VIIRS instruments provide valuable active-fire observations, but their measurements cannot be directly compared as though they came from identical sensors.
+MODIS and VIIRS observe active fires using different
+instruments, resolutions, sensitivities, and observation
+schedules.
 
-Differences in spatial resolution, sensitivity, observation schedules, and detection characteristics complicate the interpretation of hotspot counts.
+Consequently, their hotspot detections cannot be treated
+as directly interchangeable measurements.
 
-A higher detection count does not necessarily mean more unique fires or a larger burned area.
+FireSignal makes these differences visible and evaluates
+empirical harmonization methods without claiming physical
+sensor calibration.
 
-## Our Solution
+## Application features
 
-FireSignal provides an exploratory framework for comparing active-fire observations on a common spatial grid.
+### Historical fire activity
 
-The dashboard includes:
+Explore historical hotspot activity across India using:
 
-- **Fire Activity Overview:** Compare MODIS and VIIRS daily occupied grid-cell activity.
-- **Sensor Shift Analyzer:** Examine differences across 1 km, 5 km, and 10 km spatial grids.
-- **Temporal Agreement Diagnostics:** Compare daily correlations and day-to-day changes.
-- **Day/Night Comparison:** Explore how sensor differences vary between daytime and nighttime observations.
-- **Scientific Transparency:** Display limitations and explicitly distinguish exploratory comparisons from validated calibration.
+- MODIS Collection 6.1 observations from 2003–2025
+- VIIRS Suomi-NPP Collection 2 observations from 2013–2025
+- Monthly and daily activity exploration
+- Seasonal anomaly comparisons
 
-## Scientific Approach
+### Geographic exploration
 
-FireSignal uses **occupied grid-cell-days (OGCD)** to reduce the influence of multiple hotspot detections within the same grid cell on the same day.
+Explore state-level fire activity using:
 
-The analysis:
+- 36 Indian states and union territories
+- Monthly and annual activity visualizations
+- Regional comparisons and rankings
+- Regional seasonal anomaly analysis
 
-1. Reads NASA FIRMS MODIS and VIIRS hotspot datasets.
-2. Projects coordinates into EPSG:6933.
-3. Aggregates detections into common spatial grids.
-4. Compares daily activity and temporal agreement.
-5. Evaluates grid-size sensitivity and day/night differences.
-6. Exports reproducible results to an interactive React dashboard.
+### Sensor comparison
 
-The primary grid resolution is 5 km, with 1 km and 10 km sensitivity analyses.
+Compare MODIS and VIIRS using:
 
-## Key Findings
+- Common-grid spatial aggregation
+- 1 km, 5 km, and 10 km sensitivity experiments
+- Daily temporal agreement
+- Day-to-day activity changes
+- Daytime and nighttime comparisons
 
-The current demonstration uses active-fire hotspot observations for India from March 1 to May 31, 2023.
+### Statistical harmonization
+
+Evaluate:
+
+1. Raw VIIRS observations
+2. National global adjustment
+3. National seasonal adjustment
+4. Regional global adjustment
+5. Regional seasonal adjustment
+
+The models are evaluated using separate training,
+validation, and held-out test periods.
+
+## Scientific methodology
+
+FireSignal uses occupied grid-cell-days (OGCD).
+
+A grid cell contributes at most one observation per
+sensor per acquisition date, regardless of the number
+of hotspot detections in that cell on that date.
+
+The primary grid is defined in the EPSG:6933
+equal-area projection with nominal 5 km grid dimensions.
+
+OGCD measures detected hotspot activity, not unique
+fires, burned area, or independently verified events.
+
+## Historical dataset
+
+| Sensor | Years | Source records |
+|---|---|---:|
+| MODIS Collection 6.1 | 2003–2025 | 1,801,292 |
+| VIIRS Suomi-NPP Collection 2 | 2013–2025 | 7,634,234 |
+
+Source: NASA Fire Information for Resource Management
+System (FIRMS).
+
+https://firms.modaps.eosdis.nasa.gov/
+
+## Harmonization evaluation
+
+Chronological evaluation periods:
+
+| Split | Years |
+|---|---|
+| Training | 2013–2021 |
+| Validation | 2022–2023 |
+| Held-out testing | 2024–2025 |
+
+### National evaluation
+
+On held-out national monthly observations, seasonal
+adjustment reduced MAE by approximately 19.7% and
+RMSE by approximately 24.6% compared with global
+adjustment.
+
+### Regional evaluation
+
+On paired regional monthly observations in the held-out
+test period, regional seasonal adjustment achieved:
+
+- MAE: 43.56 OGCD
+- RMSE: 107.65 OGCD
+- 38.6% lower MAE than national seasonal adjustment
+- 38.5% lower RMSE than national seasonal adjustment
+
+Among 28 regions with at least 12 paired test months,
+24 improved relative to national seasonal adjustment
+and four performed worse.
+
+These improvements measure statistical agreement with
+MODIS OGCD observations, not independent fire-detection
+accuracy.
+
+## Original March–May 2023 experiment
+
+The initial experiments compared MODIS and VIIRS
+observations over India from March 1 to May 31, 2023.
 
 | Indicator | Result |
 |---|---:|
@@ -58,14 +145,13 @@ The current demonstration uses active-fire hotspot observations for India from M
 | Daily Pearson correlation | 0.8841 |
 | Day-to-day change Pearson correlation | 0.4776 |
 | Direction agreement | 65.93% |
-| Daytime VIIRS/MODIS OGCD ratio | 5.66× |
-| Nighttime VIIRS/MODIS OGCD ratio | 12.16× |
+| Daytime VIIRS/MODIS OGCD ratio | 5.66x |
+| Nighttime VIIRS/MODIS OGCD ratio | 12.16x |
 
-**Key insight:** MODIS and VIIRS exhibit strong agreement in broad daily activity patterns, but substantially weaker agreement in day-to-day changes. The difference between daytime and nighttime detection ratios also highlights why raw hotspot counts should not be treated as interchangeable measurements.
+These results are specific to the original
+three-month experiment.
 
-These findings are exploratory and specific to the selected datasets and period.
-
-## Technology Stack
+## Technology stack
 
 | Component | Technology |
 |---|---|
@@ -73,11 +159,11 @@ These findings are exploratory and specific to the selected datasets and period.
 | Styling | Tailwind CSS |
 | Visualizations | Recharts |
 | Data processing | Python, pandas, NumPy |
-| Spatial analysis | pyproj |
+| Spatial processing | pyproj |
 | Statistical analysis | SciPy |
 | Deployment | Vercel |
 
-## Running the Dashboard Locally
+## Run locally
 
 Requirements: Node.js and npm.
 
@@ -87,38 +173,77 @@ npm install
 npm run dev
 ```
 
-Open the local address displayed by Vite.
+The frontend reads precomputed JSON datasets from
+`frontend/public/data/`.
 
-The dashboard reads precomputed JSON data from `frontend/public/data/`. Running the Python pipeline is not necessary to view the existing demonstration.
+Running the Python processing pipelines is not
+required to explore the existing dashboard.
 
-## Data and Reproducibility
+## Data processing and reproducibility
 
-Source data were downloaded from [NASA FIRMS](https://firms.modaps.eosdis.nasa.gov/).
+The repository contains:
 
-The original NASA archive ZIP files are not included in this repository.
+- `pipeline/historical_pipeline.py`
+- `pipeline/harmonization_experiment.py`
+- `pipeline/regional_pipeline.py`
+- `pipeline/regional_harmonization_experiment.py`
 
-The Python scripts in `pipeline/` perform the scientific analysis and generate the data used by the frontend.
+Original NASA FIRMS archive downloads are excluded
+from the Git repository.
 
-See [METHODOLOGY.md](METHODOLOGY.md) for the dataset scope, calculation details, findings, and limitations.
+The regional pipeline uses India ADM1 boundaries
+obtained from geoBoundaries.
 
-## Important Scientific Limitations
+Boundary download instructions and licensing
+information are available in:
 
-FireSignal does not currently perform validated cross-sensor calibration.
+[data/boundaries/README.md](data/boundaries/README.md)
 
-Its common-grid comparisons do not correct for all differences in satellite resolution, observation opportunities, sensitivity, confidence classification, or overpass timing.
+Derived browser-ready JSON files are included in
+`frontend/public/data/`.
 
-Active-fire hotspot detections are not equivalent to unique fires, burned area, or independently verified fire events.
+For detailed scientific methods, results, and
+limitations, see [METHODOLOGY.md](METHODOLOGY.md).
 
-The current dataset covers one three-month period and does not support conclusions about long-term fire trends.
+## Scientific limitations
 
-## Project Status
+- MODIS is a statistical reference, not ground truth.
+- Statistical harmonization is not physical calibration.
+- Satellite observation opportunities are not explicitly
+  normalized.
+- MODIS and VIIRS differ in sensitivity, spatial
+  resolution, and observation timing.
+- Regional evaluations exclude unpaired months.
+- Sparse regional datasets can produce unstable estimates.
+- Historical administrative boundaries may differ
+  from current boundaries.
+- No hotspot detection does not prove no fire occurred.
+- OGCD is not a measure of unique fires or burned area.
+- The models have not been independently validated
+  against ground observations.
 
-**Functional research prototype — calibration not validated.**
+FireSignal should be used for exploratory scientific
+analysis, not operational fire warnings or verified
+fire-event estimates.
 
-Future work could include observation-opportunity normalization, overpass-aware matching, independent validation, and multi-year seasonal comparisons.
+## Project status
+
+Functional public research application with historical
+exploration, geographic intelligence, and empirical
+cross-sensor harmonization.
+
+Independent physical calibration and ground-truth
+validation remain future research opportunities.
 
 ## Acknowledgments
 
-This project uses NASA FIRMS active-fire data derived from MODIS and VIIRS satellite observations.
+FireSignal uses NASA FIRMS active-fire observations
+derived from MODIS and VIIRS.
 
-Developed as an independent project for the NASA Space Apps Challenge 2026.
+Administrative boundaries: geoBoundaries gbOpen,
+India ADM1, with underlying attribution to
+DataMeet India / Election Commission of India,
+licensed under CC BY 2.5 IN.
+
+Developed as an independent project for the
+NASA Space Apps Challenge 2026.
