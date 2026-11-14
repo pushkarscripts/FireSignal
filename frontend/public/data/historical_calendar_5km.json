@@ -1,0 +1,1382 @@
+[
+  {
+    "month": "2003-01",
+    "modis": 2339,
+    "viirs": null
+  },
+  {
+    "month": "2003-02",
+    "modis": 2668,
+    "viirs": null
+  },
+  {
+    "month": "2003-03",
+    "modis": 9329,
+    "viirs": null
+  },
+  {
+    "month": "2003-04",
+    "modis": 6576,
+    "viirs": null
+  },
+  {
+    "month": "2003-05",
+    "modis": 5426,
+    "viirs": null
+  },
+  {
+    "month": "2003-06",
+    "modis": 711,
+    "viirs": null
+  },
+  {
+    "month": "2003-07",
+    "modis": 160,
+    "viirs": null
+  },
+  {
+    "month": "2003-08",
+    "modis": 143,
+    "viirs": null
+  },
+  {
+    "month": "2003-09",
+    "modis": 265,
+    "viirs": null
+  },
+  {
+    "month": "2003-10",
+    "modis": 7616,
+    "viirs": null
+  },
+  {
+    "month": "2003-11",
+    "modis": 1782,
+    "viirs": null
+  },
+  {
+    "month": "2003-12",
+    "modis": 1197,
+    "viirs": null
+  },
+  {
+    "month": "2004-01",
+    "modis": 1580,
+    "viirs": null
+  },
+  {
+    "month": "2004-02",
+    "modis": 4081,
+    "viirs": null
+  },
+  {
+    "month": "2004-03",
+    "modis": 17350,
+    "viirs": null
+  },
+  {
+    "month": "2004-04",
+    "modis": 5809,
+    "viirs": null
+  },
+  {
+    "month": "2004-05",
+    "modis": 3110,
+    "viirs": null
+  },
+  {
+    "month": "2004-06",
+    "modis": 213,
+    "viirs": null
+  },
+  {
+    "month": "2004-07",
+    "modis": 89,
+    "viirs": null
+  },
+  {
+    "month": "2004-08",
+    "modis": 117,
+    "viirs": null
+  },
+  {
+    "month": "2004-09",
+    "modis": 684,
+    "viirs": null
+  },
+  {
+    "month": "2004-10",
+    "modis": 6650,
+    "viirs": null
+  },
+  {
+    "month": "2004-11",
+    "modis": 2044,
+    "viirs": null
+  },
+  {
+    "month": "2004-12",
+    "modis": 1809,
+    "viirs": null
+  },
+  {
+    "month": "2005-01",
+    "modis": 1809,
+    "viirs": null
+  },
+  {
+    "month": "2005-02",
+    "modis": 4530,
+    "viirs": null
+  },
+  {
+    "month": "2005-03",
+    "modis": 6844,
+    "viirs": null
+  },
+  {
+    "month": "2005-04",
+    "modis": 8870,
+    "viirs": null
+  },
+  {
+    "month": "2005-05",
+    "modis": 3835,
+    "viirs": null
+  },
+  {
+    "month": "2005-06",
+    "modis": 979,
+    "viirs": null
+  },
+  {
+    "month": "2005-07",
+    "modis": 134,
+    "viirs": null
+  },
+  {
+    "month": "2005-08",
+    "modis": 102,
+    "viirs": null
+  },
+  {
+    "month": "2005-09",
+    "modis": 311,
+    "viirs": null
+  },
+  {
+    "month": "2005-10",
+    "modis": 8749,
+    "viirs": null
+  },
+  {
+    "month": "2005-11",
+    "modis": 4873,
+    "viirs": null
+  },
+  {
+    "month": "2005-12",
+    "modis": 2257,
+    "viirs": null
+  },
+  {
+    "month": "2006-01",
+    "modis": 2887,
+    "viirs": null
+  },
+  {
+    "month": "2006-02",
+    "modis": 5731,
+    "viirs": null
+  },
+  {
+    "month": "2006-03",
+    "modis": 14082,
+    "viirs": null
+  },
+  {
+    "month": "2006-04",
+    "modis": 6106,
+    "viirs": null
+  },
+  {
+    "month": "2006-05",
+    "modis": 2701,
+    "viirs": null
+  },
+  {
+    "month": "2006-06",
+    "modis": 293,
+    "viirs": null
+  },
+  {
+    "month": "2006-07",
+    "modis": 179,
+    "viirs": null
+  },
+  {
+    "month": "2006-08",
+    "modis": 182,
+    "viirs": null
+  },
+  {
+    "month": "2006-09",
+    "modis": 574,
+    "viirs": null
+  },
+  {
+    "month": "2006-10",
+    "modis": 7090,
+    "viirs": null
+  },
+  {
+    "month": "2006-11",
+    "modis": 2787,
+    "viirs": null
+  },
+  {
+    "month": "2006-12",
+    "modis": 2113,
+    "viirs": null
+  },
+  {
+    "month": "2007-01",
+    "modis": 3248,
+    "viirs": null
+  },
+  {
+    "month": "2007-02",
+    "modis": 3531,
+    "viirs": null
+  },
+  {
+    "month": "2007-03",
+    "modis": 15082,
+    "viirs": null
+  },
+  {
+    "month": "2007-04",
+    "modis": 7621,
+    "viirs": null
+  },
+  {
+    "month": "2007-05",
+    "modis": 4605,
+    "viirs": null
+  },
+  {
+    "month": "2007-06",
+    "modis": 762,
+    "viirs": null
+  },
+  {
+    "month": "2007-07",
+    "modis": 196,
+    "viirs": null
+  },
+  {
+    "month": "2007-08",
+    "modis": 219,
+    "viirs": null
+  },
+  {
+    "month": "2007-09",
+    "modis": 384,
+    "viirs": null
+  },
+  {
+    "month": "2007-10",
+    "modis": 9224,
+    "viirs": null
+  },
+  {
+    "month": "2007-11",
+    "modis": 4078,
+    "viirs": null
+  },
+  {
+    "month": "2007-12",
+    "modis": 2087,
+    "viirs": null
+  },
+  {
+    "month": "2008-01",
+    "modis": 3000,
+    "viirs": null
+  },
+  {
+    "month": "2008-02",
+    "modis": 4047,
+    "viirs": null
+  },
+  {
+    "month": "2008-03",
+    "modis": 9150,
+    "viirs": null
+  },
+  {
+    "month": "2008-04",
+    "modis": 11579,
+    "viirs": null
+  },
+  {
+    "month": "2008-05",
+    "modis": 6751,
+    "viirs": null
+  },
+  {
+    "month": "2008-06",
+    "modis": 309,
+    "viirs": null
+  },
+  {
+    "month": "2008-07",
+    "modis": 158,
+    "viirs": null
+  },
+  {
+    "month": "2008-08",
+    "modis": 118,
+    "viirs": null
+  },
+  {
+    "month": "2008-09",
+    "modis": 376,
+    "viirs": null
+  },
+  {
+    "month": "2008-10",
+    "modis": 7261,
+    "viirs": null
+  },
+  {
+    "month": "2008-11",
+    "modis": 5253,
+    "viirs": null
+  },
+  {
+    "month": "2008-12",
+    "modis": 1943,
+    "viirs": null
+  },
+  {
+    "month": "2009-01",
+    "modis": 2735,
+    "viirs": null
+  },
+  {
+    "month": "2009-02",
+    "modis": 8464,
+    "viirs": null
+  },
+  {
+    "month": "2009-03",
+    "modis": 19211,
+    "viirs": null
+  },
+  {
+    "month": "2009-04",
+    "modis": 10301,
+    "viirs": null
+  },
+  {
+    "month": "2009-05",
+    "modis": 4653,
+    "viirs": null
+  },
+  {
+    "month": "2009-06",
+    "modis": 1049,
+    "viirs": null
+  },
+  {
+    "month": "2009-07",
+    "modis": 275,
+    "viirs": null
+  },
+  {
+    "month": "2009-08",
+    "modis": 148,
+    "viirs": null
+  },
+  {
+    "month": "2009-09",
+    "modis": 409,
+    "viirs": null
+  },
+  {
+    "month": "2009-10",
+    "modis": 7338,
+    "viirs": null
+  },
+  {
+    "month": "2009-11",
+    "modis": 5129,
+    "viirs": null
+  },
+  {
+    "month": "2009-12",
+    "modis": 1842,
+    "viirs": null
+  },
+  {
+    "month": "2010-01",
+    "modis": 2283,
+    "viirs": null
+  },
+  {
+    "month": "2010-02",
+    "modis": 3743,
+    "viirs": null
+  },
+  {
+    "month": "2010-03",
+    "modis": 18107,
+    "viirs": null
+  },
+  {
+    "month": "2010-04",
+    "modis": 9884,
+    "viirs": null
+  },
+  {
+    "month": "2010-05",
+    "modis": 3145,
+    "viirs": null
+  },
+  {
+    "month": "2010-06",
+    "modis": 365,
+    "viirs": null
+  },
+  {
+    "month": "2010-07",
+    "modis": 218,
+    "viirs": null
+  },
+  {
+    "month": "2010-08",
+    "modis": 256,
+    "viirs": null
+  },
+  {
+    "month": "2010-09",
+    "modis": 259,
+    "viirs": null
+  },
+  {
+    "month": "2010-10",
+    "modis": 5460,
+    "viirs": null
+  },
+  {
+    "month": "2010-11",
+    "modis": 6203,
+    "viirs": null
+  },
+  {
+    "month": "2010-12",
+    "modis": 1792,
+    "viirs": null
+  },
+  {
+    "month": "2011-01",
+    "modis": 2361,
+    "viirs": null
+  },
+  {
+    "month": "2011-02",
+    "modis": 3804,
+    "viirs": null
+  },
+  {
+    "month": "2011-03",
+    "modis": 14679,
+    "viirs": null
+  },
+  {
+    "month": "2011-04",
+    "modis": 7463,
+    "viirs": null
+  },
+  {
+    "month": "2011-05",
+    "modis": 5460,
+    "viirs": null
+  },
+  {
+    "month": "2011-06",
+    "modis": 437,
+    "viirs": null
+  },
+  {
+    "month": "2011-07",
+    "modis": 221,
+    "viirs": null
+  },
+  {
+    "month": "2011-08",
+    "modis": 162,
+    "viirs": null
+  },
+  {
+    "month": "2011-09",
+    "modis": 233,
+    "viirs": null
+  },
+  {
+    "month": "2011-10",
+    "modis": 7860,
+    "viirs": null
+  },
+  {
+    "month": "2011-11",
+    "modis": 5460,
+    "viirs": null
+  },
+  {
+    "month": "2011-12",
+    "modis": 2607,
+    "viirs": null
+  },
+  {
+    "month": "2012-01",
+    "modis": 2396,
+    "viirs": null
+  },
+  {
+    "month": "2012-02",
+    "modis": 8004,
+    "viirs": null
+  },
+  {
+    "month": "2012-03",
+    "modis": 19445,
+    "viirs": null
+  },
+  {
+    "month": "2012-04",
+    "modis": 7178,
+    "viirs": null
+  },
+  {
+    "month": "2012-05",
+    "modis": 8289,
+    "viirs": null
+  },
+  {
+    "month": "2012-06",
+    "modis": 1367,
+    "viirs": null
+  },
+  {
+    "month": "2012-07",
+    "modis": 186,
+    "viirs": null
+  },
+  {
+    "month": "2012-08",
+    "modis": 224,
+    "viirs": null
+  },
+  {
+    "month": "2012-09",
+    "modis": 300,
+    "viirs": null
+  },
+  {
+    "month": "2012-10",
+    "modis": 6398,
+    "viirs": null
+  },
+  {
+    "month": "2012-11",
+    "modis": 7830,
+    "viirs": null
+  },
+  {
+    "month": "2012-12",
+    "modis": 2500,
+    "viirs": null
+  },
+  {
+    "month": "2013-01",
+    "modis": 2820,
+    "viirs": 15573
+  },
+  {
+    "month": "2013-02",
+    "modis": 3857,
+    "viirs": 20004
+  },
+  {
+    "month": "2013-03",
+    "modis": 11356,
+    "viirs": 59770
+  },
+  {
+    "month": "2013-04",
+    "modis": 8901,
+    "viirs": 55796
+  },
+  {
+    "month": "2013-05",
+    "modis": 6434,
+    "viirs": 36217
+  },
+  {
+    "month": "2013-06",
+    "modis": 376,
+    "viirs": 2841
+  },
+  {
+    "month": "2013-07",
+    "modis": 168,
+    "viirs": 758
+  },
+  {
+    "month": "2013-08",
+    "modis": 216,
+    "viirs": 940
+  },
+  {
+    "month": "2013-09",
+    "modis": 369,
+    "viirs": 1814
+  },
+  {
+    "month": "2013-10",
+    "modis": 5847,
+    "viirs": 19217
+  },
+  {
+    "month": "2013-11",
+    "modis": 6722,
+    "viirs": 24613
+  },
+  {
+    "month": "2013-12",
+    "modis": 2702,
+    "viirs": 16033
+  },
+  {
+    "month": "2014-01",
+    "modis": 2690,
+    "viirs": 14212
+  },
+  {
+    "month": "2014-02",
+    "modis": 3579,
+    "viirs": 19322
+  },
+  {
+    "month": "2014-03",
+    "modis": 11031,
+    "viirs": 51696
+  },
+  {
+    "month": "2014-04",
+    "modis": 11539,
+    "viirs": 70739
+  },
+  {
+    "month": "2014-05",
+    "modis": 4515,
+    "viirs": 34327
+  },
+  {
+    "month": "2014-06",
+    "modis": 1195,
+    "viirs": 9286
+  },
+  {
+    "month": "2014-07",
+    "modis": 224,
+    "viirs": 1083
+  },
+  {
+    "month": "2014-08",
+    "modis": 215,
+    "viirs": 919
+  },
+  {
+    "month": "2014-09",
+    "modis": 416,
+    "viirs": 2542
+  },
+  {
+    "month": "2014-10",
+    "modis": 5742,
+    "viirs": 20421
+  },
+  {
+    "month": "2014-11",
+    "modis": 8895,
+    "viirs": 31164
+  },
+  {
+    "month": "2014-12",
+    "modis": 2647,
+    "viirs": 15417
+  },
+  {
+    "month": "2015-01",
+    "modis": 2868,
+    "viirs": 15191
+  },
+  {
+    "month": "2015-02",
+    "modis": 4521,
+    "viirs": 25287
+  },
+  {
+    "month": "2015-03",
+    "modis": 11815,
+    "viirs": 59739
+  },
+  {
+    "month": "2015-04",
+    "modis": 5825,
+    "viirs": 39096
+  },
+  {
+    "month": "2015-05",
+    "modis": 5169,
+    "viirs": 33961
+  },
+  {
+    "month": "2015-06",
+    "modis": 642,
+    "viirs": 5936
+  },
+  {
+    "month": "2015-07",
+    "modis": 200,
+    "viirs": 1396
+  },
+  {
+    "month": "2015-08",
+    "modis": 223,
+    "viirs": 1119
+  },
+  {
+    "month": "2015-09",
+    "modis": 410,
+    "viirs": 2545
+  },
+  {
+    "month": "2015-10",
+    "modis": 5357,
+    "viirs": 20521
+  },
+  {
+    "month": "2015-11",
+    "modis": 7261,
+    "viirs": 28956
+  },
+  {
+    "month": "2015-12",
+    "modis": 3643,
+    "viirs": 19554
+  },
+  {
+    "month": "2016-01",
+    "modis": 3928,
+    "viirs": 22229
+  },
+  {
+    "month": "2016-02",
+    "modis": 4953,
+    "viirs": 35708
+  },
+  {
+    "month": "2016-03",
+    "modis": 13376,
+    "viirs": 80297
+  },
+  {
+    "month": "2016-04",
+    "modis": 13388,
+    "viirs": 77789
+  },
+  {
+    "month": "2016-05",
+    "modis": 3965,
+    "viirs": 26709
+  },
+  {
+    "month": "2016-06",
+    "modis": 500,
+    "viirs": 4057
+  },
+  {
+    "month": "2016-07",
+    "modis": 127,
+    "viirs": 854
+  },
+  {
+    "month": "2016-08",
+    "modis": 290,
+    "viirs": 1447
+  },
+  {
+    "month": "2016-09",
+    "modis": 262,
+    "viirs": 1968
+  },
+  {
+    "month": "2016-10",
+    "modis": 7995,
+    "viirs": 27976
+  },
+  {
+    "month": "2016-11",
+    "modis": 9358,
+    "viirs": 35702
+  },
+  {
+    "month": "2016-12",
+    "modis": 3631,
+    "viirs": 19167
+  },
+  {
+    "month": "2017-01",
+    "modis": 3339,
+    "viirs": 18276
+  },
+  {
+    "month": "2017-02",
+    "modis": 6525,
+    "viirs": 34420
+  },
+  {
+    "month": "2017-03",
+    "modis": 10339,
+    "viirs": 62720
+  },
+  {
+    "month": "2017-04",
+    "modis": 14888,
+    "viirs": 76134
+  },
+  {
+    "month": "2017-05",
+    "modis": 5020,
+    "viirs": 33814
+  },
+  {
+    "month": "2017-06",
+    "modis": 567,
+    "viirs": 4624
+  },
+  {
+    "month": "2017-07",
+    "modis": 158,
+    "viirs": 997
+  },
+  {
+    "month": "2017-08",
+    "modis": 251,
+    "viirs": 1033
+  },
+  {
+    "month": "2017-09",
+    "modis": 514,
+    "viirs": 2138
+  },
+  {
+    "month": "2017-10",
+    "modis": 6574,
+    "viirs": 24625
+  },
+  {
+    "month": "2017-11",
+    "modis": 6735,
+    "viirs": 29076
+  },
+  {
+    "month": "2017-12",
+    "modis": 3693,
+    "viirs": 20743
+  },
+  {
+    "month": "2018-01",
+    "modis": 4553,
+    "viirs": 24112
+  },
+  {
+    "month": "2018-02",
+    "modis": 6233,
+    "viirs": 33201
+  },
+  {
+    "month": "2018-03",
+    "modis": 20213,
+    "viirs": 106335
+  },
+  {
+    "month": "2018-04",
+    "modis": 8335,
+    "viirs": 46249
+  },
+  {
+    "month": "2018-05",
+    "modis": 6825,
+    "viirs": 38710
+  },
+  {
+    "month": "2018-06",
+    "modis": 561,
+    "viirs": 4378
+  },
+  {
+    "month": "2018-07",
+    "modis": 149,
+    "viirs": 873
+  },
+  {
+    "month": "2018-08",
+    "modis": 191,
+    "viirs": 903
+  },
+  {
+    "month": "2018-09",
+    "modis": 458,
+    "viirs": 2759
+  },
+  {
+    "month": "2018-10",
+    "modis": 4600,
+    "viirs": 18991
+  },
+  {
+    "month": "2018-11",
+    "modis": 9009,
+    "viirs": 33693
+  },
+  {
+    "month": "2018-12",
+    "modis": 2976,
+    "viirs": 18008
+  },
+  {
+    "month": "2019-01",
+    "modis": 3811,
+    "viirs": 20085
+  },
+  {
+    "month": "2019-02",
+    "modis": 4249,
+    "viirs": 22669
+  },
+  {
+    "month": "2019-03",
+    "modis": 10213,
+    "viirs": 52224
+  },
+  {
+    "month": "2019-04",
+    "modis": 10047,
+    "viirs": 56875
+  },
+  {
+    "month": "2019-05",
+    "modis": 9419,
+    "viirs": 52880
+  },
+  {
+    "month": "2019-06",
+    "modis": 1282,
+    "viirs": 9937
+  },
+  {
+    "month": "2019-07",
+    "modis": 314,
+    "viirs": 1608
+  },
+  {
+    "month": "2019-08",
+    "modis": 275,
+    "viirs": 926
+  },
+  {
+    "month": "2019-09",
+    "modis": 298,
+    "viirs": 1621
+  },
+  {
+    "month": "2019-10",
+    "modis": 4880,
+    "viirs": 15350
+  },
+  {
+    "month": "2019-11",
+    "modis": 5077,
+    "viirs": 21537
+  },
+  {
+    "month": "2019-12",
+    "modis": 2329,
+    "viirs": 13345
+  },
+  {
+    "month": "2020-01",
+    "modis": 2215,
+    "viirs": 12325
+  },
+  {
+    "month": "2020-02",
+    "modis": 3233,
+    "viirs": 18428
+  },
+  {
+    "month": "2020-03",
+    "modis": 8844,
+    "viirs": 37280
+  },
+  {
+    "month": "2020-04",
+    "modis": 9759,
+    "viirs": 55146
+  },
+  {
+    "month": "2020-05",
+    "modis": 5376,
+    "viirs": 38057
+  },
+  {
+    "month": "2020-06",
+    "modis": 412,
+    "viirs": 3334
+  },
+  {
+    "month": "2020-07",
+    "modis": 308,
+    "viirs": 1320
+  },
+  {
+    "month": "2020-08",
+    "modis": 272,
+    "viirs": 836
+  },
+  {
+    "month": "2020-09",
+    "modis": 480,
+    "viirs": 2275
+  },
+  {
+    "month": "2020-10",
+    "modis": 6586,
+    "viirs": 24996
+  },
+  {
+    "month": "2020-11",
+    "modis": 9909,
+    "viirs": 35669
+  },
+  {
+    "month": "2020-12",
+    "modis": 4791,
+    "viirs": 24916
+  },
+  {
+    "month": "2021-01",
+    "modis": 3557,
+    "viirs": 19775
+  },
+  {
+    "month": "2021-02",
+    "modis": 7410,
+    "viirs": 36316
+  },
+  {
+    "month": "2021-03",
+    "modis": 24592,
+    "viirs": 119823
+  },
+  {
+    "month": "2021-04",
+    "modis": 16335,
+    "viirs": 77524
+  },
+  {
+    "month": "2021-05",
+    "modis": 3539,
+    "viirs": 25484
+  },
+  {
+    "month": "2021-06",
+    "modis": 471,
+    "viirs": 3910
+  },
+  {
+    "month": "2021-07",
+    "modis": 310,
+    "viirs": 1428
+  },
+  {
+    "month": "2021-08",
+    "modis": 249,
+    "viirs": 1220
+  },
+  {
+    "month": "2021-09",
+    "modis": 323,
+    "viirs": 1758
+  },
+  {
+    "month": "2021-10",
+    "modis": 4274,
+    "viirs": 16413
+  },
+  {
+    "month": "2021-11",
+    "modis": 12122,
+    "viirs": 37791
+  },
+  {
+    "month": "2021-12",
+    "modis": 2969,
+    "viirs": 17202
+  },
+  {
+    "month": "2022-01",
+    "modis": 2453,
+    "viirs": 12243
+  },
+  {
+    "month": "2022-02",
+    "modis": 4059,
+    "viirs": 19692
+  },
+  {
+    "month": "2022-03",
+    "modis": 16201,
+    "viirs": 75688
+  },
+  {
+    "month": "2022-04",
+    "modis": 10886,
+    "viirs": 70044
+  },
+  {
+    "month": "2022-05",
+    "modis": 4941,
+    "viirs": 32561
+  },
+  {
+    "month": "2022-06",
+    "modis": 1078,
+    "viirs": 8701
+  },
+  {
+    "month": "2022-07",
+    "modis": 342,
+    "viirs": 1141
+  },
+  {
+    "month": "2022-08",
+    "modis": 300,
+    "viirs": 1013
+  },
+  {
+    "month": "2022-09",
+    "modis": 378,
+    "viirs": 2140
+  },
+  {
+    "month": "2022-10",
+    "modis": 3723,
+    "viirs": 15899
+  },
+  {
+    "month": "2022-11",
+    "modis": 8796,
+    "viirs": 35768
+  },
+  {
+    "month": "2022-12",
+    "modis": 4706,
+    "viirs": 23935
+  },
+  {
+    "month": "2023-01",
+    "modis": 4520,
+    "viirs": 21566
+  },
+  {
+    "month": "2023-02",
+    "modis": 9123,
+    "viirs": 44518
+  },
+  {
+    "month": "2023-03",
+    "modis": 10843,
+    "viirs": 62165
+  },
+  {
+    "month": "2023-04",
+    "modis": 10708,
+    "viirs": 60901
+  },
+  {
+    "month": "2023-05",
+    "modis": 4149,
+    "viirs": 37606
+  },
+  {
+    "month": "2023-06",
+    "modis": 1127,
+    "viirs": 12870
+  },
+  {
+    "month": "2023-07",
+    "modis": 291,
+    "viirs": 1624
+  },
+  {
+    "month": "2023-08",
+    "modis": 315,
+    "viirs": 1976
+  },
+  {
+    "month": "2023-09",
+    "modis": 352,
+    "viirs": 1997
+  },
+  {
+    "month": "2023-10",
+    "modis": 2935,
+    "viirs": 16472
+  },
+  {
+    "month": "2023-11",
+    "modis": 8434,
+    "viirs": 29492
+  },
+  {
+    "month": "2023-12",
+    "modis": 3985,
+    "viirs": 21119
+  },
+  {
+    "month": "2024-01",
+    "modis": 3906,
+    "viirs": 18460
+  },
+  {
+    "month": "2024-02",
+    "modis": 5116,
+    "viirs": 24672
+  },
+  {
+    "month": "2024-03",
+    "modis": 9548,
+    "viirs": 53367
+  },
+  {
+    "month": "2024-04",
+    "modis": 10993,
+    "viirs": 74759
+  },
+  {
+    "month": "2024-05",
+    "modis": 7514,
+    "viirs": 46026
+  },
+  {
+    "month": "2024-06",
+    "modis": 1688,
+    "viirs": 8345
+  },
+  {
+    "month": "2024-07",
+    "modis": 278,
+    "viirs": 782
+  },
+  {
+    "month": "2024-08",
+    "modis": 237,
+    "viirs": 994
+  },
+  {
+    "month": "2024-09",
+    "modis": 451,
+    "viirs": 2619
+  },
+  {
+    "month": "2024-10",
+    "modis": 1907,
+    "viirs": 10307
+  },
+  {
+    "month": "2024-11",
+    "modis": 7859,
+    "viirs": 30072
+  },
+  {
+    "month": "2024-12",
+    "modis": 5138,
+    "viirs": 25933
+  },
+  {
+    "month": "2025-01",
+    "modis": 5082,
+    "viirs": 23720
+  },
+  {
+    "month": "2025-02",
+    "modis": 8083,
+    "viirs": 38034
+  },
+  {
+    "month": "2025-03",
+    "modis": 20806,
+    "viirs": 99277
+  },
+  {
+    "month": "2025-04",
+    "modis": 13037,
+    "viirs": 65908
+  },
+  {
+    "month": "2025-05",
+    "modis": 4851,
+    "viirs": 31540
+  },
+  {
+    "month": "2025-06",
+    "modis": 704,
+    "viirs": 5297
+  },
+  {
+    "month": "2025-07",
+    "modis": 211,
+    "viirs": 1084
+  },
+  {
+    "month": "2025-08",
+    "modis": 209,
+    "viirs": 1281
+  },
+  {
+    "month": "2025-09",
+    "modis": 362,
+    "viirs": 2208
+  },
+  {
+    "month": "2025-10",
+    "modis": 1842,
+    "viirs": 7533
+  },
+  {
+    "month": "2025-11",
+    "modis": 7775,
+    "viirs": 29568
+  },
+  {
+    "month": "2025-12",
+    "modis": 6594,
+    "viirs": 34446
+  }
+]

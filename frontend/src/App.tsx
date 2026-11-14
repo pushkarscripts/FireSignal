@@ -1,3 +1,4 @@
+import HistoricalCalendar from './HistoricalCalendar'
 import SensorShiftAnalyzer from './SensorShiftAnalyzer'
 import { useEffect, useMemo, useState } from 'react'
 import {
@@ -92,6 +93,9 @@ function App() {
       </header>
 
       <main className="mx-auto max-w-7xl px-6 py-10">
+        <HistoricalCalendar />
+
+        <div className="mt-14 border-t border-white/10 pt-10">
         <p className="mb-2 text-sm font-medium text-orange-400">
           INDIA · MARCH–MAY 2023
         </p>
@@ -190,9 +194,10 @@ function App() {
             </section>
 
             <SensorShiftAnalyzer />
-            
+
           </>
         )}
+        </div>
       </main>
     </div>
   )

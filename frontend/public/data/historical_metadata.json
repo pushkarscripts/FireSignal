@@ -1,0 +1,28 @@
+{
+  "metric": "occupied_grid_cell_days",
+  "grid_km": 5,
+  "projection": "EPSG:6933",
+  "requested_start": "2003-01-01",
+  "requested_end": "2025-12-31",
+  "archive_paths": {
+    "MODIS": "data\\raw\\DL_FIRE_M-C61_847437.zip",
+    "VIIRS": "data\\raw\\DL_FIRE_SV-C2_847444.zip"
+  },
+  "processing": {
+    "MODIS": {
+      "rows_read": 1801292,
+      "rows_in_range": 1801292,
+      "rows_invalid": 0,
+      "chunks": 19
+    },
+    "VIIRS": {
+      "rows_read": 7634234,
+      "rows_in_range": 7634234,
+      "rows_invalid": 0,
+      "chunks": 77
+    }
+  },
+  "calibration_status": "not_validated",
+  "coverage_warning": "Days/months without detections are unknown, not verified zero activity. Archive request boundaries and observation coverage must be independently checked.",
+  "calendar_null_definition": "No detections in available archive for month; not necessarily zero burning activity"
+}
