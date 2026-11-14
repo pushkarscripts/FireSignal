@@ -23,19 +23,8 @@ type DailyRecord = {
   viirs: number
 }
 
-export type ViewId = 'observatory' | 'historical-patterns' | 'sensor-laboratory' | 'research-methods'
-
-const VALID_VIEWS: Record<string, ViewId> = {
-  'observatory': 'observatory',
-  'historical-patterns': 'historical-patterns',
-  'sensor-laboratory': 'sensor-laboratory',
-  'research-methods': 'research-methods',
-}
-
-function parseHash(hash: string): ViewId {
-  const clean = hash.replace(/^#\/?/, '').toLowerCase().trim()
-  return VALID_VIEWS[clean] ?? 'observatory'
-}
+import { type ViewId, parseHash } from './navigation.ts'
+export type { ViewId }
 
 function App() {
   const [currentView, setCurrentView] = useState<ViewId>(() => {

@@ -25,15 +25,18 @@ import {
 // ============================================================================
 // TYPES & SCHEMAS
 // ============================================================================
-export type Sensor = 'MODIS' | 'VIIRS'
+import {
+  type Sensor,
+  type RegionalRecord,
+  type RegionSummary,
+  MONTH_FULL,
+  computeDaysInYear,
+  filterRecordsBySensorAndYear,
+  computeRegionTotals,
+  computeMonthlySequence,
+} from './observatoryAggregations.ts'
 
-export interface RegionalRecord {
-  sensor: Sensor
-  region: string
-  month: string // "YYYY-MM"
-  ogcd: number
-  daysWithDetections: number
-}
+export type { Sensor, RegionalRecord, RegionSummary }
 
 export interface RegionalPayload {
   metric: string
@@ -174,21 +177,6 @@ const SMALL_TERRITORIES = [
   'Sikkim',
 ]
 
-const MONTH_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-const MONTH_FULL = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-]
 
 function formatNumber(val: number): string {
   return val.toLocaleString('en-IN')
@@ -370,48 +358,12 @@ export default function GeographicObservatory({ onNavigateToHistorical }: Geogra
   // --------------------------------------------------------------------------
   const recordsForSensorYear = useMemo(() => {
     if (!regionalPayload) return []
-    return regionalPayload.records.filter((r) => r.sensor === sensor && r.month.startsWith(year))
+    return filterRecordsBySensorAndYear(regionalPayload.records, sensor, year)
   }, [regionalPayload, sensor, year])
 
   // Annual OGCD total and stats per region
   const regionTotals = useMemo(() => {
-    const map = new Map<
-      string,
-      {
-        totalOgcd: number
-        totalDays: number
-        monthCount: number
-        peakMonth: string
-        peakOgcd: number
-        months: RegionalRecord[]
-      }
-    >()
-
-    recordsForSensorYear.forEach((rec) => {
-      const prev = map.get(rec.region) ?? {
-        totalOgcd: 0,
-        totalDays: 0,
-        monthCount: 0,
-        peakMonth: '',
-        peakOgcd: -1,
-        months: [],
-      }
-
-      const newTotal = prev.totalOgcd + rec.ogcd
-      const newDays = prev.totalDays + rec.daysWithDetections
-      const isPeak = rec.ogcd > prev.peakOgcd
-
-      map.set(rec.region, {
-        totalOgcd: newTotal,
-        totalDays: newDays,
-        monthCount: prev.monthCount + 1,
-        peakMonth: isPeak ? rec.month : prev.peakMonth,
-        peakOgcd: isPeak ? rec.ogcd : prev.peakOgcd,
-        months: [...prev.months, rec],
-      })
-    })
-
-    return map
+    return computeRegionTotals(recordsForSensorYear)
   }, [recordsForSensorYear])
 
   // Maximum annual OGCD across regions for current selection
@@ -484,35 +436,13 @@ export default function GeographicObservatory({ onNavigateToHistorical }: Geogra
 
   // Total calendar days in selected year (accounting for leap years)
   const daysInSelectedYear = useMemo(() => {
-    const y = parseInt(year, 10)
-    return (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0 ? 366 : 365
+    return computeDaysInYear(year)
   }, [year])
 
   // Monthly 12-month sequence
   const monthlyTrend = useMemo<MonthlyDatum[]>(() => {
     if (!regionalPayload) return []
-
-    const recordsForRegion = regionalPayload.records.filter(
-      (r) => r.region === selectedRegion && r.sensor === sensor && r.month.startsWith(year)
-    )
-    const monthMap = new Map<string, RegionalRecord>()
-    recordsForRegion.forEach((r) => monthMap.set(r.month, r))
-
-    return Array.from({ length: 12 }, (_, i) => {
-      const monthNum = String(i + 1).padStart(2, '0')
-      const monthKey = `${year}-${monthNum}`
-      const rec = monthMap.get(monthKey)
-
-      return {
-        monthKey,
-        shortName: MONTH_SHORT[i] ?? '',
-        fullName: MONTH_FULL[i] ?? '',
-        ogcd: rec ? rec.ogcd : null,
-        displayOgcd: rec ? rec.ogcd : 0,
-        daysWithDetections: rec ? rec.daysWithDetections : null,
-        hasRecord: !!rec,
-      }
-    })
+    return computeMonthlySequence(regionalPayload.records, selectedRegion, sensor, year)
   }, [regionalPayload, selectedRegion, sensor, year])
 
   // Peak month details for selected region
