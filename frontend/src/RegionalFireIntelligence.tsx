@@ -8,12 +8,14 @@ type RegionalRecord = { sensor: Sensor; region: string; month: string; ogcd: num
 type Payload = { regions: string[]; records: RegionalRecord[]; boundaryYear: number; boundaryLicense: string; gridKm: number }
 const format = (value: number) => value.toLocaleString('en-IN')
 const monthLabel = (month: string) => `${month.slice(0, 4)}-${month.slice(5)}`
+
 function median(values: number[]) {
   if (!values.length) return null
   const sorted = [...values].sort((a, b) => a - b)
   const mid = Math.floor(sorted.length / 2)
   return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2
 }
+
 function validPayload(value: unknown): value is Payload {
   if (!value || typeof value !== 'object') return false
   const data = value as Partial<Payload>
@@ -23,6 +25,7 @@ function validPayload(value: unknown): value is Payload {
       /^\d{4}-(0[1-9]|1[0-2])$/.test(r.month) && Number.isInteger(r.ogcd) && r.ogcd >= 0 &&
       Number.isInteger(r.daysWithDetections) && r.daysWithDetections >= 0)
 }
+
 export default function RegionalFireIntelligence() {
   const [data, setData] = useState<Payload | null>(null)
   const [loading, setLoading] = useState(true)
@@ -76,106 +79,224 @@ export default function RegionalFireIntelligence() {
     return [...totals].map(([name, value]) => ({ region: name, ogcd: value.total, months: value.months }))
       .sort((a, b) => b.ogcd - a.ogcd).slice(0, 10)
   }, [sensorRecords, year])
-  const tooltipStyle = { background: '#101827', border: '1px solid #334155', borderRadius: 12, color: '#e2e8f0' }
+  const tooltipStyle = { background: '#151A1F', border: '1px solid #252D34', borderRadius: 8, color: '#E8EDF0' }
 
   return (
-    <section className="mt-14 border-t border-white/10 pt-10" aria-labelledby="regional-heading">
+    <div className="mt-12 space-y-6">
       <div className="flex items-start gap-3">
-        <div className="rounded-xl bg-orange-500/15 p-3 text-orange-400"><MapPinned size={24} /></div>
+        <div className="rounded-lg border border-[#F0A34A]/30 bg-[#F0A34A]/10 p-2 text-[#F0A34A]">
+          <MapPinned size={22} />
+        </div>
         <div>
-          <p className="text-sm font-medium text-orange-400">INDIA Â· REGIONAL EXPLORATION</p>
-          <h2 id="regional-heading" className="mt-1 text-2xl font-semibold sm:text-3xl">Regional Fire Intelligence</h2>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-400">Explore monthly satellite hotspot activity within historical administrative boundaries. Values are occupied 5 km grid-cell-days (OGCD), not fire counts or burned area.</p>
+          <h3 className="text-xl font-semibold text-[#E8EDF0]">Regional Fire Intelligence</h3>
+          <p className="mt-1 max-w-3xl text-sm leading-6 text-[#9BA8B2]">
+            Explore monthly satellite hotspot activity within historical administrative boundaries. Values are occupied 5 km grid-cell-days (OGCD), not fire counts or burned area.
+          </p>
         </div>
       </div>
-      {loading && <p className="mt-6 text-slate-400">Loading regional observationsâ€¦</p>}
-      {error && <p role="alert" className="mt-6 rounded-xl border border-red-500/30 p-4 text-red-300">Unable to load regional data: {error}</p>}
-      {data && !loading && !error && <>
-        <div className="mt-7 grid gap-4 rounded-2xl border border-white/10 bg-white/[0.04] p-5 sm:grid-cols-3">
-          <label className="text-sm text-slate-300">Region
-            <select className="mt-2 w-full rounded-lg border border-slate-600 bg-[#101827] p-3 text-slate-100" value={region} onChange={e => setRegion(e.target.value)}>
-              {data.regions.map(name => <option key={name} value={name}>{name}</option>)}
-            </select>
-          </label>
-          <label className="text-sm text-slate-300">Satellite sensor
-            <select className="mt-2 w-full rounded-lg border border-slate-600 bg-[#101827] p-3 text-slate-100" value={sensor} onChange={e => { const next = e.target.value as Sensor; setSensor(next); if (next === 'VIIRS' && Number(year) < 2013) setYear('2013') }}>
-              <option value="MODIS">MODIS</option><option value="VIIRS">VIIRS</option>
-            </select>
-          </label>
-          <label className="text-sm text-slate-300">Year
-            <select className="mt-2 w-full rounded-lg border border-slate-600 bg-[#101827] p-3 text-slate-100" value={year} onChange={e => setYear(e.target.value)}>
-              {years.map(y => <option key={y} value={y}>{y}</option>)}
-            </select>
-          </label>
+
+      {loading && (
+        <div className="rounded-xl border border-[#252D34] bg-[#151A1F] p-8 text-center text-sm text-[#9BA8B2]">
+          Loading regional observations…
         </div>
-        <div className="mt-4 grid gap-4 sm:grid-cols-3">
-          <div className="rounded-xl border border-white/10 bg-white/[0.04] p-5"><p className="text-sm text-slate-400">Recorded OGCD Â· {year}</p><p className="mt-2 text-2xl font-semibold">{selectedYearTotal === null ? 'Unavailable' : format(selectedYearTotal)}</p></div>
-          <div className="rounded-xl border border-white/10 bg-white/[0.04] p-5"><p className="text-sm text-slate-400">Months with detections Â· {year}</p><p className="mt-2 text-2xl font-semibold">{observedMonths} / 12</p></div>
-          <div className="rounded-xl border border-white/10 bg-white/[0.04] p-5"><p className="text-sm text-slate-400">Region coverage Â· {sensor}</p><p className="mt-2 text-2xl font-semibold">{regionRecords.length ? `${regionRecords.length} months` : 'No matched detections'}</p></div>
+      )}
+
+      {error && (
+        <div role="alert" className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-300">
+          Unable to load regional data: {error}
         </div>
-        {observedMonths < 12 && <p className="mt-3 text-sm text-amber-300">{observedMonths === 0 ? 'No matched detections in the selected year.' : 'Some months have no matched detections.'} Missing months are not treated as verified zero activity. The annual total sums only months with detections.</p>}
-        <div className="mt-7 rounded-2xl border border-white/10 bg-white/[0.04] p-5 sm:p-6">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div><h3 className="flex items-center gap-2 text-lg font-semibold"><TrendingUp size={19} className="text-orange-400" /> Monthly regional analysis</h3><p className="mt-1 text-sm text-slate-400">{region} Â· {sensor} Â· {year}</p></div>
-            <div className="flex gap-2" role="group" aria-label="Regional chart mode">
-              {(['activity', 'anomaly'] as View[]).map(v => <button key={v} type="button" onClick={() => setView(v)} aria-pressed={view === v} className={`rounded-lg px-3 py-2 text-sm ${view === v ? 'bg-orange-500 text-slate-950' : 'border border-white/15 text-slate-300 hover:bg-white/10'}`}>{v === 'activity' ? 'Activity' : 'Anomaly'}</button>)}
+      )}
+
+      {data && !loading && !error && (
+        <>
+          <div className="grid gap-4 rounded-2xl border border-[#252D34] bg-[#151A1F] p-5 sm:grid-cols-3">
+            <label className="text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">
+              Region
+              <select
+                className="mt-2 block w-full rounded-lg border border-[#252D34] bg-[#0B0E11] p-2.5 text-sm font-sans normal-case text-[#E8EDF0] focus:border-[#F0A34A] focus:outline-none"
+                value={region}
+                onChange={e => setRegion(e.target.value)}
+              >
+                {data.regions.map(name => (
+                  <option key={name} value={name}>
+                    {name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">
+              Satellite Sensor
+              <select
+                className="mt-2 block w-full rounded-lg border border-[#252D34] bg-[#0B0E11] p-2.5 text-sm font-sans normal-case text-[#E8EDF0] focus:border-[#F0A34A] focus:outline-none"
+                value={sensor}
+                onChange={e => {
+                  const next = e.target.value as Sensor
+                  setSensor(next)
+                  if (next === 'VIIRS' && Number(year) < 2013) setYear('2013')
+                }}
+              >
+                <option value="MODIS">MODIS (2003–2025)</option>
+                <option value="VIIRS">VIIRS (2013–2025)</option>
+              </select>
+            </label>
+            <label className="text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">
+              Observation Year
+              <select
+                className="mt-2 block w-full rounded-lg border border-[#252D34] bg-[#0B0E11] p-2.5 text-sm font-sans normal-case text-[#E8EDF0] focus:border-[#F0A34A] focus:outline-none"
+                value={year}
+                onChange={e => setYear(e.target.value)}
+              >
+                {years.map(y => (
+                  <option key={y} value={y}>
+                    {y}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-3">
+            <div className="rounded-xl border border-[#252D34] bg-[#151A1F] p-5">
+              <p className="text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">Recorded OGCD · {year}</p>
+              <p className="mt-2 text-2xl font-semibold text-[#E8EDF0]">
+                {selectedYearTotal === null ? 'Unavailable' : format(selectedYearTotal)}
+              </p>
+            </div>
+            <div className="rounded-xl border border-[#252D34] bg-[#151A1F] p-5">
+              <p className="text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">Months with detections · {year}</p>
+              <p className="mt-2 text-2xl font-semibold text-[#E8EDF0]">{observedMonths} / 12</p>
+            </div>
+            <div className="rounded-xl border border-[#252D34] bg-[#151A1F] p-5">
+              <p className="text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">Region coverage · {sensor}</p>
+              <p className="mt-2 text-2xl font-semibold text-[#E8EDF0]">
+                {regionRecords.length ? `${regionRecords.length} months` : 'No matched detections'}
+              </p>
             </div>
           </div>
-          <div className="mt-6 h-72 w-full">
-            <ResponsiveContainer width="100%" height="100%">
 
-              <BarChart data={monthRows}>
-                <CartesianGrid
-                  stroke="#253044"
-                  strokeDasharray="3 3"
-                />
+          {observedMonths < 12 && (
+            <div className="rounded-xl border border-[#F0A34A]/25 bg-[#F0A34A]/5 p-3.5 text-xs text-[#E8EDF0]">
+              <span className="font-semibold text-[#F0A34A]">Note: </span>
+              {observedMonths === 0 ? 'No matched detections in the selected year.' : 'Some months have no matched detections.'} Missing months are not treated as verified zero activity. The annual total sums only months with detections.
+            </div>
+          )}
 
-                <XAxis
-                  dataKey="month"
-                  type="category"
-                  interval={0}
-                  tickFormatter={(value: string) => {
-                    const monthNumber = Number(value.slice(5))
-                    return [
-                      'Jan', 'Feb', 'Mar', 'Apr',
-                      'May', 'Jun', 'Jul', 'Aug',
-                      'Sep', 'Oct', 'Nov', 'Dec'
-                    ][monthNumber - 1] ?? value
-                  }}
-                  stroke="#94a3b8"
-                  tick={{ fontSize: 12 }}
-                />
+          <div className="rounded-2xl border border-[#252D34] bg-[#151A1F] p-5 sm:p-6">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <h4 className="flex items-center gap-2 text-lg font-semibold text-[#E8EDF0]">
+                  <TrendingUp size={19} className="text-[#F0A34A]" /> Monthly regional analysis
+                </h4>
+                <p className="mt-1 text-sm text-[#9BA8B2]">
+                  {region} · {sensor} · {year}
+                </p>
+              </div>
+              <div className="flex rounded-lg border border-[#252D34] bg-[#0B0E11] p-1" role="group" aria-label="Regional chart mode">
+                {(['activity', 'anomaly'] as View[]).map(v => (
+                  <button
+                    key={v}
+                    type="button"
+                    onClick={() => setView(v)}
+                    aria-pressed={view === v}
+                    className={`rounded-md px-3.5 py-1 text-sm font-medium transition ${
+                      view === v ? 'bg-[#F0A34A] text-[#0B0E11] font-semibold' : 'text-[#9BA8B2] hover:text-[#E8EDF0]'
+                    }`}
+                  >
+                    {v === 'activity' ? 'Activity' : 'Anomaly'}
+                  </button>
+                ))}
+              </div>
+            </div>
 
-                <YAxis
-                  stroke="#94a3b8"
-                  tick={{ fontSize: 11 }}
-                  tickFormatter={(n: number) =>
-                    view === 'anomaly' ? `${n}%` : format(n)
-                  }
-                />
-
-                <Tooltip contentStyle={tooltipStyle} formatter={(value, name) => [value == null ? 'No data' : view === 'anomaly' ? `${Number(value).toFixed(1)}%` : format(Number(value)), name === 'anomaly' ? 'Seasonal anomaly' : 'OGCD']} />
-                <Bar dataKey={view === 'anomaly' ? 'anomaly' : 'ogcd'} name={view === 'anomaly' ? 'anomaly' : 'ogcd'} fill={view === 'anomaly' ? '#38bdf8' : '#fb923c'} radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+            <div className="mt-6 h-72 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={monthRows} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+                  <CartesianGrid stroke="#252D34" strokeDasharray="3 3" />
+                  <XAxis
+                    dataKey="month"
+                    type="category"
+                    interval={0}
+                    tickFormatter={(value: string) => {
+                      const monthNumber = Number(value.slice(5))
+                      return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][monthNumber - 1] ?? value
+                    }}
+                    stroke="#9BA8B2"
+                    tick={{ fontSize: 11 }}
+                  />
+                  <YAxis
+                    stroke="#9BA8B2"
+                    tick={{ fontSize: 11 }}
+                    tickFormatter={(n: number) => (view === 'anomaly' ? `${n}%` : format(n))}
+                  />
+                  <Tooltip
+                    contentStyle={tooltipStyle}
+                    formatter={(value, name) => [
+                      value == null ? 'No data' : view === 'anomaly' ? `${Number(value).toFixed(1)}%` : format(Number(value)),
+                      name === 'anomaly' ? 'Seasonal anomaly' : 'OGCD',
+                    ]}
+                  />
+                  <Bar
+                    dataKey={view === 'anomaly' ? 'anomaly' : 'ogcd'}
+                    name={view === 'anomaly' ? 'anomaly' : 'ogcd'}
+                    fill={view === 'anomaly' ? '#38BDF8' : '#F0A34A'}
+                    radius={[4, 4, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+            <p className="mt-3 text-xs leading-5 text-[#9BA8B2]">
+              {view === 'anomaly'
+                ? 'Anomaly compares each observed month with the median of the same calendar month in other years for this region and sensor. At least three comparison years and a positive baseline are required. Missing months are excluded.'
+                : 'Only months containing matched hotspot detections are plotted. An empty month does not establish zero fire activity or complete satellite coverage.'}
+            </p>
           </div>
-          <p className="mt-3 text-xs leading-5 text-slate-400">{view === 'anomaly' ? 'Anomaly compares each observed month with the median of the same calendar month in other years for this region and sensor. At least three comparison years and a positive baseline are required. Missing months are excluded.' : 'Only months containing matched hotspot detections are plotted. An empty month does not establish zero fire activity or complete satellite coverage.'}</p>
-        </div>
-        <div className="mt-6 grid gap-6 lg:grid-cols-2">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 sm:p-6">
-            <h3 className="text-lg font-semibold">Historical annual activity</h3><p className="mt-1 text-sm text-slate-400">{region} Â· {sensor} Â· observed months only</p>
-            <div className="mt-5 h-64"><ResponsiveContainer width="100%" height="100%"><LineChart data={annual}><CartesianGrid stroke="#253044" strokeDasharray="3 3" /><XAxis dataKey="year" stroke="#94a3b8" tick={{ fontSize: 11 }} minTickGap={16} /><YAxis stroke="#94a3b8" tick={{ fontSize: 11 }} tickFormatter={format} /><Tooltip contentStyle={tooltipStyle} formatter={v => v == null ? 'No matched detections' : format(Number(v))} /><Line dataKey="ogcd" name="Observed OGCD" stroke="#38bdf8" strokeWidth={2} dot={false} connectNulls={false} /></LineChart></ResponsiveContainer></div>
-            <p className="mt-2 text-xs text-slate-400">Annual totals are not corrected for missing observation coverage or changing satellite detection opportunities.</p>
+
+          <div className="grid gap-6 lg:grid-cols-2">
+            <div className="rounded-2xl border border-[#252D34] bg-[#151A1F] p-5 sm:p-6">
+              <h4 className="text-lg font-semibold text-[#E8EDF0]">Historical annual activity</h4>
+              <p className="mt-1 text-sm text-[#9BA8B2]">{region} · {sensor} · observed months only</p>
+              <div className="mt-5 h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={annual} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+                    <CartesianGrid stroke="#252D34" strokeDasharray="3 3" />
+                    <XAxis dataKey="year" stroke="#9BA8B2" tick={{ fontSize: 11 }} minTickGap={16} />
+                    <YAxis stroke="#9BA8B2" tick={{ fontSize: 11 }} tickFormatter={format} />
+                    <Tooltip contentStyle={tooltipStyle} formatter={v => (v == null ? 'No matched detections' : format(Number(v)))} />
+                    <Line dataKey="ogcd" name="Observed OGCD" stroke="#38BDF8" strokeWidth={2} dot={false} connectNulls={false} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+              <p className="mt-2 text-xs text-[#9BA8B2]">Annual totals are not corrected for missing observation coverage or changing satellite detection opportunities.</p>
+            </div>
+
+            <div className="rounded-2xl border border-[#252D34] bg-[#151A1F] p-5 sm:p-6">
+              <h4 className="flex items-center gap-2 text-lg font-semibold text-[#E8EDF0]">
+                <BarChart3 size={19} className="text-[#F0A34A]" /> Top regions · {year}
+              </h4>
+              <p className="mt-1 text-sm text-[#9BA8B2]">{sensor} only · observed OGCD, not fire risk</p>
+              <div className="mt-5 h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={ranking} layout="vertical" margin={{ left: 14, right: 12, top: 5, bottom: 5 }}>
+                    <CartesianGrid stroke="#252D34" strokeDasharray="3 3" />
+                    <XAxis type="number" stroke="#9BA8B2" tick={{ fontSize: 11 }} tickFormatter={format} />
+                    <YAxis type="category" dataKey="region" width={110} stroke="#9BA8B2" tick={{ fontSize: 10 }} />
+                    <Tooltip contentStyle={tooltipStyle} formatter={v => (v == null ? 'No data' : format(Number(v)))} />
+                    <Bar dataKey="ogcd" name="Observed OGCD" fill="#F0A34A" radius={[0, 4, 4, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+              <p className="mt-2 text-xs text-[#9BA8B2]">Rankings reflect recorded activity, not normalized area, coverage, or independently verified fire severity.</p>
+            </div>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 sm:p-6">
-            <h3 className="flex items-center gap-2 text-lg font-semibold"><BarChart3 size={19} className="text-orange-400" /> Top regions Â· {year}</h3><p className="mt-1 text-sm text-slate-400">{sensor} only Â· observed OGCD, not fire risk</p>
-            <div className="mt-5 h-64"><ResponsiveContainer width="100%" height="100%"><BarChart data={ranking} layout="vertical" margin={{ left: 14, right: 8 }}><CartesianGrid stroke="#253044" strokeDasharray="3 3" /><XAxis type="number" stroke="#94a3b8" tick={{ fontSize: 11 }} tickFormatter={format} /><YAxis type="category" dataKey="region" width={110} stroke="#94a3b8" tick={{ fontSize: 10 }} /><Tooltip contentStyle={tooltipStyle} formatter={v => v == null ? 'No data' : format(Number(v))} /><Bar dataKey="ogcd" name="Observed OGCD" fill="#fb923c" radius={[0, 4, 4, 0]} /></BarChart></ResponsiveContainer></div>
-            <p className="mt-2 text-xs text-slate-400">Rankings reflect recorded activity, not normalized area, coverage, or independently verified fire severity.</p>
+
+          <div className="flex items-start gap-3 rounded-xl border border-[#252D34] bg-[#151A1F] p-4 text-xs leading-6 text-[#9BA8B2]">
+            <Info size={18} className="mt-1 shrink-0 text-sky-400" />
+            <p>
+              <strong className="text-[#E8EDF0]">Methodology & Attribution:</strong> Detection points were assigned to administrative polygons represented by the {data.boundaryYear} boundary snapshot, then deduplicated by sensor, region, acquisition date and {data.gridKm} km equal-area cell. Boundaries are not time-varying. Regions sharing a grid cell can each count that cell-day. Unmatched detections are excluded. Boundary data: geoBoundaries / DataMeet India / Election Commission of India, {data.boundaryLicense}. Displayed month labels use YYYY-MM (e.g., {monthLabel(`${year}-01`)}).
+            </p>
           </div>
-        </div>
-        <div className="mt-6 flex items-start gap-3 rounded-xl border border-sky-500/20 bg-sky-500/[0.06] p-4 text-sm leading-6 text-slate-300"><Info size={19} className="mt-1 shrink-0 text-sky-400" /><p><strong>Methodology:</strong> Detection points were assigned to administrative polygons represented by the {data.boundaryYear} boundary snapshot, then deduplicated by sensor, region, acquisition date and {data.gridKm} km equal-area cell. Boundaries are not time-varying. Regions sharing a grid cell can each count that cell-day. Unmatched detections are excluded. MODIS and VIIRS raw OGCD are not physically calibrated or directly comparable. Boundary data: geoBoundaries / DataMeet India / Election Commission of India, {data.boundaryLicense}.</p></div>
-        <p className="mt-3 text-xs text-slate-500">Displayed month labels use YYYY-MM. Example: {monthLabel(`${year}-01`)}.</p>
-      </>}
-    </section>
+        </>
+      )}
+    </div>
   )
 }

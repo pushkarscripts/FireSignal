@@ -1,12 +1,6 @@
-
 import { useEffect, useState } from 'react'
-import {
-  Activity, AlertTriangle, Layers3, Moon, Sun
-} from 'lucide-react'
-import {
-  Bar, BarChart, CartesianGrid, Legend,
-  ResponsiveContainer, Tooltip, XAxis, YAxis
-} from 'recharts'
+import { Activity, AlertTriangle, Layers3, Moon, Sun } from 'lucide-react'
+import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
 type GridResult = {
   grid_km: number
@@ -42,8 +36,7 @@ type AnalyzerData = {
   calibration_status: string
 }
 
-const number = (value: number) =>
-  value.toLocaleString('en-IN')
+const number = (value: number) => value.toLocaleString('en-IN')
 
 export default function SensorShiftAnalyzer() {
   const [data, setData] = useState<AnalyzerData | null>(null)
@@ -65,7 +58,7 @@ export default function SensorShiftAnalyzer() {
 
   if (error) {
     return (
-      <div className="rounded-xl border border-red-500/30 p-5 text-red-300">
+      <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-5 text-sm text-red-300">
         Sensor Shift Analyzer error: {error}
       </div>
     )
@@ -73,23 +66,15 @@ export default function SensorShiftAnalyzer() {
 
   if (!data) {
     return (
-      <p className="py-8 text-slate-400">
+      <div className="rounded-xl border border-[#252D34] bg-[#151A1F] p-8 text-center text-sm text-[#9BA8B2]">
         Loading Sensor Shift Analyzer...
-      </p>
+      </div>
     )
   }
 
-  const grid = data.grid_comparison.find(
-    (item) => item.grid_km === selectedGrid
-  )
-
-  const period = data.daynight.find(
-    (item) => item.period === selectedPeriod
-  )
-
-  const periodRatio = period && period.modis_ogcd > 0
-    ? period.viirs_ogcd / period.modis_ogcd
-    : null
+  const grid = data.grid_comparison.find((item) => item.grid_km === selectedGrid)
+  const period = data.daynight.find((item) => item.period === selectedPeriod)
+  const periodRatio = period && period.modis_ogcd > 0 ? period.viirs_ogcd / period.modis_ogcd : null
 
   const agreementBars = [
     {
@@ -105,44 +90,39 @@ export default function SensorShiftAnalyzer() {
   ]
 
   return (
-    <section className="mt-8 space-y-6">
-      <div>
-        <div className="flex items-center gap-3">
-          <Layers3 className="text-orange-400" size={25} />
-          <h2 className="text-2xl font-semibold">
-            Sensor Shift Analyzer
-          </h2>
+    <div className="space-y-6">
+      <div className="flex items-start gap-3">
+        <div className="rounded-lg border border-[#F0A34A]/30 bg-[#F0A34A]/10 p-2 text-[#F0A34A]">
+          <Layers3 size={22} />
         </div>
-
-        <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-400">
-          Explore how spatial aggregation, observation
-          conditions, and temporal comparisons change the
-          apparent differences between MODIS and VIIRS.
-        </p>
+        <div>
+          <h3 className="text-xl font-semibold text-[#E8EDF0]">Sensor Shift Analyzer</h3>
+          <p className="mt-1 max-w-3xl text-sm leading-6 text-[#9BA8B2]">
+            Explore how spatial aggregation, observation conditions, and temporal comparisons change the apparent differences between MODIS and VIIRS.
+          </p>
+        </div>
       </div>
 
       {/* GRID COMPARISON */}
-      <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
+      <div className="rounded-2xl border border-[#252D34] bg-[#151A1F] p-5 sm:p-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h3 className="text-lg font-semibold">
-              Spatial Harmonization
-            </h3>
-            <p className="mt-1 text-sm text-slate-400">
-              Occupied grid-cell-days at different
-              equal-area grid resolutions.
+            <h4 className="text-lg font-semibold text-[#E8EDF0]">Spatial Harmonization</h4>
+            <p className="mt-1 text-sm text-[#9BA8B2]">
+              Occupied grid-cell-days at different equal-area grid resolutions.
             </p>
           </div>
 
-          <div className="flex rounded-xl border border-white/10 bg-black/20 p-1">
+          <div className="flex rounded-lg border border-[#252D34] bg-[#0B0E11] p-1">
             {[1, 5, 10].map((size) => (
               <button
                 key={size}
+                type="button"
                 onClick={() => setSelectedGrid(size)}
-                className={`rounded-lg px-4 py-2 text-sm transition ${
+                className={`rounded-md px-4 py-1.5 text-sm font-medium transition ${
                   selectedGrid === size
-                    ? 'bg-orange-500 text-slate-950 font-semibold'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'bg-[#F0A34A] text-[#0B0E11] font-semibold'
+                    : 'text-[#9BA8B2] hover:text-[#E8EDF0]'
                 }`}
               >
                 {size} km
@@ -154,32 +134,20 @@ export default function SensorShiftAnalyzer() {
         {grid && (
           <>
             <div className="mt-6 grid gap-4 sm:grid-cols-3">
-              <Metric
-                label="MODIS OGCD"
-                value={number(grid.modis_ogcd)}
-              />
-              <Metric
-                label="VIIRS OGCD"
-                value={number(grid.viirs_ogcd)}
-              />
-              <Metric
-                label="VIIRS / MODIS"
-                value={`${grid.ratio.toFixed(2)}×`}
-                highlight
-              />
+              <Metric label="MODIS OGCD" value={number(grid.modis_ogcd)} />
+              <Metric label="VIIRS OGCD" value={number(grid.viirs_ogcd)} />
+              <Metric label="VIIRS / MODIS" value={`${grid.ratio.toFixed(2)}×`} highlight />
             </div>
 
-            <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
-              <p className="text-xs uppercase tracking-wide text-slate-500">
-                Raw detection ratio
+            <div className="mt-5 rounded-xl border border-[#252D34] bg-[#0B0E11] p-4">
+              <p className="text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">
+                Raw Detection Ratio
               </p>
-              <p className="mt-1 text-xl font-semibold text-slate-200">
+              <p className="mt-1 text-xl font-semibold text-[#E8EDF0]">
                 {data.raw_ratio.toFixed(2)}×
               </p>
-              <p className="mt-2 text-sm text-slate-400">
-                Common-grid aggregation changes the
-                observed ratio, but does not establish
-                calibration or equivalent sensor sensitivity.
+              <p className="mt-2 text-xs leading-5 text-[#9BA8B2]">
+                Common-grid aggregation changes the observed ratio, but does not establish calibration or equivalent sensor sensitivity.
               </p>
             </div>
           </>
@@ -187,15 +155,12 @@ export default function SensorShiftAnalyzer() {
       </div>
 
       {/* DAY / NIGHT */}
-      <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
+      <div className="rounded-2xl border border-[#252D34] bg-[#151A1F] p-5 sm:p-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h3 className="text-lg font-semibold">
-              Day vs Night Observations
-            </h3>
-            <p className="mt-1 text-sm text-slate-400">
-              Compare 5 km occupied grid-cell-days by
-              satellite day/night classification.
+            <h4 className="text-lg font-semibold text-[#E8EDF0]">Day vs Night Observations</h4>
+            <p className="mt-1 text-sm text-[#9BA8B2]">
+              Compare 5 km occupied grid-cell-days by satellite day/night classification.
             </p>
           </div>
 
@@ -206,11 +171,12 @@ export default function SensorShiftAnalyzer() {
             ].map(({ label, icon: Icon }) => (
               <button
                 key={label}
+                type="button"
                 onClick={() => setSelectedPeriod(label)}
-                className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm ${
+                className={`flex items-center gap-2 rounded-lg px-3.5 py-1.5 text-sm font-medium transition ${
                   selectedPeriod === label
-                    ? 'bg-orange-500 text-slate-950 font-semibold'
-                    : 'border border-white/10 text-slate-400'
+                    ? 'bg-[#F0A34A] text-[#0B0E11] font-semibold'
+                    : 'border border-[#252D34] bg-[#0B0E11] text-[#9BA8B2] hover:text-[#E8EDF0]'
                 }`}
               >
                 <Icon size={16} />
@@ -222,87 +188,51 @@ export default function SensorShiftAnalyzer() {
 
         {period && (
           <div className="mt-6 grid gap-4 sm:grid-cols-3">
-            <Metric
-              label="MODIS OGCD"
-              value={number(period.modis_ogcd)}
-            />
-            <Metric
-              label="VIIRS OGCD"
-              value={number(period.viirs_ogcd)}
-            />
+            <Metric label="MODIS OGCD" value={number(period.modis_ogcd)} />
+            <Metric label="VIIRS OGCD" value={number(period.viirs_ogcd)} />
             <Metric
               label="VIIRS / MODIS"
-              value={
-                periodRatio === null
-                  ? 'Undefined'
-                  : `${periodRatio.toFixed(2)}×`
-              }
+              value={periodRatio === null ? 'Undefined' : `${periodRatio.toFixed(2)}×`}
               highlight
             />
           </div>
         )}
 
-        <p className="mt-5 text-sm leading-6 text-slate-400">
-          Day and night totals can overlap in the same
-          grid-cell-day, so they should not be added to
-          reproduce the overall OGCD total.
+        <p className="mt-4 text-xs leading-5 text-[#9BA8B2]">
+          Day and night totals can overlap in the same grid-cell-day, so they should not be added to reproduce the overall OGCD total.
         </p>
       </div>
 
       {/* CORRELATION */}
-      <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
+      <div className="rounded-2xl border border-[#252D34] bg-[#151A1F] p-5 sm:p-6">
         <div className="flex items-center gap-2">
-          <Activity size={20} className="text-orange-400" />
-          <h3 className="text-lg font-semibold">
-            Cross-Sensor Agreement
-          </h3>
+          <Activity size={20} className="text-[#F0A34A]" />
+          <h4 className="text-lg font-semibold text-[#E8EDF0]">Cross-Sensor Agreement</h4>
         </div>
 
-        <p className="mt-2 text-sm text-slate-400">
-          Agreement in daily activity levels compared with
-          agreement in day-to-day changes.
+        <p className="mt-1 text-sm text-[#9BA8B2]">
+          Agreement in daily activity levels compared with agreement in day-to-day changes.
         </p>
 
         <div className="mt-6 h-72 w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={agreementBars}>
-              <CartesianGrid
-                stroke="#253044"
-                strokeDasharray="3 3"
-              />
-              <XAxis
-                dataKey="metric"
-                stroke="#94a3b8"
-              />
-              <YAxis
-                domain={[0, 1]}
-                stroke="#94a3b8"
-              />
+            <BarChart data={agreementBars} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+              <CartesianGrid stroke="#252D34" strokeDasharray="3 3" />
+              <XAxis dataKey="metric" stroke="#9BA8B2" tick={{ fontSize: 11 }} />
+              <YAxis domain={[0, 1]} stroke="#9BA8B2" tick={{ fontSize: 11 }} />
               <Tooltip
-                contentStyle={{
-                  background: '#101827',
-                  border: '1px solid #334155',
-                  borderRadius: 12,
-                }}
+                contentStyle={{ background: '#151A1F', border: '1px solid #252D34', borderRadius: 8, color: '#E8EDF0' }}
               />
-              <Legend />
-              <Bar
-                dataKey="Pearson"
-                fill="#fb923c"
-                radius={[5, 5, 0, 0]}
-              />
-              <Bar
-                dataKey="Spearman"
-                fill="#38bdf8"
-                radius={[5, 5, 0, 0]}
-              />
+              <Legend wrapperStyle={{ color: '#9BA8B2', fontSize: 12 }} />
+              <Bar dataKey="Pearson" fill="#F0A34A" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="Spearman" fill="#38BDF8" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
 
-        <p className="mt-3 text-sm text-slate-400">
+        <p className="mt-3 text-xs text-[#9BA8B2]">
           Direction of day-to-day changes agreed on{' '}
-          <strong className="text-white">
+          <strong className="text-[#E8EDF0]">
             {data.daily_change_agreement.direction_agreement_pct.toFixed(2)}%
           </strong>{' '}
           of comparable days.
@@ -310,38 +240,24 @@ export default function SensorShiftAnalyzer() {
       </div>
 
       {/* SCIENTIFIC WARNING */}
-      <div className="rounded-2xl border border-amber-500/20 bg-amber-500/[0.05] p-5">
+      <div className="rounded-2xl border border-[#F0A34A]/25 bg-[#F0A34A]/5 p-5">
         <div className="flex items-start gap-3">
-          <AlertTriangle
-            size={20}
-            className="mt-0.5 shrink-0 text-amber-400"
-          />
-
+          <AlertTriangle size={20} className="mt-0.5 shrink-0 text-[#F0A34A]" />
           <div>
-            <h3 className="font-semibold text-amber-300">
-              Scientific interpretation
-            </h3>
-            <p className="mt-2 text-sm leading-6 text-slate-300">
-              These comparisons use NASA FIRMS hotspot
-              detections for India, March–May 2023.
-              Spatial aggregation reduces repeated
-              observations within grid-cell-days, but does
-              not correct differences in sensor sensitivity,
-              overpass schedules, confidence thresholds,
-              or observation completeness.
+            <h4 className="font-semibold text-[#F0A34A]">Scientific interpretation</h4>
+            <p className="mt-2 text-sm leading-6 text-[#9BA8B2]">
+              These comparisons use NASA FIRMS hotspot detections for India, March–May 2023. Spatial aggregation reduces repeated observations within grid-cell-days, but does not correct differences in sensor sensitivity, overpass schedules, confidence thresholds, or observation completeness.
             </p>
-            <p className="mt-2 text-sm text-slate-400">
-              Calibration status:{' '}
-              <strong className="text-amber-300">
-                {data.calibration_status === 'not_validated'
-                  ? 'Not validated'
-                  : data.calibration_status}
+            <p className="mt-2 text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">
+              Calibration Status:{' '}
+              <strong className="text-[#F0A34A]">
+                {data.calibration_status === 'not_validated' ? 'Not validated' : data.calibration_status}
               </strong>
             </p>
           </div>
         </div>
       </div>
-    </section>
+    </div>
   )
 }
 
@@ -355,13 +271,9 @@ function Metric({
   highlight?: boolean
 }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-black/20 p-4">
-      <p className="text-xs text-slate-400">{label}</p>
-      <p
-        className={`mt-2 text-2xl font-semibold ${
-          highlight ? 'text-orange-400' : 'text-white'
-        }`}
-      >
+    <div className="rounded-xl border border-[#252D34] bg-[#0B0E11] p-4">
+      <p className="text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">{label}</p>
+      <p className={`mt-2 text-2xl font-semibold ${highlight ? 'text-[#F0A34A]' : 'text-[#E8EDF0]'}`}>
         {value}
       </p>
     </div>

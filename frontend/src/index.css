@@ -1,20 +1,93 @@
 @import "tailwindcss";
 
+@theme {
+  --color-obs-bg: #0B0E11;
+  --color-obs-surface: #151A1F;
+  --color-obs-surface-elevated: #1B2127;
+  --color-obs-border: #252D34;
+  --color-obs-border-subtle: #1C2329;
+  --color-obs-accent: #F0A34A;
+  --color-obs-accent-hover: #F5B56E;
+  --color-obs-accent-active: #D98C35;
+  --color-obs-text: #E8EDF0;
+  --color-obs-text-muted: #9BA8B2;
+  --color-obs-text-subtle: #677580;
+}
+
 :root {
-  font-family: Inter, system-ui, -apple-system,
-    BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: #e2e8f0;
-  background: #080d18;
+  --obs-bg: #0B0E11;
+  --obs-surface: #151A1F;
+  --obs-surface-elevated: #1B2127;
+  --obs-border: #252D34;
+  --obs-border-subtle: #1C2329;
+  --obs-accent: #F0A34A;
+  --obs-accent-hover: #F5B56E;
+  --obs-text: #E8EDF0;
+  --obs-text-muted: #9BA8B2;
+  --obs-text-subtle: #677580;
+
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: #E8EDF0;
+  background-color: #0B0E11;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  background-color: #0B0E11;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 body {
   margin: 0;
   min-width: 320px;
+  background-color: #0B0E11;
+  color: #E8EDF0;
+  overflow-x: hidden;
 }
 
 * {
   box-sizing: border-box;
+}
+
+/* Visible keyboard focus state */
+:focus-visible {
+  outline: 2px solid #F0A34A;
+  outline-offset: 2px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Observational subtle scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0B0E11;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #252D34;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #36414B;
 }
