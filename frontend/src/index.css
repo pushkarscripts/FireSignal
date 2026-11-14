@@ -68,6 +68,11 @@ body {
   outline-offset: 2px;
 }
 
+/* Suppress generic outline on programmatic focus targets while preserving custom accessible indicators */
+[tabindex="-1"]:focus {
+  outline: none;
+}
+
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after {
