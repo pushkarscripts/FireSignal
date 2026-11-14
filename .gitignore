@@ -29,3 +29,6 @@ data/figures/
 .DS_Store
 Thumbs.db
 .vscode/
+
+# Regenerable historical processing outputs
+data/historical/
