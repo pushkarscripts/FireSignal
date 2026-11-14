@@ -1,0 +1,9 @@
+{
+  "experiment": "daily_changes_03",
+  "grid_km": 5,
+  "days_compared": 91,
+  "pearson": 0.47758103590291506,
+  "spearman": 0.5366317872602441,
+  "direction_agreement_pct": 65.93406593406593,
+  "days_with_both_changing": 91
+}

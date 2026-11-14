@@ -28,24 +28,24 @@
     "median_ratio": 7.482157112208752
   },
   "daily_change_agreement": {
-    "pearson": 0.4776,
-    "spearman": 0.5366,
-    "direction_agreement_pct": 65.93
+    "pearson": 0.47758103590291506,
+    "spearman": 0.5366317872602441,
+    "direction_agreement_pct": 65.93406593406593
   },
   "daynight": [
     {
       "period": "Daytime",
       "modis_ogcd": 22588,
       "viirs_ogcd": 127900,
-      "pearson": 0.8762,
-      "spearman": 0.9147
+      "pearson": 0.8762436563981468,
+      "spearman": 0.9147133308782752
     },
     {
       "period": "Nighttime",
       "modis_ogcd": 3599,
       "viirs_ogcd": 43755,
-      "pearson": 0.7316,
-      "spearman": 0.7934
+      "pearson": 0.7315585212487329,
+      "spearman": 0.7933569577370025
     }
   ],
   "calibration_status": "not_validated"

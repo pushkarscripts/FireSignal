@@ -20,6 +20,18 @@ with open(
 ) as file:
     agreement = json.load(file)
 
+with open(
+    PROCESSED / "experiment_03_summary.json",
+    encoding="utf-8",
+) as file:
+    changes = json.load(file)
+
+with open(
+    PROCESSED / "experiment_04_summary.json",
+    encoding="utf-8",
+) as file:
+    daynight = json.load(file)
+
 analyzer = {
     "period": "2023-03-01 to 2023-05-31",
     "region": "India",
@@ -30,27 +42,14 @@ analyzer = {
         "spearman": agreement["spearman_rho"],
         "median_ratio": agreement["median_daily_ratio"],
     },
+    
     "daily_change_agreement": {
-        "pearson": 0.4776,
-        "spearman": 0.5366,
-        "direction_agreement_pct": 65.93,
+        "pearson": changes["pearson"],
+        "spearman": changes["spearman"],
+        "direction_agreement_pct":
+            changes["direction_agreement_pct"],
     },
-    "daynight": [
-        {
-            "period": "Daytime",
-            "modis_ogcd": 22588,
-            "viirs_ogcd": 127900,
-            "pearson": 0.8762,
-            "spearman": 0.9147,
-        },
-        {
-            "period": "Nighttime",
-            "modis_ogcd": 3599,
-            "viirs_ogcd": 43755,
-            "pearson": 0.7316,
-            "spearman": 0.7934,
-        },
-    ],
+    "daynight": daynight["results"],
     "calibration_status": "not_validated",
 }
 

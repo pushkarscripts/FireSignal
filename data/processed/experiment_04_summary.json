@@ -1,0 +1,20 @@
+{
+  "experiment": "daynight_04",
+  "grid_km": 5,
+  "results": [
+    {
+      "period": "Daytime",
+      "modis_ogcd": 22588,
+      "viirs_ogcd": 127900,
+      "pearson": 0.8762436563981468,
+      "spearman": 0.9147133308782752
+    },
+    {
+      "period": "Nighttime",
+      "modis_ogcd": 3599,
+      "viirs_ogcd": 43755,
+      "pearson": 0.7315585212487329,
+      "spearman": 0.7933569577370025
+    }
+  ]
+}

@@ -73,6 +73,7 @@ def daily_occupied(df, period):
     return daily.reindex(dates, fill_value=0)
 
 def main():
+    results = []
     print("FIRESIGNAL — EXPERIMENT 04")
     print("DAY/NIGHT SENSOR COMPARISON")
     print("=" * 48)
@@ -112,7 +113,35 @@ def main():
         print(f"Daily Pearson r: {pearson:.4f}")
         print(f"Daily Spearman rho: {spearman:.4f}")
 
+        results.append({
+            "period": (
+                "Daytime" if period == "D"
+                else "Nighttime"
+            ),
+            "modis_ogcd": modis_total,
+            "viirs_ogcd": viirs_total,
+            "pearson": float(pearson),
+            "spearman": float(spearman),
+        })
+
     print("\nEXPERIMENT 04 COMPLETED")
+
+    import json
+
+    output = ROOT / "data" / "processed"
+    output.mkdir(parents=True, exist_ok=True)
+
+    with open(
+        output / "experiment_04_summary.json",
+        "w",
+        encoding="utf-8",
+    ) as file:
+        json.dump({
+            "experiment": "daynight_04",
+            "grid_km": 5,
+            "results": results,
+        }, file, indent=2)
+
 
 if __name__ == "__main__":
     main()
