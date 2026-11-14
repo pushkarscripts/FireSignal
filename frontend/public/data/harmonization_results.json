@@ -1,0 +1,311 @@
+{
+  "title": "India monthly 5 km OGCD cross-sensor evaluation",
+  "status": "empirical_statistical_adjustment_not_physical_calibration",
+  "metric": "occupied_grid_cell_days",
+  "geography": "India",
+  "grid_km": 5,
+  "splits": {
+    "train": "2013-2021",
+    "validation": "2022-2023",
+    "test": "2024-2025"
+  },
+  "method": {
+    "global": "least-squares VIIRS-to-MODIS slope through origin",
+    "seasonal": "calendar-month slope shrunk towards global slope (9 training years, strength=6)",
+    "selection": "lowest validation MAE among raw VIIRS, global, seasonal; RMSE tiebreaker",
+    "reference": "training-period same-calendar-month MODIS median"
+  },
+  "global_factor": 0.192984,
+  "seasonal_factors": {
+    "1": 0.18765,
+    "2": 0.185823,
+    "3": 0.192884,
+    "4": 0.18539,
+    "5": 0.172862,
+    "6": 0.152338,
+    "7": 0.191913,
+    "8": 0.214416,
+    "9": 0.185458,
+    "10": 0.241934,
+    "11": 0.240675,
+    "12": 0.185153
+  },
+  "validation_metrics": {
+    "raw_viirs": {
+      "n_months": 24,
+      "mae": 20686.92,
+      "rmse": 27636.6,
+      "bias": 20686.92
+    },
+    "global_adjustment": {
+      "n_months": 24,
+      "mae": 840.33,
+      "rmse": 1253.09,
+      "bias": 137.22
+    },
+    "seasonal_adjustment": {
+      "n_months": 24,
+      "mae": 618.73,
+      "rmse": 903.11,
+      "bias": 155.44
+    },
+    "modis_seasonal_median": {
+      "n_months": 24,
+      "mae": 1036.88,
+      "rmse": 1662.81,
+      "bias": -321.46
+    }
+  },
+  "selected_model": "seasonal_adjustment",
+  "test_metrics": {
+    "raw_viirs": {
+      "n_months": 24,
+      "mae": 21335.04,
+      "rmse": 29811.31,
+      "bias": 21335.04
+    },
+    "global_adjustment": {
+      "n_months": 24,
+      "mae": 675.34,
+      "rmse": 1088.57,
+      "bias": -58.69
+    },
+    "seasonal_adjustment": {
+      "n_months": 24,
+      "mae": 542.16,
+      "rmse": 821.22,
+      "bias": -84.42
+    },
+    "modis_seasonal_median": {
+      "n_months": 24,
+      "mae": 1728.96,
+      "rmse": 2705.85,
+      "bias": -719.21
+    }
+  },
+  "test_months": [
+    {
+      "month": "2024-01",
+      "modis": 3906,
+      "viirs": 18460,
+      "selected_prediction": 3464.02,
+      "global_prediction": 3562.48,
+      "seasonal_prediction": 3464.02,
+      "modis_seasonal_median": 3339
+    },
+    {
+      "month": "2024-02",
+      "modis": 5116,
+      "viirs": 24672,
+      "selected_prediction": 4584.63,
+      "global_prediction": 4761.3,
+      "seasonal_prediction": 4584.63,
+      "modis_seasonal_median": 4521
+    },
+    {
+      "month": "2024-03",
+      "modis": 9548,
+      "viirs": 53367,
+      "selected_prediction": 10293.65,
+      "global_prediction": 10298.97,
+      "seasonal_prediction": 10293.65,
+      "modis_seasonal_median": 11356
+    },
+    {
+      "month": "2024-04",
+      "modis": 10993,
+      "viirs": 74759,
+      "selected_prediction": 13859.55,
+      "global_prediction": 14427.28,
+      "seasonal_prediction": 13859.55,
+      "modis_seasonal_median": 10047
+    },
+    {
+      "month": "2024-05",
+      "modis": 7514,
+      "viirs": 46026,
+      "selected_prediction": 7956.15,
+      "global_prediction": 8882.27,
+      "seasonal_prediction": 7956.15,
+      "modis_seasonal_median": 5169
+    },
+    {
+      "month": "2024-06",
+      "modis": 1688,
+      "viirs": 8345,
+      "selected_prediction": 1271.26,
+      "global_prediction": 1610.45,
+      "seasonal_prediction": 1271.26,
+      "modis_seasonal_median": 561
+    },
+    {
+      "month": "2024-07",
+      "modis": 278,
+      "viirs": 782,
+      "selected_prediction": 150.08,
+      "global_prediction": 150.91,
+      "seasonal_prediction": 150.08,
+      "modis_seasonal_median": 200
+    },
+    {
+      "month": "2024-08",
+      "modis": 237,
+      "viirs": 994,
+      "selected_prediction": 213.13,
+      "global_prediction": 191.83,
+      "seasonal_prediction": 213.13,
+      "modis_seasonal_median": 249
+    },
+    {
+      "month": "2024-09",
+      "modis": 451,
+      "viirs": 2619,
+      "selected_prediction": 485.72,
+      "global_prediction": 505.42,
+      "seasonal_prediction": 485.72,
+      "modis_seasonal_median": 410
+    },
+    {
+      "month": "2024-10",
+      "modis": 1907,
+      "viirs": 10307,
+      "selected_prediction": 2493.62,
+      "global_prediction": 1989.08,
+      "seasonal_prediction": 2493.62,
+      "modis_seasonal_median": 5742
+    },
+    {
+      "month": "2024-11",
+      "modis": 7859,
+      "viirs": 30072,
+      "selected_prediction": 7237.57,
+      "global_prediction": 5803.41,
+      "seasonal_prediction": 7237.57,
+      "modis_seasonal_median": 8895
+    },
+    {
+      "month": "2024-12",
+      "modis": 5138,
+      "viirs": 25933,
+      "selected_prediction": 4801.57,
+      "global_prediction": 5004.65,
+      "seasonal_prediction": 4801.57,
+      "modis_seasonal_median": 2976
+    },
+    {
+      "month": "2025-01",
+      "modis": 5082,
+      "viirs": 23720,
+      "selected_prediction": 4451.06,
+      "global_prediction": 4577.58,
+      "seasonal_prediction": 4451.06,
+      "modis_seasonal_median": 3339
+    },
+    {
+      "month": "2025-02",
+      "modis": 8083,
+      "viirs": 38034,
+      "selected_prediction": 7067.6,
+      "global_prediction": 7339.95,
+      "seasonal_prediction": 7067.6,
+      "modis_seasonal_median": 4521
+    },
+    {
+      "month": "2025-03",
+      "modis": 20806,
+      "viirs": 99277,
+      "selected_prediction": 19148.97,
+      "global_prediction": 19158.85,
+      "seasonal_prediction": 19148.97,
+      "modis_seasonal_median": 11356
+    },
+    {
+      "month": "2025-04",
+      "modis": 13037,
+      "viirs": 65908,
+      "selected_prediction": 12218.67,
+      "global_prediction": 12719.18,
+      "seasonal_prediction": 12218.67,
+      "modis_seasonal_median": 10047
+    },
+    {
+      "month": "2025-05",
+      "modis": 4851,
+      "viirs": 31540,
+      "selected_prediction": 5452.07,
+      "global_prediction": 6086.71,
+      "seasonal_prediction": 5452.07,
+      "modis_seasonal_median": 5169
+    },
+    {
+      "month": "2025-06",
+      "modis": 704,
+      "viirs": 5297,
+      "selected_prediction": 806.94,
+      "global_prediction": 1022.24,
+      "seasonal_prediction": 806.94,
+      "modis_seasonal_median": 561
+    },
+    {
+      "month": "2025-07",
+      "modis": 211,
+      "viirs": 1084,
+      "selected_prediction": 208.03,
+      "global_prediction": 209.19,
+      "seasonal_prediction": 208.03,
+      "modis_seasonal_median": 200
+    },
+    {
+      "month": "2025-08",
+      "modis": 209,
+      "viirs": 1281,
+      "selected_prediction": 274.67,
+      "global_prediction": 247.21,
+      "seasonal_prediction": 274.67,
+      "modis_seasonal_median": 249
+    },
+    {
+      "month": "2025-09",
+      "modis": 362,
+      "viirs": 2208,
+      "selected_prediction": 409.49,
+      "global_prediction": 426.11,
+      "seasonal_prediction": 409.49,
+      "modis_seasonal_median": 410
+    },
+    {
+      "month": "2025-10",
+      "modis": 1842,
+      "viirs": 7533,
+      "selected_prediction": 1822.49,
+      "global_prediction": 1453.75,
+      "seasonal_prediction": 1822.49,
+      "modis_seasonal_median": 5742
+    },
+    {
+      "month": "2025-11",
+      "modis": 7775,
+      "viirs": 29568,
+      "selected_prediction": 7116.27,
+      "global_prediction": 5706.14,
+      "seasonal_prediction": 7116.27,
+      "modis_seasonal_median": 8895
+    },
+    {
+      "month": "2025-12",
+      "modis": 6594,
+      "viirs": 34446,
+      "selected_prediction": 6377.78,
+      "global_prediction": 6647.52,
+      "seasonal_prediction": 6377.78,
+      "modis_seasonal_median": 2976
+    }
+  ],
+  "limitations": [
+    "No ground-truth fires or burned-area validation.",
+    "Not normalized for satellite overpass opportunity, clouds, or coverage.",
+    "Aggregated India-wide monthly data; not validated for local geography or daily inference.",
+    "Monthly pairs are serially and seasonally dependent; metrics are descriptive.",
+    "Test set is evaluated after selecting the model on validation years; do not tune based on test outcomes."
+  ]
+}

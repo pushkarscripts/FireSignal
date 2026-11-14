@@ -1,3 +1,4 @@
+import HarmonizationResults from './HarmonizationResults'
 import HistoricalCalendar from './HistoricalCalendar'
 import SensorShiftAnalyzer from './SensorShiftAnalyzer'
 import { useEffect, useMemo, useState } from 'react'
@@ -194,7 +195,8 @@ function App() {
             </section>
 
             <SensorShiftAnalyzer />
-
+            <HarmonizationResults />
+            
           </>
         )}
         </div>
