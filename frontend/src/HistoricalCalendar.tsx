@@ -3,12 +3,46 @@ import { CalendarDays, Download, Info, Satellite, TrendingUp } from 'lucide-reac
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
 type Sensor = 'modis' | 'viirs'
+type ViewMode = 'activity' | 'anomaly'
 type MonthRecord = { month: string; modis: number | null; viirs: number | null }
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 const format = (n: number) => n.toLocaleString('en-IN')
 // Ordered low-to-high colors, deliberately distinct on a dark background.
 const ACTIVITY_COLORS = ['#233653', '#287B91', '#E4BA56', '#F17B38', '#C73535'] as const
 const ACTIVITY_LABELS = ['Very low', 'Low', 'Moderate', 'High', 'Very high'] as const
+const ANOMALY_COLORS = ['#2563eb', '#67a8dd', '#475569', '#f59e0b', '#dc2626'] as const
+const ANOMALY_LABELS = ['< -50%', '-50% to -20%', 'Within ±20%', '+20% to +50%', '> +50%'] as const
+
+function median(numbers: number[]): number | null {
+  if (numbers.length === 0) return null
+  const sorted = [...numbers].sort((a, b) => a - b)
+  const middle = Math.floor(sorted.length / 2)
+  return sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2
+}
+
+// Leave-one-year-out seasonal baseline: compare each month only with the
+// same calendar month in OTHER years of the selected sensor's archive.
+function anomalyFor(month: string, sensor: Sensor, records: MonthRecord[]) {
+  const current = records.find(row => row.month === month)?.[sensor] ?? null
+  if (current === null) return null
+  const calendarMonth = month.slice(5)
+  const baseline = median(records.filter(row => row.month.slice(5) === calendarMonth && row.month !== month)
+    .map(row => row[sensor]).filter((value): value is number => value !== null))
+  if (baseline === null || baseline <= 0) return null
+  return { percent: ((current - baseline) / baseline) * 100, baseline }
+}
+
+function anomalyBand(percent: number) {
+  if (percent < -50) return 0
+  if (percent < -20) return 1
+  if (percent <= 20) return 2
+  if (percent <= 50) return 3
+  return 4
+}
+
+function signedPercent(value: number) {
+  return `${value > 0 ? '+' : ''}${value.toFixed(1)}%`
+}
 
 function activityBand(value: number, sortedValues: number[]): number {
   // Equal-frequency bands based on the selected sensor's archived months.
@@ -34,6 +68,7 @@ function validRecord(value: unknown): value is MonthRecord {
 export default function HistoricalCalendar() {
   const [records, setRecords] = useState<MonthRecord[]>([])
   const [sensor, setSensor] = useState<Sensor>('modis')
+  const [viewMode, setViewMode] = useState<ViewMode>('activity')
   const [selected, setSelected] = useState('2023-03')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -62,6 +97,7 @@ export default function HistoricalCalendar() {
   const sortedValues = useMemo(() => [...values].sort((a, b) => a - b), [values])
   const selectedRecord = lookup.get(selected)
   const selectedValue = selectedRecord?.[sensor] ?? null
+  const selectedAnomaly = useMemo(() => anomalyFor(selected, sensor, records), [selected, sensor, records])
   const selectedYear = Number(selected.slice(0, 4))
   const annual = useMemo(() => years.map(year => {
     const months = MONTHS.map((_, index) => lookup.get(`${year}-${String(index + 1).padStart(2, '0')}`)?.[sensor] ?? null)
@@ -117,6 +153,18 @@ export default function HistoricalCalendar() {
             </div>
           </div>
 
+          <div className="mt-5 flex flex-wrap items-center gap-2" role="group" aria-label="Calendar display mode">
+            {([['activity', 'Relative activity'], ['anomaly', 'Seasonal anomaly']] as const).map(([mode, label]) => (
+              <button key={mode} type="button" aria-pressed={viewMode === mode} onClick={() => setViewMode(mode)}
+                className={`rounded-lg border px-4 py-2 text-sm transition ${viewMode === mode ? 'border-orange-400 bg-orange-500/15 text-orange-200' : 'border-white/10 text-slate-400 hover:text-white'}`}>
+                {label}
+              </button>
+            ))}
+          </div>
+          <p className="mt-2 text-xs text-slate-400">{viewMode === 'anomaly'
+            ? 'Each month is compared with the median of that calendar month in other years for the selected sensor. This is a descriptive detection anomaly, not a change in fire risk.'
+            : 'Colors show the rank of monthly activity within the selected sensor archive.'}</p>
+
           <div className="mt-7 overflow-x-auto pb-2">
             <div className="min-w-[590px]">
               <div className="mb-2 grid grid-cols-[56px_repeat(12,minmax(0,1fr))] gap-1.5">
@@ -128,14 +176,17 @@ export default function HistoricalCalendar() {
                   {MONTHS.map((_, index) => {
                     const key = `${year}-${String(index + 1).padStart(2, '0')}`
                     const value = lookup.get(key)?.[sensor] ?? null
-                    const band = value === null ? null : activityBand(value, sortedValues)
+                    const anomaly = value === null ? null : anomalyFor(key, sensor, records)
+                    const band = viewMode === 'activity'
+                      ? (value === null ? null : activityBand(value, sortedValues))
+                      : (anomaly === null ? null : anomalyBand(anomaly.percent))
                     const active = selected === key
                     return <button key={key} type="button" disabled={value === null} onClick={() => setSelected(key)}
-                      title={`${key}: ${value === null ? 'Unavailable / no archived detections' : `${format(value)} OGCD · ${ACTIVITY_LABELS[band!] } relative activity`}`}
-                      aria-label={`${key}, ${sensor.toUpperCase()}: ${value === null ? 'unavailable' : `${format(value)} occupied grid-cell-days`}`}
+                      title={`${key}: ${value === null ? 'Unavailable / no archived detections' : `${format(value)} OGCD`}${viewMode === 'anomaly' ? (anomaly ? ` · ${signedPercent(anomaly.percent)} vs leave-one-year-out median (${format(anomaly.baseline)} OGCD)` : ' · anomaly unavailable') : (band !== null ? ` · ${ACTIVITY_LABELS[band]} relative activity` : '')}`}
+                      aria-label={`${key}, ${sensor.toUpperCase()}: ${value === null ? 'unavailable' : `${format(value)} occupied grid-cell-days`}${viewMode === 'anomaly' && anomaly ? `, ${signedPercent(anomaly.percent)} seasonal anomaly` : ''}`}
                       aria-pressed={active}
                       className={`h-6 rounded-[4px] border transition ${active ? 'border-white ring-2 ring-orange-400 ring-offset-1 ring-offset-[#080d18]' : 'border-white/10'} ${value === null ? 'cursor-not-allowed bg-slate-700/30' : 'hover:brightness-125'}`}
-                      style={band === null ? undefined : { backgroundColor: ACTIVITY_COLORS[band] }} />
+                      style={band === null ? undefined : { backgroundColor: viewMode === 'activity' ? ACTIVITY_COLORS[band] : ANOMALY_COLORS[band] }} />
                   })}
                 </div>)}
               </div>
@@ -143,10 +194,10 @@ export default function HistoricalCalendar() {
           </div>
 
           <div className="mt-5 flex flex-wrap items-center gap-3 text-xs text-slate-300">
-            {ACTIVITY_COLORS.map((color, index) => (
+            {(viewMode === 'activity' ? ACTIVITY_COLORS : ANOMALY_COLORS).map((color, index) => (
               <span key={color} className="flex items-center gap-1.5">
                 <span className="h-3.5 w-5 rounded-sm border border-white/10" style={{ backgroundColor: color }} />
-                {ACTIVITY_LABELS[index]}
+                {viewMode === 'activity' ? ACTIVITY_LABELS[index] : ANOMALY_LABELS[index]}
               </span>
             ))}
             <span className="flex items-center gap-1.5">
@@ -154,8 +205,9 @@ export default function HistoricalCalendar() {
             </span>
           </div>
           <p className="mt-3 text-xs leading-5 text-slate-500">
-            Five equal-frequency activity bands based on the selected sensor’s monthly OGCD values (2003–2025 for MODIS; 2013–2025 for VIIRS).
-            Colors indicate relative rank, not absolute fire risk. Compare colors within a sensor only.
+            {viewMode === 'activity'
+              ? 'Five equal-frequency activity bands based on the selected sensor’s monthly OGCD values (2003–2025 for MODIS; 2013–2025 for VIIRS). Colors indicate relative rank, not absolute fire risk.'
+              : 'Anomaly = (observed OGCD − leave-one-year-out same-month median) / baseline × 100. Baselines exclude the selected year; values are not observation-normalized or cross-sensor calibrated.'}
           </p>
         </div>
 
@@ -165,6 +217,10 @@ export default function HistoricalCalendar() {
             <p className="mt-2 text-xl font-semibold">{MONTHS[Number(selected.slice(5)) - 1]} {selectedYear}</p>
             <p className="mt-3 text-3xl font-semibold text-orange-400">{selectedValue === null ? 'N/A' : format(selectedValue)}</p>
             <p className="mt-1 text-xs text-slate-400">{selectedValue === null ? 'No archived detections / unavailable' : `${sensor.toUpperCase()} occupied grid-cell-days`}</p>
+            {viewMode === 'anomaly' && <div className="mt-3 border-t border-white/10 pt-3">
+              <p className="text-sm text-slate-300">Seasonal anomaly: <strong className="text-white">{selectedAnomaly ? signedPercent(selectedAnomaly.percent) : 'Unavailable'}</strong></p>
+              <p className="mt-1 text-xs text-slate-400">{selectedAnomaly ? `Other-year same-month median: ${format(selectedAnomaly.baseline)} OGCD` : 'No valid baseline for this month'}</p>
+            </div>}
           </div>
           <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
             <p className="text-xs uppercase tracking-wide text-slate-400">{selectedYear} annual activity</p>
@@ -180,7 +236,7 @@ export default function HistoricalCalendar() {
 
         <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 sm:p-7">
           <div className="flex items-center gap-2"><TrendingUp size={19} className="text-orange-400" /><h3 className="text-lg font-semibold">Annual hotspot activity</h3></div>
-          <p className="mt-2 text-sm text-slate-400">Annual sums of monthly OGCD for {sensor.toUpperCase()}. Gaps represent unavailable years.</p>
+          <p className="mt-2 text-sm text-slate-400">Annual sums of raw monthly OGCD for {sensor.toUpperCase()} (not anomalies). Gaps represent unavailable years.</p>
           <div className="mt-6 h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={annual}>
