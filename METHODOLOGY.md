@@ -96,7 +96,7 @@ To resolve double-counting from multiple detections within a single pixel footpr
 
 $$\text{OGCD}(c, d, s) = \begin{cases} 1 & \text{if } \ge 1 \text{ detection by sensor } s \text{ in cell } c \text{ on date } d \\ 0 & \text{otherwise} \end{cases}$$
 
-where $c = (c_x, c_y)$ represents the spatial grid cell index, $d$ denotes the UTC acquisition date, and $s \in \{\text{MODIS}, \text{VIIRS}\}$.
+where $c = (c_x, c_y)$ represents the spatial grid cell index, $d$ denotes the UTC acquisition date, and $s \in \lbrace\text{MODIS}, \text{VIIRS}\rbrace$.
 
 Daily national activity is computed by summing occupied grid cells across the spatial domain $\mathcal{C}$:
 
@@ -247,7 +247,7 @@ FROM cells GROUP BY sensor, day ORDER BY sensor, day;
 
 To compare fire activity in a specific month against historical seasonal norms, FireSignal calculates leave-one-year-out baseline medians:
 
-$$\text{Median}_{\text{ref}}(m, y) = \text{Median}\left( \left\{ \text{OGCD}_{\text{monthly}}(m, k) \mid k \in \mathcal{Y}, k \ne y \right\} \right)$$
+$$\text{Median}_{\text{ref}}(m, y) = \text{Median}\left( \left\lbrace \text{OGCD}_{\text{monthly}}(m, k) \mid k \in \mathcal{Y}, k \ne y \right\rbrace \right)$$
 
 where $\mathcal{Y}$ represents the set of all available observation years. The seasonal anomaly is defined as:
 
@@ -292,7 +292,7 @@ To stabilize seasonal factors, FireSignal applies empirical Bayes shrinkage towa
 $$\beta_m = \frac{N_m b_m + \lambda \hat{\beta}_{\text{global}}}{N_m + \lambda}$$
 
 where:
-- $b_m = \frac{\sum_{i \in \text{Train}_m} x_i y_i}{\sum_{i \in \text{Train}_m} x_i^2}$ is the unregularized least-squares slope for calendar month $m \in \{1, \dots, 12\}$.
+- $b_m = \frac{\sum_{i \in \text{Train}_m} x_i y_i}{\sum_{i \in \text{Train}_m} x_i^2}$ is the unregularized least-squares slope for calendar month $m \in \lbrace 1, \dots, 12 \rbrace$.
 - $N_m$ is the number of training years observing calendar month $m$ ($N_m = 9$ across all months in 2013–2021).
 - $\lambda = 6$ is the fixed shrinkage parameter (equivalent to 6 pseudo-years of weight pulled toward the global factor).
 
