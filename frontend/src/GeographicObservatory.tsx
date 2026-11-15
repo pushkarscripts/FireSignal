@@ -38,46 +38,23 @@ import {
 
 export type { Sensor, RegionalRecord, RegionSummary }
 
-export interface RegionalPayload {
-  metric: string
-  projection: string
-  gridKm: number
-  boundaryYear: number
-  boundaryLicense: string
-  regions: string[]
-  records: RegionalRecord[]
-  limitations?: string[]
-}
+import {
+  type RegionalPayload,
+  type GeoFeature,
+  type GeoJSONPayload,
+  type ProjectedFeature,
+  SVG_WIDTH,
+  SVG_HEIGHT,
+  SMALL_TERRITORIES,
+  projectToSvg,
+  projectFeatures,
+  getCachedObservatoryData,
+  hasCachedObservatoryData,
+  clearObservatoryCache,
+  loadObservatoryDatasets,
+} from './observatoryCache.ts'
 
-export interface GeoFeature {
-  type: 'Feature'
-  properties: {
-    shapeName: string
-    shapeISO: string
-    shapeID?: string
-    shapeGroup?: string
-    shapeType?: string
-  }
-  geometry: {
-    type: 'Polygon' | 'MultiPolygon'
-    coordinates: number[][][] | number[][][][]
-  }
-}
-
-export interface GeoJSONPayload {
-  type: 'FeatureCollection'
-  features: GeoFeature[]
-}
-
-export interface ProjectedFeature {
-  name: string
-  iso: string
-  type: string
-  path: string
-  centroid: [number, number]
-  bbox: { minX: number; maxX: number; minY: number; maxY: number; width: number; height: number }
-  isSmall: boolean
-}
+export type { RegionalPayload, GeoFeature, GeoJSONPayload, ProjectedFeature }
 
 interface MonthlyDatum {
   monthKey: string
@@ -92,91 +69,6 @@ interface MonthlyDatum {
 interface GeographicObservatoryProps {
   onNavigateToHistorical?: (regionName?: string) => void
 }
-
-// ============================================================================
-// PROJECTION ENGINE (Albers Equal Area Conic tailored for India)
-// Standard parallels: 12°N and 28°N, Central meridian: 82.5°E, Origin: 22°N
-// ============================================================================
-const TO_RAD = Math.PI / 180
-const PHI1 = 12 * TO_RAD
-const PHI2 = 28 * TO_RAD
-const PHI0 = 22 * TO_RAD
-const LAM0 = 82.5 * TO_RAD
-
-const N = (Math.sin(PHI1) + Math.sin(PHI2)) / 2
-const C = Math.cos(PHI1) ** 2 + 2 * N * Math.sin(PHI1)
-const RHO0 = Math.sqrt(C - 2 * N * Math.sin(PHI0)) / N
-
-function albersIndia([lon, lat]: [number, number]): [number, number] {
-  const lam = lon * TO_RAD
-  const phi = lat * TO_RAD
-  const rho = Math.sqrt(Math.max(0, C - 2 * N * Math.sin(phi))) / N
-  const theta = N * (lam - LAM0)
-  const x = rho * Math.sin(theta)
-  const y = RHO0 - rho * Math.cos(theta)
-  return [x, y]
-}
-
-const SVG_WIDTH = 800
-const SVG_HEIGHT = 920
-const SVG_PADDING = 18
-
-// Extents across India ADM1 bounding box in projection space
-const BBOX_MIN_X = -0.2282130213171272
-const BBOX_MAX_X = 0.2294701860600999
-const BBOX_MIN_Y = -0.25998209279995166
-const BBOX_MAX_Y = 0.26368683637424395
-
-const PROJ_SCALE = Math.min(
-  (SVG_WIDTH - 2 * SVG_PADDING) / (BBOX_MAX_X - BBOX_MIN_X),
-  (SVG_HEIGHT - 2 * SVG_PADDING) / (BBOX_MAX_Y - BBOX_MIN_Y)
-)
-const PROJ_CX = (BBOX_MIN_X + BBOX_MAX_X) / 2
-const PROJ_CY = (BBOX_MIN_Y + BBOX_MAX_Y) / 2
-
-function projectToSvg(coord: [number, number]): [number, number] {
-  const [x, y] = albersIndia(coord)
-  const sx = SVG_WIDTH / 2 + (x - PROJ_CX) * PROJ_SCALE
-  const sy = SVG_HEIGHT / 2 - (y - PROJ_CY) * PROJ_SCALE
-  return [Number(sx.toFixed(1)), Number(sy.toFixed(1))]
-}
-
-function ringToSvgPath(ring: number[][]): string {
-  if (!ring || ring.length === 0) return ''
-  let path = ''
-  for (let i = 0; i < ring.length; i++) {
-    const pt = ring[i]
-    if (!pt || pt.length < 2) continue
-    const [sx, sy] = projectToSvg([pt[0] as number, pt[1] as number])
-    path += (i === 0 ? 'M' : 'L') + sx + ',' + sy
-  }
-  return path + 'Z'
-}
-
-function geometryToSvgPath(geometry: GeoFeature['geometry']): string {
-  if (geometry.type === 'Polygon') {
-    return (geometry.coordinates as number[][][]).map(ringToSvgPath).join(' ')
-  }
-  if (geometry.type === 'MultiPolygon') {
-    return (geometry.coordinates as number[][][][])
-      .map((poly) => poly.map(ringToSvgPath).join(' '))
-      .join(' ')
-  }
-  return ''
-}
-
-// Small territories that require highlighted centroid pins / discovery chips
-const SMALL_TERRITORIES = [
-  'Chandīgarh',
-  'Delhi',
-  'Goa',
-  'Lakshadweep',
-  'Puducherry',
-  'Dādra and Nagar Haveli and Damān and Diu',
-  'Andaman and Nicobar Islands',
-  'Sikkim',
-]
-
 
 function formatNumber(val: number): string {
   return val.toLocaleString('en-IN')
@@ -205,10 +97,14 @@ const GRATICULE_MERIDIANS = [72, 76, 80, 84, 88, 92, 96].map((lon) => {
 // COMPONENT
 // ============================================================================
 export default function GeographicObservatory({ onNavigateToHistorical }: GeographicObservatoryProps) {
+  // Check if datasets and projections are already warm in memory
+  const initialCache = getCachedObservatoryData()
+  const isWarm = hasCachedObservatoryData()
+
   // State
-  const [geoData, setGeoData] = useState<GeoJSONPayload | null>(null)
-  const [regionalPayload, setRegionalPayload] = useState<RegionalPayload | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [geoData, setGeoData] = useState<GeoJSONPayload | null>(initialCache.geoData)
+  const [regionalPayload, setRegionalPayload] = useState<RegionalPayload | null>(initialCache.regionalData)
+  const [loading, setLoading] = useState(!isWarm)
   const [error, setError] = useState<string | null>(null)
 
   const [sensor, setSensor] = useState<Sensor>('MODIS')
@@ -226,106 +122,63 @@ export default function GeographicObservatory({ onNavigateToHistorical }: Geogra
   const mapSvgContainerRef = useRef<HTMLDivElement>(null)
 
   // --------------------------------------------------------------------------
-  // Lazy data loading (GeoJSON + Regional Monthly dataset concurrently)
+  // Data loading (Uses in-memory cache on return navigation)
   // --------------------------------------------------------------------------
-  useEffect(() => {
-    const controller = new AbortController()
-
-    async function loadDatasets() {
-      try {
-        setLoading(true)
-        setError(null)
-
-        const [geoRes, dataRes] = await Promise.all([
-          fetch(`${import.meta.env.BASE_URL}data/india_adm1_simplified.geojson`, { signal: controller.signal }),
-          fetch(`${import.meta.env.BASE_URL}data/regional_monthly_5km.json`, { signal: controller.signal }),
-        ])
-
-        if (!geoRes.ok) throw new Error(`Failed to load boundaries (HTTP ${geoRes.status})`)
-        if (!dataRes.ok) throw new Error(`Failed to load regional data (HTTP ${dataRes.status})`)
-
-        const geoJson = (await geoRes.json()) as GeoJSONPayload
-        const dataJson = (await dataRes.json()) as RegionalPayload
-
-        if (!geoJson.features || geoJson.features.length !== 36) {
-          throw new Error('Boundary asset does not contain the expected 36 ADM1 features')
-        }
-        if (!Array.isArray(dataJson.records) || !Array.isArray(dataJson.regions)) {
-          throw new Error('Regional dataset has invalid schema')
-        }
-
-        setGeoData(geoJson)
-        setRegionalPayload(dataJson)
-      } catch (err: unknown) {
-        if (err instanceof Error && err.name === 'AbortError') return
+  const handleRetry = useCallback(() => {
+    clearObservatoryCache()
+    setError(null)
+    setLoading(true)
+    loadObservatoryDatasets({
+      baseUrl: import.meta.env.BASE_URL,
+      forceRefresh: true,
+    })
+      .then((data) => {
+        setGeoData(data.geoData)
+        setRegionalPayload(data.regionalData)
+        setLoading(false)
+      })
+      .catch((err: unknown) => {
         setError(err instanceof Error ? err.message : 'Unknown loading error occurred')
-      } finally {
-        if (!controller.signal.aborted) {
-          setLoading(false)
-        }
-      }
+        setLoading(false)
+      })
+  }, [])
+
+  useEffect(() => {
+    // If cache is already warm, skip network fetch entirely
+    if (hasCachedObservatoryData()) {
+      return
     }
 
-    loadDatasets()
-    return () => controller.abort()
+    let isMounted = true
+
+    loadObservatoryDatasets({
+      baseUrl: import.meta.env.BASE_URL,
+    })
+      .then((data) => {
+        if (isMounted) {
+          setGeoData(data.geoData)
+          setRegionalPayload(data.regionalData)
+          setLoading(false)
+        }
+      })
+      .catch((err: unknown) => {
+        if (isMounted) {
+          setError(err instanceof Error ? err.message : 'Unknown loading error occurred')
+          setLoading(false)
+        }
+      })
+
+    return () => {
+      isMounted = false
+    }
   }, [])
 
   // --------------------------------------------------------------------------
-  // Projection compilation (Calculated once from GeoJSON)
+  // Projection compilation (Reuses cached projection array)
   // --------------------------------------------------------------------------
   const projectedFeatures = useMemo<ProjectedFeature[]>(() => {
     if (!geoData) return []
-
-    return geoData.features.map((feature) => {
-      const name = feature.properties.shapeName
-      const iso = feature.properties.shapeISO
-      const type = feature.properties.shapeType || 'ADM1'
-      const path = geometryToSvgPath(feature.geometry)
-
-      // Calculate centroid and bounding box
-      let minX = Infinity,
-        maxX = -Infinity,
-        minY = Infinity,
-        maxY = -Infinity
-      let sumX = 0,
-        sumY = 0,
-        count = 0
-
-      function scanCoords(c: unknown) {
-        if (Array.isArray(c) && typeof c[0] === 'number') {
-          const [sx, sy] = projectToSvg([c[0] as number, c[1] as number])
-          if (sx < minX) minX = sx
-          if (sx > maxX) maxX = sx
-          if (sy < minY) minY = sy
-          if (sy > maxY) maxY = sy
-          sumX += sx
-          sumY += sy
-          count++
-        } else if (Array.isArray(c)) {
-          c.forEach(scanCoords)
-        }
-      }
-
-      scanCoords(feature.geometry.coordinates)
-
-      const w = maxX - minX
-      const h = maxY - minY
-      const isSmall = w * h < 2600 || SMALL_TERRITORIES.includes(name)
-      const centroid: [number, number] = [
-        count > 0 ? Number((sumX / count).toFixed(1)) : (minX + maxX) / 2,
-        count > 0 ? Number((sumY / count).toFixed(1)) : (minY + maxY) / 2,
-      ]
-
-      return {
-        name,
-        iso,
-        type,
-        path,
-        centroid,
-        bbox: { minX, maxX, minY, maxY, width: w, height: h },
-        isSmall,
-      }
-    })
+    return projectFeatures(geoData)
   }, [geoData])
 
   // Fast ISO lookup map
@@ -534,7 +387,7 @@ export default function GeographicObservatory({ onNavigateToHistorical }: Geogra
           {error ?? 'Observatory datasets could not be retrieved from local storage.'}
         </p>
         <button
-          onClick={() => window.location.reload()}
+          onClick={handleRetry}
           className="mt-5 inline-flex items-center gap-2 rounded-xl border border-rose-700/50 bg-rose-900/30 px-4 py-2 text-xs font-semibold text-rose-200 hover:bg-rose-900/50"
         >
           <RotateCcw size={14} />
