@@ -1023,7 +1023,7 @@ function App() {
                   Fire<span className="text-[#F0A34A]">Signal</span>
                 </span>
                 <span className="text-[10px] font-mono uppercase tracking-wider text-[#9BA8B2] leading-none mt-0.5">
-                  Earth Observation · India
+                  Satellite Fire Intelligence · India
                 </span>
               </div>
             </a>
@@ -1095,7 +1095,7 @@ function App() {
               <span className="font-medium text-[#E8EDF0]">NASA Space Apps Challenge 2026</span>
             </p>
             <p className="font-mono text-[11px] text-[#9BA8B2]">
-              Data courtesy NASA FIRMS (MODIS & VIIRS)
+              <span className="font-semibold">Data courtesy:</span> NASA FIRMS (MODIS & VIIRS)
             </p>
           </div>
         </div>
