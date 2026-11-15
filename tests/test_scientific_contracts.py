@@ -10,6 +10,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 REGIONAL_DATA_PATH = ROOT / "frontend" / "public" / "data" / "regional_monthly_5km.json"
 GEOJSON_DATA_PATH = ROOT / "frontend" / "public" / "data" / "india_adm1_simplified.geojson"
+HISTORICAL_CALENDAR_PATH = ROOT / "frontend" / "public" / "data" / "historical_calendar_5km.json"
+HARMONIZATION_PATH = ROOT / "frontend" / "public" / "data" / "harmonization_results.json"
 
 
 class TestScientificContracts(unittest.TestCase):
@@ -77,6 +79,43 @@ class TestScientificContracts(unittest.TestCase):
         missing = set(self.regional["regions"]) - observed_regions
         self.assertEqual(missing, {"Lakshadweep"})
         self.assertEqual(len(observed_regions), 35)
+
+
+class TestNationalHarmonizationContracts(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        with open(HISTORICAL_CALENDAR_PATH, "r", encoding="utf-8") as f:
+            cls.calendar = json.load(f)
+        with open(HARMONIZATION_PATH, "r", encoding="utf-8") as f:
+            cls.harm = json.load(f)
+
+    def test_national_monthly_archive_coverage(self):
+        """All 276 historical months (2003-2025) are present without gaps."""
+        self.assertEqual(len(self.calendar), 276)
+        expected = [f"{y}-{m:02d}" for y in range(2003, 2026) for m in range(1, 13)]
+        actual = [r["month"] for r in self.calendar]
+        self.assertEqual(actual, expected)
+
+    def test_sensor_observation_completeness(self):
+        """MODIS complete for 2003-2025; VIIRS strictly null in 2003-2012 and complete in 2013-2025."""
+        for r in self.calendar:
+            self.assertIsInstance(r["modis"], int)
+            self.assertGreater(r["modis"], 0)
+            if r["month"] < "2013-01":
+                self.assertIsNone(r["viirs"])
+            else:
+                self.assertIsInstance(r["viirs"], int)
+                self.assertGreater(r["viirs"], 0)
+
+    def test_seasonal_factors_exact_schema(self):
+        """Harmonization results contain all 12 positive finite seasonal factors."""
+        factors = self.harm["seasonal_factors"]
+        self.assertEqual(set(factors.keys()), {str(m) for m in range(1, 13)})
+        for m in range(1, 13):
+            val = factors[str(m)]
+            self.assertIsInstance(val, float)
+            self.assertGreater(val, 0)
+            self.assertLess(val, 1.0)
 
 
 if __name__ == "__main__":

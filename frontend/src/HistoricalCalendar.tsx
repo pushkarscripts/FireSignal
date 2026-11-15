@@ -1,12 +1,20 @@
 import { useEffect, useMemo, useState } from 'react'
 import { CalendarDays, Download, Info, Satellite, TrendingUp } from 'lucide-react'
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import {
+  type UnifiedMonthRecord,
+  synthesizeUnifiedCalendar,
+  computeUnifiedAnomaly,
+  formatUnifiedCSV,
+  validateSeasonalFactors,
+} from './unifiedCalendar.ts'
 
-type Sensor = 'modis' | 'viirs'
+type Sensor = 'harmonized' | 'modis' | 'viirs'
 type ViewMode = 'activity' | 'anomaly'
 type MonthRecord = { month: string; modis: number | null; viirs: number | null }
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 const format = (n: number) => n.toLocaleString('en-IN')
+
 // Ordered low-to-high colors, calibrated for visibility on Dark Observatory surfaces
 const ACTIVITY_COLORS = ['#233653', '#287B91', '#E4BA56', '#F17B38', '#C73535'] as const
 const ACTIVITY_LABELS = ['Very low', 'Low', 'Moderate', 'High', 'Very high'] as const
@@ -20,16 +28,19 @@ function median(numbers: number[]): number | null {
   return sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2
 }
 
-// Leave-one-year-out seasonal baseline: compare each month only with the
-// same calendar month in OTHER years of the selected sensor's archive.
-function anomalyFor(month: string, sensor: Sensor, records: MonthRecord[]) {
+// Leave-one-year-out seasonal baseline for raw sensor series
+function anomalyForRaw(month: string, sensor: 'modis' | 'viirs', records: MonthRecord[]) {
   const current = records.find(row => row.month === month)?.[sensor] ?? null
   if (current === null) return null
   const calendarMonth = month.slice(5)
-  const baseline = median(records.filter(row => row.month.slice(5) === calendarMonth && row.month !== month)
-    .map(row => row[sensor]).filter((value): value is number => value !== null))
+  const peers = records
+    .filter(row => row.month.slice(5) === calendarMonth && row.month !== month)
+    .map(row => row[sensor])
+    .filter((value): value is number => value !== null)
+  if (peers.length < 3) return null
+  const baseline = median(peers)
   if (baseline === null || baseline <= 0) return null
-  return { percent: ((current - baseline) / baseline) * 100, baseline }
+  return { percent: ((current - baseline) / baseline) * 100, baseline, peerYears: peers.length }
 }
 
 function anomalyBand(percent: number) {
@@ -65,7 +76,8 @@ function validRecord(value: unknown): value is MonthRecord {
 
 export default function HistoricalCalendar() {
   const [records, setRecords] = useState<MonthRecord[]>([])
-  const [sensor, setSensor] = useState<Sensor>('modis')
+  const [unifiedRecords, setUnifiedRecords] = useState<UnifiedMonthRecord[]>([])
+  const [sensor, setSensor] = useState<Sensor>('harmonized')
   const [viewMode, setViewMode] = useState<ViewMode>('activity')
   const [selected, setSelected] = useState('2023-03')
   const [loading, setLoading] = useState(true)
@@ -73,40 +85,90 @@ export default function HistoricalCalendar() {
 
   useEffect(() => {
     const controller = new AbortController()
-    fetch(`${import.meta.env.BASE_URL}data/historical_calendar_5km.json`, { signal: controller.signal })
-      .then(response => {
-        if (!response.ok) throw new Error(`HTTP ${response.status}`)
-        return response.json()
-      })
-      .then((json: unknown) => {
-        if (!Array.isArray(json) || json.length === 0 || !json.every(validRecord)) {
+    const base = import.meta.env.BASE_URL
+    Promise.all([
+      fetch(`${base}data/historical_calendar_5km.json`, { signal: controller.signal })
+        .then(response => {
+          if (!response.ok) throw new Error(`Historical data HTTP ${response.status}`)
+          return response.json()
+        }),
+      fetch(`${base}data/harmonization_results.json`, { signal: controller.signal })
+        .then(response => {
+          if (!response.ok) throw new Error(`Harmonization data HTTP ${response.status}`)
+          return response.json()
+        }),
+    ])
+      .then(([calJson, harmJson]: [unknown, unknown]) => {
+        if (!Array.isArray(calJson) || calJson.length === 0 || !calJson.every(validRecord)) {
           throw new Error('Historical calendar JSON is missing or invalid')
         }
-        setRecords(json)
+        const harmObj = harmJson as { seasonal_factors?: unknown }
+        const factors = validateSeasonalFactors(harmObj?.seasonal_factors)
+        const synthesized = synthesizeUnifiedCalendar(calJson, factors)
+        setRecords(calJson)
+        setUnifiedRecords(synthesized)
       })
-      .catch((reason: Error) => { if (reason.name !== 'AbortError') setError(reason.message) })
-      .finally(() => { if (!controller.signal.aborted) setLoading(false) })
+      .catch((reason: Error) => {
+        if (reason.name !== 'AbortError') setError(reason.message)
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setLoading(false)
+      })
     return () => controller.abort()
   }, [])
 
-  const lookup = useMemo(() => new Map(records.map(row => [row.month, row])), [records])
+  const rawLookup = useMemo(() => new Map(records.map(row => [row.month, row])), [records])
+  const unifiedLookup = useMemo(() => new Map(unifiedRecords.map(row => [row.month, row])), [unifiedRecords])
   const years = useMemo(() => [...new Set(records.map(row => Number(row.month.slice(0, 4))))].sort((a, b) => a - b), [records])
-  const values = useMemo(() => records.map(row => row[sensor]).filter((value): value is number => value !== null), [records, sensor])
+
+  // Active series values based on current sensor view
+  const values = useMemo(() => {
+    if (sensor === 'harmonized') {
+      return unifiedRecords.map(row => row.harmonized).filter((v): v is number => Number.isFinite(v))
+    }
+    return records.map(row => row[sensor]).filter((v): v is number => v !== null)
+  }, [sensor, records, unifiedRecords])
+
   const sortedValues = useMemo(() => [...values].sort((a, b) => a - b), [values])
-  const selectedRecord = lookup.get(selected)
-  const selectedValue = selectedRecord?.[sensor] ?? null
-  const selectedAnomaly = useMemo(() => anomalyFor(selected, sensor, records), [selected, sensor, records])
+
+  // Selected cell data
+  const selectedUnified = unifiedLookup.get(selected)
+  const selectedRaw = rawLookup.get(selected)
   const selectedYear = Number(selected.slice(0, 4))
+  const selectedValue = sensor === 'harmonized'
+    ? (selectedUnified?.harmonized ?? null)
+    : (selectedRaw?.[sensor] ?? null)
+
+  const selectedAnomaly = useMemo(() => {
+    if (sensor === 'harmonized') {
+      return computeUnifiedAnomaly(selected, unifiedRecords)
+    }
+    return anomalyForRaw(selected, sensor, records)
+  }, [sensor, selected, unifiedRecords, records])
+
+  // Annual aggregations for chart
   const annual = useMemo(() => years.map(year => {
-    const months = MONTHS.map((_, index) => lookup.get(`${year}-${String(index + 1).padStart(2, '0')}`)?.[sensor] ?? null)
-    return { year: String(year), total: months.every(value => value !== null) ? months.reduce<number>((sum, value) => sum + (value ?? 0), 0) : null }
-  }), [years, lookup, sensor])
+    if (sensor === 'harmonized') {
+      const months = MONTHS.map((_, index) => unifiedLookup.get(`${year}-${String(index + 1).padStart(2, '0')}`)?.harmonized ?? null)
+      return {
+        year: String(year),
+        total: months.every(v => v !== null) ? Math.round(months.reduce<number>((sum, v) => sum + (v ?? 0), 0)) : null,
+      }
+    }
+    const months = MONTHS.map((_, index) => rawLookup.get(`${year}-${String(index + 1).padStart(2, '0')}`)?.[sensor] ?? null)
+    return {
+      year: String(year),
+      total: months.every(v => v !== null) ? months.reduce<number>((sum, v) => sum + (v ?? 0), 0) : null,
+    }
+  }), [years, sensor, rawLookup, unifiedLookup])
+
   const yearTotal = annual.find(row => row.year === String(selectedYear))?.total ?? null
   const availableMonths = values.length
 
   function downloadCSV() {
-    const lines = ['month,modis_ogcd,viirs_ogcd', ...records.map(row => `${row.month},${row.modis ?? ''},${row.viirs ?? ''}`)]
-    const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8' })
+    if (unifiedRecords.length === 0) return
+    const csvContent = formatUnifiedCSV(unifiedRecords)
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' })
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
@@ -129,7 +191,7 @@ export default function HistoricalCalendar() {
           </div>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-[#9BA8B2]">
             India · 2003–2025 · NASA FIRMS · occupied 5 km equal-area grid-cell-days (OGCD).
-            Explore monthly hotspot activity across the available satellite records.
+            Explore long-term hotspot patterns across satellite observations and empirical cross-sensor harmonization.
           </p>
         </div>
         <button
@@ -144,7 +206,7 @@ export default function HistoricalCalendar() {
 
       {loading && (
         <div className="rounded-xl border border-[#252D34] bg-[#151A1F] p-8 text-center text-sm text-[#9BA8B2]">
-          Loading historical observations…
+          Loading historical observations and harmonization models…
         </div>
       )}
 
@@ -159,22 +221,28 @@ export default function HistoricalCalendar() {
           <div className="rounded-2xl border border-[#252D34] bg-[#151A1F] p-5 sm:p-7">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-2 text-sm text-[#9BA8B2]">
-                <Satellite size={17} className="text-[#F0A34A]" /> Select satellite sensor
+                <Satellite size={17} className="text-[#F0A34A]" /> Select series view
               </div>
-              <div className="flex rounded-lg border border-[#252D34] bg-[#0B0E11] p-1" role="group" aria-label="Satellite sensor">
-                {(['modis', 'viirs'] as const).map(item => (
+              <div className="flex flex-wrap rounded-lg border border-[#252D34] bg-[#0B0E11] p-1" role="group" aria-label="Satellite series mode">
+                {(
+                  [
+                    ['harmonized', 'Harmonized (Unified)'],
+                    ['modis', 'MODIS (Observed)'],
+                    ['viirs', 'VIIRS (Observed)'],
+                  ] as const
+                ).map(([item, label]) => (
                   <button
                     key={item}
                     type="button"
                     onClick={() => setSensor(item)}
                     aria-pressed={sensor === item}
-                    className={`rounded-md px-4 py-1.5 text-sm font-medium transition ${
+                    className={`rounded-md px-3.5 py-1.5 text-xs sm:text-sm font-medium transition ${
                       sensor === item
                         ? 'bg-[#F0A34A] text-[#0B0E11] font-semibold'
                         : 'text-[#9BA8B2] hover:text-[#E8EDF0]'
                     }`}
                   >
-                    {item.toUpperCase()}
+                    {label}
                   </button>
                 ))}
               </div>
@@ -199,8 +267,12 @@ export default function HistoricalCalendar() {
             </div>
             <p className="mt-2 text-xs text-[#9BA8B2]">
               {viewMode === 'anomaly'
-                ? 'Each month is compared with the median of that calendar month in other years for the selected sensor. This is a descriptive detection anomaly, not a change in fire risk.'
-                : 'Colors show the rank of monthly activity within the selected sensor archive.'}
+                ? sensor === 'harmonized'
+                  ? 'Each month is compared against the leave-one-year-out same-calendar-month median across the 2003–2025 harmonized baseline. Baseline departures reflect descriptive differences relative to historical medians, which can be influenced by multi-decadal changes in fire activity, environmental conditions, and sensor transition characteristics.'
+                  : `Each month is compared with the leave-one-year-out median of that calendar month in other years of the ${sensor.toUpperCase()} archive.`
+                : sensor === 'harmonized'
+                  ? 'Colors show quantile activity bands on the unified MODIS-equivalent OGCD scale (2003–2012 observed MODIS; 2013–2025 seasonally adjusted VIIRS).'
+                  : `Colors show the rank of monthly activity within the ${sensor.toUpperCase()} archive.`}
             </p>
 
             <div className="mt-6 overflow-x-auto pb-2">
@@ -214,37 +286,80 @@ export default function HistoricalCalendar() {
                   ))}
                 </div>
                 <div className="space-y-1.5">
-                  {years.map(year => (
-                    <div key={year} className="grid grid-cols-[56px_repeat(12,minmax(0,1fr))] gap-1.5">
-                      <span className="self-center text-xs font-mono tabular-nums text-[#9BA8B2]">{year}</span>
-                      {MONTHS.map((_, index) => {
-                        const key = `${year}-${String(index + 1).padStart(2, '0')}`
-                        const value = lookup.get(key)?.[sensor] ?? null
-                        const anomaly = value === null ? null : anomalyFor(key, sensor, records)
-                        const band = viewMode === 'activity'
-                          ? (value === null ? null : activityBand(value, sortedValues))
-                          : (anomaly === null ? null : anomalyBand(anomaly.percent))
-                        const active = selected === key
-                        return (
-                          <button
-                            key={key}
-                            type="button"
-                            disabled={value === null}
-                            onClick={() => setSelected(key)}
-                            title={`${key}: ${value === null ? 'Unavailable / no archived detections' : `${format(value)} OGCD`}${viewMode === 'anomaly' ? (anomaly ? ` · ${signedPercent(anomaly.percent)} vs leave-one-year-out median (${format(anomaly.baseline)} OGCD)` : ' · anomaly unavailable') : (band !== null ? ` · ${ACTIVITY_LABELS[band]} relative activity` : '')}`}
-                            aria-label={`${key}, ${sensor.toUpperCase()}: ${value === null ? 'unavailable' : `${format(value)} occupied grid-cell-days`}${viewMode === 'anomaly' && anomaly ? `, ${signedPercent(anomaly.percent)} seasonal anomaly` : ''}`}
-                            aria-pressed={active}
-                            className={`h-6 rounded-[4px] border transition ${
-                              active
-                                ? 'border-[#E8EDF0] ring-2 ring-[#F0A34A] ring-offset-1 ring-offset-[#0B0E11]'
-                                : 'border-[#252D34]'
-                            } ${value === null ? 'cursor-not-allowed bg-[#1B2127]/60' : 'hover:brightness-125'}`}
-                            style={band === null ? undefined : { backgroundColor: viewMode === 'activity' ? ACTIVITY_COLORS[band] : ANOMALY_COLORS[band] }}
-                          />
-                        )
-                      })}
-                    </div>
-                  ))}
+                  {years.map(year => {
+                    const isTransitionBoundary = sensor === 'harmonized' && year === 2013
+                    return (
+                      <div key={year}>
+                        {isTransitionBoundary && (
+                          <div className="my-2.5 flex items-center gap-2 border-y border-[#F0A34A]/30 bg-[#F0A34A]/5 py-1 px-2 text-[11px] font-mono text-[#F0A34A]">
+                            <span className="font-semibold uppercase tracking-wider">▲ 2003–2012: Observed MODIS</span>
+                            <span className="text-[#9BA8B2]">|</span>
+                            <span className="font-semibold uppercase tracking-wider">▼ 2013–2025: Harmonized VIIRS (S-NPP 375 m scaled to MODIS scale)</span>
+                          </div>
+                        )}
+                        <div className="grid grid-cols-[56px_repeat(12,minmax(0,1fr))] gap-1.5">
+                          <span className="self-center text-xs font-mono tabular-nums text-[#9BA8B2]">{year}</span>
+                          {MONTHS.map((_, index) => {
+                            const key = `${year}-${String(index + 1).padStart(2, '0')}`
+                            const rowUnified = unifiedLookup.get(key)
+                            const rowRaw = rawLookup.get(key)
+                            const value = sensor === 'harmonized'
+                              ? (rowUnified?.harmonized ?? null)
+                              : (rowRaw?.[sensor] ?? null)
+
+                            const cellAnomaly = sensor === 'harmonized'
+                              ? computeUnifiedAnomaly(key, unifiedRecords)
+                              : anomalyForRaw(key, sensor, records)
+
+                            const band = viewMode === 'activity'
+                              ? (value === null ? null : activityBand(value, sortedValues))
+                              : (cellAnomaly === null ? null : anomalyBand(cellAnomaly.percent))
+                            const active = selected === key
+
+                            const tooltipText = sensor === 'harmonized'
+                              ? `${key} [Harmonized]: ${value === null ? 'Unavailable' : `${format(Math.round(value))} MODIS-eq OGCD`}${
+                                  rowUnified?.provenance === 'OBSERVED_MODIS' ? ' (Observed MODIS)' : ` (VIIRS × ${rowUnified?.appliedFactor?.toFixed(4)})`
+                                }${
+                                  viewMode === 'anomaly'
+                                    ? cellAnomaly
+                                      ? ` · ${signedPercent(cellAnomaly.percent)} vs leave-out median (${format(Math.round(cellAnomaly.baseline))} OGCD, n=${cellAnomaly.peerYears} yrs)`
+                                      : ' · anomaly unavailable'
+                                    : band !== null
+                                      ? ` · ${ACTIVITY_LABELS[band]} relative activity`
+                                      : ''
+                                }`
+                              : `${key} [${sensor.toUpperCase()}]: ${value === null ? 'Unavailable' : `${format(value)} OGCD`}${
+                                  viewMode === 'anomaly'
+                                    ? cellAnomaly
+                                      ? ` · ${signedPercent(cellAnomaly.percent)} vs median (${format(Math.round(cellAnomaly.baseline))} OGCD)`
+                                      : ' · anomaly unavailable'
+                                    : band !== null
+                                      ? ` · ${ACTIVITY_LABELS[band]} relative activity`
+                                      : ''
+                                }`
+
+                            return (
+                              <button
+                                key={key}
+                                type="button"
+                                disabled={value === null}
+                                onClick={() => setSelected(key)}
+                                title={tooltipText}
+                                aria-label={tooltipText}
+                                aria-pressed={active}
+                                className={`h-6 rounded-[4px] border transition ${
+                                  active
+                                    ? 'border-[#E8EDF0] ring-2 ring-[#F0A34A] ring-offset-1 ring-offset-[#0B0E11]'
+                                    : 'border-[#252D34]'
+                                } ${value === null ? 'cursor-not-allowed bg-[#1B2127]/60' : 'hover:brightness-125'}`}
+                                style={band === null ? undefined : { backgroundColor: viewMode === 'activity' ? ACTIVITY_COLORS[band] : ANOMALY_COLORS[band] }}
+                              />
+                            )
+                          })}
+                        </div>
+                      </div>
+                    )
+                  })}
                 </div>
               </div>
             </div>
@@ -262,8 +377,8 @@ export default function HistoricalCalendar() {
             </div>
             <p className="mt-3 text-xs leading-5 text-[#9BA8B2]">
               {viewMode === 'activity'
-                ? 'Five equal-frequency activity bands based on the selected sensor’s monthly OGCD values (2003–2025 for MODIS; 2013–2025 for VIIRS). Colors indicate relative rank, not absolute fire risk.'
-                : 'Anomaly = (observed OGCD − leave-one-year-out same-month median) / baseline × 100. Baselines exclude the selected year; values are not observation-normalized or cross-sensor calibrated.'}
+                ? 'Five equal-frequency activity bands based on the active series distribution. Colors indicate relative rank within the record, not absolute fire risk or burned area.'
+                : 'Seasonal anomaly = (observed/modeled OGCD − leave-one-year-out same-month median) / baseline × 100. Baselines exclude the evaluated year. Values are descriptive detection anomalies, not changes in fire danger.'}
             </p>
           </div>
 
@@ -271,33 +386,165 @@ export default function HistoricalCalendar() {
             <div className="rounded-2xl border border-[#252D34] bg-[#151A1F] p-5">
               <p className="text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">Selected month</p>
               <p className="mt-2 text-xl font-semibold text-[#E8EDF0]">{MONTHS[Number(selected.slice(5)) - 1]} {selectedYear}</p>
-              <p className="mt-3 text-3xl font-semibold text-[#F0A34A]">{selectedValue === null ? 'N/A' : format(selectedValue)}</p>
-              <p className="mt-1 text-xs text-[#9BA8B2]">{selectedValue === null ? 'No archived detections / unavailable' : `${sensor.toUpperCase()} occupied grid-cell-days`}</p>
+              <p className="mt-3 text-3xl font-semibold text-[#F0A34A]">
+                {selectedValue === null ? 'N/A' : format(Math.round(selectedValue))}
+              </p>
+              <p className="mt-1 text-xs text-[#9BA8B2]">
+                {selectedValue === null
+                  ? 'No archived detections / unavailable'
+                  : sensor === 'harmonized'
+                    ? 'Harmonized MODIS-equivalent OGCD'
+                    : `${sensor.toUpperCase()} occupied grid-cell-days`}
+              </p>
+
               {viewMode === 'anomaly' && (
                 <div className="mt-3 border-t border-[#252D34] pt-3">
-                  <p className="text-sm text-[#E8EDF0]">Seasonal anomaly: <strong className="text-[#F0A34A]">{selectedAnomaly ? signedPercent(selectedAnomaly.percent) : 'Unavailable'}</strong></p>
-                  <p className="mt-1 text-xs text-[#9BA8B2]">{selectedAnomaly ? `Other-year same-month median: ${format(selectedAnomaly.baseline)} OGCD` : 'No valid baseline for this month'}</p>
+                  <p className="text-sm text-[#E8EDF0]">
+                    Seasonal anomaly: <strong className="text-[#F0A34A]">{selectedAnomaly ? signedPercent(selectedAnomaly.percent) : 'Unavailable'}</strong>
+                  </p>
+                  <p className="mt-1 text-xs text-[#9BA8B2]">
+                    {selectedAnomaly
+                      ? `Leave-one-out median: ${format(Math.round(selectedAnomaly.baseline))} OGCD (n=${selectedAnomaly.peerYears} years, mixed 2003–2025 baseline)`
+                      : 'No valid baseline for this month'}
+                  </p>
                 </div>
               )}
             </div>
+
             <div className="rounded-2xl border border-[#252D34] bg-[#151A1F] p-5">
               <p className="text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">{selectedYear} annual activity</p>
               <p className="mt-5 text-3xl font-semibold text-[#E8EDF0]">{yearTotal === null ? 'N/A' : format(yearTotal)}</p>
-              <p className="mt-1 text-xs text-[#9BA8B2]">{yearTotal === null ? 'Incomplete / unavailable year' : `${sensor.toUpperCase()} annual OGCD total`}</p>
+              <p className="mt-1 text-xs text-[#9BA8B2]">
+                {yearTotal === null
+                  ? 'Incomplete / unavailable year'
+                  : sensor === 'harmonized'
+                    ? 'Annual harmonized MODIS-equivalent OGCD'
+                    : `${sensor.toUpperCase()} annual OGCD total`}
+              </p>
             </div>
+
             <div className="rounded-2xl border border-[#252D34] bg-[#151A1F] p-5">
               <p className="text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">Months with detections</p>
-              <p className="mt-5 text-3xl font-semibold text-[#E8EDF0]">{availableMonths} <span className="text-lg text-[#9BA8B2]">/ {records.length}</span></p>
-              <p className="mt-1 text-xs text-[#9BA8B2]">{sensor.toUpperCase()} · archive presence, not verified observation completeness</p>
+              <p className="mt-5 text-3xl font-semibold text-[#E8EDF0]">
+                {availableMonths} <span className="text-lg text-[#9BA8B2]">/ {records.length}</span>
+              </p>
+              <p className="mt-1 text-xs text-[#9BA8B2]">
+                {sensor === 'harmonized'
+                  ? 'Continuous 2003–2025 harmonized historical indicator'
+                  : `${sensor.toUpperCase()} · archive presence, not verified completeness`}
+              </p>
             </div>
           </div>
+
+          {/* SCIENTIFIC PROVENANCE CARD FOR SELECTED MONTH */}
+          {sensor === 'harmonized' && selectedUnified && (
+            <div className="rounded-2xl border border-[#252D34] bg-[#151A1F] p-5 sm:p-6 space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#252D34] pb-3">
+                <div className="flex items-center gap-2">
+                  <span className="rounded-md border border-[#F0A34A]/40 bg-[#F0A34A]/10 px-2.5 py-0.5 text-xs font-mono font-semibold text-[#F0A34A]">
+                    {selectedUnified.provenance === 'OBSERVED_MODIS' ? 'OBSERVED MODIS' : 'HARMONIZED VIIRS'}
+                  </span>
+                  <span className="text-sm font-semibold text-[#E8EDF0]">
+                    Scientific Provenance · {selected}
+                  </span>
+                </div>
+                <span className="text-xs font-mono text-[#9BA8B2]">
+                  Split:{' '}
+                  {selectedUnified.split === 'PRE_VIIRS'
+                    ? 'Pre-VIIRS Baseline (2003–2012)'
+                    : selectedUnified.split === 'TRAIN'
+                      ? 'Model Training Split (2013–2021)'
+                      : selectedUnified.split === 'VALIDATION'
+                        ? 'Model Validation Split (2022–2023)'
+                        : 'Chronologically Held-Out Retrospective Test Split (2024–2025)'}
+                </span>
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 text-xs">
+                <div className="rounded-xl border border-[#252D34] bg-[#0B0E11] p-3.5">
+                  <p className="text-[#9BA8B2] uppercase font-mono tracking-wider">Harmonized Value</p>
+                  <p className="mt-1.5 text-lg font-semibold text-[#F0A34A] tabular-nums">
+                    {format(Math.round(selectedUnified.harmonized))} <span className="text-xs text-[#9BA8B2]">OGCD</span>
+                  </p>
+                  <p className="mt-1 text-[11px] text-[#9BA8B2] font-mono">
+                    Exact: {selectedUnified.harmonized.toFixed(2)}
+                  </p>
+                </div>
+
+                <div className="rounded-xl border border-[#252D34] bg-[#0B0E11] p-3.5">
+                  <p className="text-[#9BA8B2] uppercase font-mono tracking-wider">Observed MODIS</p>
+                  <p className="mt-1.5 text-lg font-semibold text-[#E8EDF0] tabular-nums">
+                    {selectedUnified.modis !== null ? format(selectedUnified.modis) : 'Unavailable'}{' '}
+                    <span className="text-xs text-[#9BA8B2]">OGCD</span>
+                  </p>
+                  <p className="mt-1 text-[11px] text-[#9BA8B2]">
+                    {selectedUnified.provenance === 'OBSERVED_MODIS' ? 'Primary observation' : 'Comparison reference'}
+                  </p>
+                </div>
+
+                <div className="rounded-xl border border-[#252D34] bg-[#0B0E11] p-3.5">
+                  <p className="text-[#9BA8B2] uppercase font-mono tracking-wider">Observed VIIRS</p>
+                  <p className="mt-1.5 text-lg font-semibold text-[#E8EDF0] tabular-nums">
+                    {selectedUnified.viirs !== null ? format(selectedUnified.viirs) : 'N/A'}{' '}
+                    <span className="text-xs text-[#9BA8B2]">OGCD</span>
+                  </p>
+                  <p className="mt-1 text-[11px] text-[#9BA8B2]">
+                    {selectedUnified.appliedFactor !== null
+                      ? `Factor β_${selectedUnified.calendarMonth} = ${selectedUnified.appliedFactor.toFixed(6)}`
+                      : 'Sensor not operational'}
+                  </p>
+                </div>
+
+                <div className="rounded-xl border border-[#252D34] bg-[#0B0E11] p-3.5">
+                  <p className="text-[#9BA8B2] uppercase font-mono tracking-wider">Co-observation Residual</p>
+                  <p className="mt-1.5 text-lg font-semibold tabular-nums text-[#E8EDF0]">
+                    {selectedUnified.coObservationResidual !== null ? (
+                      <>
+                        <span className={selectedUnified.coObservationResidual >= 0 ? 'text-amber-400' : 'text-blue-400'}>
+                          {selectedUnified.coObservationResidual >= 0 ? '+' : ''}
+                          {format(Math.round(selectedUnified.coObservationResidual))}
+                        </span>{' '}
+                        <span className="text-xs text-[#9BA8B2]">
+                          ({selectedUnified.modis ? ((selectedUnified.coObservationResidual / selectedUnified.modis) * 100).toFixed(1) : 0}%)
+                        </span>
+                      </>
+                    ) : (
+                      'N/A (Pre-2013)'
+                    )}
+                  </p>
+                  <p className="mt-1 text-[11px] text-[#9BA8B2]">
+                    {selectedUnified.coObservationResidual !== null ? 'Harmonized VIIRS − Observed MODIS' : 'Single-sensor era'}
+                  </p>
+                </div>
+              </div>
+
+              <div className="rounded-xl border border-[#252D34]/70 bg-[#0B0E11]/60 p-3 text-xs leading-5 text-[#9BA8B2]">
+                <strong className="text-[#E8EDF0]">Methodological Note: </strong>
+                {selectedUnified.year < 2013 ? (
+                  <span>
+                    Prior to January 2013, values represent direct Terra/Aqua MODIS observations. VIIRS (S-NPP) was launched in late 2011; operational FIRMS processing begins in 2013.
+                  </span>
+                ) : (
+                  <span>
+                    Values are derived from S-NPP VIIRS detections scaled to MODIS-equivalent OGCD using calendar-month shrinkage factor{' '}
+                    <code className="text-[#F0A34A]">β_{selectedUnified.calendarMonth} = {selectedUnified.appliedFactor?.toFixed(6)}</code>.
+                    Observed MODIS is preserved strictly as an empirical comparison reference, not as physical ground truth.
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
 
           <div className="rounded-2xl border border-[#252D34] bg-[#151A1F] p-5 sm:p-7">
             <div className="flex items-center gap-2">
               <TrendingUp size={19} className="text-[#F0A34A]" />
               <h4 className="text-lg font-semibold text-[#E8EDF0]">Annual hotspot activity</h4>
             </div>
-            <p className="mt-1 text-sm text-[#9BA8B2]">Annual sums of raw monthly OGCD for {sensor.toUpperCase()} (not anomalies). Gaps represent unavailable years.</p>
+            <p className="mt-1 text-sm text-[#9BA8B2]">
+              {sensor === 'harmonized'
+                ? 'Annual sums of monthly harmonized MODIS-equivalent OGCD (2003–2025 continuous historical indicator). Spliced at January 2013.'
+                : `Annual sums of raw monthly OGCD for ${sensor.toUpperCase()} (not anomalies). Gaps represent unavailable years.`}
+            </p>
             <div className="mt-6 h-64 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={annual} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
@@ -306,9 +553,9 @@ export default function HistoricalCalendar() {
                   <YAxis stroke="#9BA8B2" tick={{ fontSize: 11 }} tickFormatter={n => `${Math.round(Number(n) / 1000)}k`} />
                   <Tooltip
                     contentStyle={{ background: '#151A1F', border: '1px solid #252D34', borderRadius: 8, color: '#E8EDF0' }}
-                    formatter={(value) => [typeof value === 'number' ? format(value) : 'N/A', 'Annual OGCD']}
+                    formatter={(value) => [typeof value === 'number' ? format(value) : 'N/A', sensor === 'harmonized' ? 'Annual Harmonized OGCD' : 'Annual OGCD']}
                   />
-                  <Line dataKey="total" name="Annual OGCD" stroke="#F0A34A" strokeWidth={2.5} dot={{ r: 2, fill: '#F0A34A' }} connectNulls={false} />
+                  <Line dataKey="total" name={sensor === 'harmonized' ? 'Harmonized OGCD' : 'Annual OGCD'} stroke="#F0A34A" strokeWidth={2.5} dot={{ r: 2, fill: '#F0A34A' }} connectNulls={false} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -316,7 +563,12 @@ export default function HistoricalCalendar() {
 
           <div className="flex gap-3 rounded-xl border border-[#F0A34A]/25 bg-[#F0A34A]/5 p-5 text-sm leading-6 text-[#9BA8B2]">
             <Info size={19} className="mt-0.5 shrink-0 text-[#F0A34A]" />
-            <p><strong className="text-[#F0A34A]">Scientific interpretation:</strong> OGCD measures grid-cell-days containing at least one FIRMS hotspot detection, not unique fires, burned area, or observation-normalized fire incidence. A missing month does not prove zero burning. MODIS and VIIRS differ in sensitivity and observation characteristics; these series are not statistically calibrated and should not be directly compared as equivalent fire counts.</p>
+            <p>
+              <strong className="text-[#F0A34A]">Scientific interpretation: </strong>
+              OGCD measures grid-cell-days containing at least one FIRMS hotspot detection, not unique fire count, fire perimeter, or burned area.
+              Statistical harmonization is an empirical transfer function that maps VIIRS to expected MODIS-equivalent OGCD; it does not eliminate physical differences in satellite overpass timing, orbital geometry, saturation thresholds, or cloud sensitivity.
+              During the 2013–2025 overlap, observed MODIS serves as a comparative reference, not physical ground truth.
+            </p>
           </div>
         </>
       )}
