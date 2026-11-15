@@ -104,7 +104,7 @@ export default function SensorShiftAnalyzer() {
       </div>
 
       {/* GRID COMPARISON */}
-      <div className="rounded-2xl border border-[#252D34] bg-[#151A1F] p-5 sm:p-6">
+      <div className="rounded-2xl border border-[#252D34]/90 bg-gradient-to-b from-[#14191E] via-[#101418] to-[#0E1216] p-5 sm:p-6 shadow-sm">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h4 className="text-lg font-semibold text-[#E8EDF0]">Spatial Harmonization</h4>
@@ -113,15 +113,15 @@ export default function SensorShiftAnalyzer() {
             </p>
           </div>
 
-          <div className="flex rounded-lg border border-[#252D34] bg-[#0B0E11] p-1">
+          <div className="flex rounded-xl border border-[#252D34] bg-[#0B0E11] p-1 shadow-inner">
             {[1, 5, 10].map((size) => (
               <button
                 key={size}
                 type="button"
                 onClick={() => setSelectedGrid(size)}
-                className={`rounded-md px-4 py-1.5 text-sm font-medium transition ${
+                className={`rounded-lg px-4 py-1.5 text-sm font-medium transition-all duration-150 active:scale-95 ${
                   selectedGrid === size
-                    ? 'bg-[#F0A34A] text-[#0B0E11] font-semibold'
+                    ? 'bg-[#F0A34A] text-[#0B0E11] font-semibold shadow-[0_0_12px_rgba(240,163,74,0.3)]'
                     : 'text-[#9BA8B2] hover:text-[#E8EDF0]'
                 }`}
               >
@@ -139,7 +139,7 @@ export default function SensorShiftAnalyzer() {
               <Metric label="VIIRS / MODIS" value={`${grid.ratio.toFixed(2)}×`} highlight />
             </div>
 
-            <div className="mt-5 rounded-xl border border-[#252D34] bg-[#0B0E11] p-4">
+            <div className="mt-5 rounded-xl border border-[#252D34] bg-[#0B0E11]/80 p-4">
               <p className="text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">
                 Raw Detection Ratio
               </p>
@@ -155,7 +155,7 @@ export default function SensorShiftAnalyzer() {
       </div>
 
       {/* DAY / NIGHT */}
-      <div className="rounded-2xl border border-[#252D34] bg-[#151A1F] p-5 sm:p-6">
+      <div className="rounded-2xl border border-[#252D34]/90 bg-gradient-to-b from-[#14191E] via-[#101418] to-[#0E1216] p-5 sm:p-6 shadow-sm">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h4 className="text-lg font-semibold text-[#E8EDF0]">Day vs Night Observations</h4>
@@ -173,9 +173,9 @@ export default function SensorShiftAnalyzer() {
                 key={label}
                 type="button"
                 onClick={() => setSelectedPeriod(label)}
-                className={`flex items-center gap-2 rounded-lg px-3.5 py-1.5 text-sm font-medium transition ${
+                className={`flex items-center gap-2 rounded-xl px-3.5 py-1.5 text-sm font-medium transition-all duration-150 active:scale-95 ${
                   selectedPeriod === label
-                    ? 'bg-[#F0A34A] text-[#0B0E11] font-semibold'
+                    ? 'bg-[#F0A34A] text-[#0B0E11] font-semibold shadow-[0_0_12px_rgba(240,163,74,0.3)]'
                     : 'border border-[#252D34] bg-[#0B0E11] text-[#9BA8B2] hover:text-[#E8EDF0]'
                 }`}
               >
@@ -204,7 +204,7 @@ export default function SensorShiftAnalyzer() {
       </div>
 
       {/* CORRELATION */}
-      <div className="rounded-2xl border border-[#252D34] bg-[#151A1F] p-5 sm:p-6">
+      <div className="rounded-2xl border border-[#252D34]/90 bg-gradient-to-b from-[#14191E] via-[#101418] to-[#0E1216] p-5 sm:p-6 shadow-sm">
         <div className="flex items-center gap-2">
           <Activity size={20} className="text-[#F0A34A]" />
           <h4 className="text-lg font-semibold text-[#E8EDF0]">Cross-Sensor Agreement</h4>
@@ -217,11 +217,21 @@ export default function SensorShiftAnalyzer() {
         <div className="mt-6 h-72 w-full">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={agreementBars} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
-              <CartesianGrid stroke="#252D34" strokeDasharray="3 3" />
+              <CartesianGrid stroke="#1C2329" strokeDasharray="3 3" />
               <XAxis dataKey="metric" stroke="#9BA8B2" tick={{ fontSize: 11 }} />
               <YAxis domain={[0, 1]} stroke="#9BA8B2" tick={{ fontSize: 11 }} />
               <Tooltip
-                contentStyle={{ background: '#151A1F', border: '1px solid #252D34', borderRadius: 8, color: '#E8EDF0' }}
+                contentStyle={{
+                  background: 'rgba(11, 14, 17, 0.95)',
+                  backdropFilter: 'blur(12px)',
+                  border: '1px solid #252D34',
+                  borderRadius: 12,
+                  color: '#E8EDF0',
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+                  fontSize: 12,
+                }}
+                labelStyle={{ color: '#9BA8B2', fontWeight: 600, marginBottom: 4 }}
+                itemStyle={{ color: '#E8EDF0' }}
               />
               <Legend wrapperStyle={{ color: '#9BA8B2', fontSize: 12 }} />
               <Bar dataKey="Pearson" fill="#F0A34A" radius={[4, 4, 0, 0]} />
@@ -271,7 +281,11 @@ function Metric({
   highlight?: boolean
 }) {
   return (
-    <div className="rounded-xl border border-[#252D34] bg-[#0B0E11] p-4">
+    <div className={`rounded-xl border p-4 transition-colors ${
+      highlight
+        ? 'border-[#F0A34A]/40 bg-[#0B0E11]/90 hover:border-[#F0A34A]/60 shadow-[0_0_12px_rgba(240,163,74,0.08)]'
+        : 'border-[#252D34]/90 bg-[#0B0E11]/80 hover:border-[#38BDF8]/30'
+    }`}>
       <p className="text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">{label}</p>
       <p className={`mt-2 text-2xl font-semibold ${highlight ? 'text-[#F0A34A]' : 'text-[#E8EDF0]'}`}>
         {value}

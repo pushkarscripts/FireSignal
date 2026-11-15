@@ -85,24 +85,24 @@ export default function HarmonizationResults() {
       </div>
 
       <div className="grid gap-3 sm:grid-cols-3">
-        <div className="rounded-xl border border-[#252D34] bg-[#151A1F] p-5">
+        <div className="rounded-xl border border-[#252D34]/90 bg-gradient-to-b from-[#14191E] to-[#0E1216] p-5 transition-colors hover:border-[#38BDF8]/30">
           <p className="text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">Training Split</p>
           <p className="mt-2 text-xl font-semibold text-[#E8EDF0]">{data.splits.train}</p>
           <p className="mt-1 text-xs text-[#9BA8B2]">Fit adjustment factors</p>
         </div>
-        <div className="rounded-xl border border-[#252D34] bg-[#151A1F] p-5">
+        <div className="rounded-xl border border-[#252D34]/90 bg-gradient-to-b from-[#14191E] to-[#0E1216] p-5 transition-colors hover:border-[#38BDF8]/30">
           <p className="text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">Validation Split</p>
           <p className="mt-2 text-xl font-semibold text-[#E8EDF0]">{data.splits.validation}</p>
           <p className="mt-1 text-xs text-[#9BA8B2]">Select adjustment approach</p>
         </div>
-        <div className="rounded-xl border border-[#F0A34A]/30 bg-[#F0A34A]/5 p-5">
+        <div className="rounded-xl border border-[#F0A34A]/40 bg-gradient-to-b from-[#1A1813] to-[#12100C] p-5 transition-colors hover:border-[#F0A34A]/60 shadow-[0_0_16px_rgba(240,163,74,0.1)]">
           <p className="text-xs font-mono uppercase tracking-wider text-[#F0A34A]">Held-Out Test Split</p>
           <p className="mt-2 text-xl font-semibold text-[#E8EDF0]">{data.splits.test}</p>
           <p className="mt-1 text-xs text-[#9BA8B2]">Final retrospective evaluation</p>
         </div>
       </div>
 
-      <div className="rounded-2xl border border-[#252D34] bg-[#151A1F] p-5 sm:p-6">
+      <div className="rounded-2xl border border-[#252D34]/90 bg-gradient-to-b from-[#14191E] via-[#101418] to-[#0E1216] p-5 sm:p-6 shadow-sm">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h4 className="text-lg font-semibold text-[#E8EDF0]">Model Error Comparison</h4>
@@ -110,16 +110,16 @@ export default function HarmonizationResults() {
               Lower MAE and RMSE indicate better agreement with observed MODIS OGCD.
             </p>
           </div>
-          <div className="flex rounded-lg border border-[#252D34] bg-[#0B0E11] p-1" role="group" aria-label="Evaluation period">
+          <div className="flex rounded-xl border border-[#252D34] bg-[#0B0E11] p-1 shadow-inner" role="group" aria-label="Evaluation period">
             {(['test', 'validation'] as const).map(v => (
               <button
                 key={v}
                 type="button"
                 onClick={() => setView(v)}
                 aria-pressed={view === v}
-                className={`rounded-md px-3.5 py-1.5 text-sm font-medium transition ${
+                className={`rounded-lg px-3.5 py-1.5 text-sm font-medium transition-all duration-150 active:scale-95 ${
                   view === v
-                    ? 'bg-[#F0A34A] text-[#0B0E11] font-semibold'
+                    ? 'bg-[#F0A34A] text-[#0B0E11] font-semibold shadow-[0_0_12px_rgba(240,163,74,0.3)]'
                     : 'text-[#9BA8B2] hover:text-[#E8EDF0]'
                 }`}
               >
@@ -141,7 +141,7 @@ export default function HarmonizationResults() {
             </thead>
             <tbody>
               {models.map(({ key, label }) => (
-                <tr key={key} className={`border-b border-[#252D34]/50 ${key === data.selected_model ? 'text-[#F0A34A]' : 'text-[#E8EDF0]'}`}>
+                <tr key={key} className={`border-b border-[#252D34]/50 transition-colors hover:bg-[#151A1F]/50 ${key === data.selected_model ? 'text-[#F0A34A]' : 'text-[#E8EDF0]'}`}>
                   <td className="py-2.5 pr-3 font-medium">
                     {label}
                     {key === data.selected_model ? ' · selected' : ''}
@@ -160,17 +160,17 @@ export default function HarmonizationResults() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
-        <div className="rounded-xl border border-[#252D34] bg-[#151A1F] p-5">
+        <div className="rounded-xl border border-[#252D34]/90 bg-gradient-to-b from-[#14191E] to-[#0E1216] p-5 transition-colors hover:border-[#38BDF8]/30">
           <p className="text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">Test MAE · Global adjustment</p>
           <p className="mt-2 text-3xl font-semibold text-[#E8EDF0]">{format(global, 2)}</p>
           <p className="mt-1 text-xs text-[#9BA8B2]">Fixed ratio across all calendar months</p>
         </div>
-        <div className="rounded-xl border border-[#F0A34A]/30 bg-[#F0A34A]/5 p-5">
+        <div className="rounded-xl border border-[#F0A34A]/40 bg-gradient-to-b from-[#1A1813] to-[#12100C] p-5 transition-colors hover:border-[#F0A34A]/60 shadow-[0_0_16px_rgba(240,163,74,0.1)]">
           <p className="text-xs font-mono uppercase tracking-wider text-[#F0A34A]">Test MAE · Seasonal adjustment</p>
           <p className="mt-2 text-3xl font-semibold text-[#F0A34A]">{format(seasonal, 2)}</p>
           <p className="mt-1 text-xs text-[#9BA8B2]">Month-specific factors regularized to global</p>
         </div>
-        <div className="rounded-xl border border-[#252D34] bg-[#151A1F] p-5">
+        <div className="rounded-xl border border-[#252D34]/90 bg-gradient-to-b from-[#14191E] to-[#0E1216] p-5 transition-colors hover:border-emerald-500/30">
           <div className="flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">
             <CheckCircle2 size={15} className="text-emerald-400" /> Reduction vs Global
           </div>
@@ -179,7 +179,7 @@ export default function HarmonizationResults() {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-[#252D34] bg-[#151A1F] p-5 sm:p-6">
+      <div className="rounded-2xl border border-[#252D34]/90 bg-gradient-to-b from-[#14191E] via-[#101418] to-[#0E1216] p-5 sm:p-6 shadow-sm">
         <h4 className="text-lg font-semibold text-[#E8EDF0]">Observed vs Predicted · Held-out Test</h4>
         <p className="mt-1 text-sm text-[#9BA8B2]">
           2024–2025 monthly MODIS observations compared with predictions from training-fitted adjustment factors.
@@ -187,11 +187,21 @@ export default function HarmonizationResults() {
         <div className="mt-6 h-80 w-full">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={chartData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
-              <CartesianGrid stroke="#252D34" strokeDasharray="3 3" />
+              <CartesianGrid stroke="#1C2329" strokeDasharray="3 3" />
               <XAxis dataKey="month" stroke="#9BA8B2" tick={{ fontSize: 11 }} minTickGap={25} />
               <YAxis stroke="#9BA8B2" tick={{ fontSize: 11 }} tickFormatter={(v: number) => `${Math.round(v / 1000)}k`} />
               <Tooltip
-                contentStyle={{ background: '#151A1F', border: '1px solid #252D34', borderRadius: 8, color: '#E8EDF0' }}
+                contentStyle={{
+                  background: 'rgba(11, 14, 17, 0.95)',
+                  backdropFilter: 'blur(12px)',
+                  border: '1px solid #252D34',
+                  borderRadius: 12,
+                  color: '#E8EDF0',
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+                  fontSize: 12,
+                }}
+                labelStyle={{ color: '#9BA8B2', fontWeight: 600, marginBottom: 4 }}
+                itemStyle={{ color: '#E8EDF0' }}
                 formatter={(v) => (v == null ? '—' : format(Number(v), 2))}
               />
               <Legend wrapperStyle={{ color: '#9BA8B2', fontSize: 12 }} />

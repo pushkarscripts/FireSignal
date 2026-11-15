@@ -424,9 +424,9 @@ export default function GeographicObservatory({ onNavigateToHistorical }: Geogra
             <button
               type="button"
               onClick={() => handleSensorChange('MODIS')}
-              className={`flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-mono font-semibold transition ${
+              className={`flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-mono font-semibold transition-all duration-150 ${
                 sensor === 'MODIS'
-                  ? 'bg-[#151A1F] text-[#38BDF8] border border-[#38BDF8]/40 shadow-sm'
+                  ? 'bg-[#151A1F] text-[#38BDF8] border border-[#38BDF8]/40 shadow-[0_0_12px_rgba(56,189,248,0.18)]'
                   : 'text-[#9BA8B2] hover:text-[#E8EDF0]'
               }`}
             >
@@ -437,9 +437,9 @@ export default function GeographicObservatory({ onNavigateToHistorical }: Geogra
             <button
               type="button"
               onClick={() => handleSensorChange('VIIRS')}
-              className={`flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-mono font-semibold transition ${
+              className={`flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-mono font-semibold transition-all duration-150 ${
                 sensor === 'VIIRS'
-                  ? 'bg-[#151A1F] text-[#F0A34A] border border-[#F0A34A]/40 shadow-sm'
+                  ? 'bg-[#151A1F] text-[#F0A34A] border border-[#F0A34A]/40 shadow-[0_0_12px_rgba(240,163,74,0.18)]'
                   : 'text-[#9BA8B2] hover:text-[#E8EDF0]'
               }`}
             >
@@ -450,7 +450,7 @@ export default function GeographicObservatory({ onNavigateToHistorical }: Geogra
           </div>
 
           {/* Year Selector */}
-          <div className="flex items-center gap-2 rounded-xl border border-[#252D34] bg-[#0B0E11] px-3 py-1.5 shadow-inner">
+          <div className="flex items-center gap-2 rounded-xl border border-[#252D34] bg-[#0B0E11] px-3 py-1.5 shadow-inner transition-colors hover:border-[#38BDF8]/30 focus-within:border-[#F0A34A]/50">
             <Calendar size={14} className="text-[#9BA8B2]" />
             <label htmlFor="geo-year-select" className="text-xs font-mono font-medium text-[#E8EDF0]">
               Year:
@@ -470,7 +470,7 @@ export default function GeographicObservatory({ onNavigateToHistorical }: Geogra
           </div>
 
           {/* Region Quick Select Dropdown */}
-          <div className="flex items-center gap-2 rounded-xl border border-[#252D34] bg-[#0B0E11] px-3 py-1.5 shadow-inner flex-1 sm:flex-initial">
+          <div className="flex items-center gap-2 rounded-xl border border-[#252D34] bg-[#0B0E11] px-3 py-1.5 shadow-inner flex-1 sm:flex-initial transition-colors hover:border-[#38BDF8]/30 focus-within:border-[#F0A34A]/50">
             <MapPin size={14} className="text-[#F0A34A]" />
             <select
               value={selectedRegion}
@@ -506,9 +506,9 @@ export default function GeographicObservatory({ onNavigateToHistorical }: Geogra
               key={territory}
               type="button"
               onClick={() => setSelectedRegion(territory)}
-              className={`rounded-lg px-2.5 py-1 text-xs font-medium transition ${
+              className={`rounded-lg px-2.5 py-1 text-xs font-medium transition-all duration-150 active:scale-95 ${
                 isSelected
-                  ? 'border border-[#F0A34A] bg-[#F0A34A]/20 text-[#F0A34A]'
+                  ? 'border border-[#F0A34A] bg-[#F0A34A]/20 text-[#F0A34A] shadow-[0_0_8px_rgba(240,163,74,0.2)]'
                   : 'border border-[#252D34] bg-[#0B0E11] text-[#9BA8B2] hover:border-[#38BDF8]/40 hover:text-[#E8EDF0]'
               }`}
             >
@@ -538,14 +538,20 @@ export default function GeographicObservatory({ onNavigateToHistorical }: Geogra
             ref={mapSvgContainerRef}
             className="relative overflow-hidden rounded-2xl border border-[#252D34] bg-[#0A0D10] p-2 sm:p-4 shadow-inner"
           >
+            {/* Mission Telemetry Corner Reticles */}
+            <div className="obs-reticle-corner obs-reticle-tl" aria-hidden="true" />
+            <div className="obs-reticle-corner obs-reticle-tr" aria-hidden="true" />
+            <div className="obs-reticle-corner obs-reticle-bl" aria-hidden="true" />
+            <div className="obs-reticle-corner obs-reticle-br" aria-hidden="true" />
+
             {/* Instrument Compass Rose / Reticle Badge */}
-            <div className="absolute top-3.5 left-3.5 z-10 flex items-center gap-2 rounded-lg border border-[#252D34] bg-[#0B0E11]/90 px-3 py-1.5 text-xs font-mono text-[#E8EDF0] backdrop-blur-sm pointer-events-none shadow-sm">
-              <span className="h-2 w-2 rounded-full bg-[#F0A34A]" />
-              <span>ALBERS CONIC · EPSG:6933 EQUAL-AREA</span>
+            <div className="absolute top-3.5 left-3.5 z-10 flex items-center gap-2 rounded-lg border border-[#252D34]/90 bg-[#0B0E11]/85 px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-mono text-[#E8EDF0] backdrop-blur-md pointer-events-none shadow-md">
+              <span className="h-2 w-2 rounded-full bg-[#F0A34A] animate-pulse" />
+              <span><span className="hidden sm:inline">ALBERS CONIC · </span>EPSG:6933 EQUAL-AREA</span>
             </div>
 
             {/* Top Right North Arrow */}
-            <div className="absolute top-3.5 right-3.5 z-10 flex flex-col items-center rounded-lg border border-[#252D34] bg-[#0B0E11]/90 px-2.5 py-1 text-xs font-mono text-[#E8EDF0] pointer-events-none shadow-sm">
+            <div className="absolute top-3.5 right-3.5 z-10 flex flex-col items-center rounded-lg border border-[#252D34]/90 bg-[#0B0E11]/85 px-2.5 py-1 text-xs font-mono text-[#E8EDF0] backdrop-blur-md pointer-events-none shadow-md">
               <span className="font-bold text-[#F0A34A]">▲ N</span>
               <span className="text-[10px] text-[#9BA8B2]">82.5°E</span>
             </div>
@@ -712,7 +718,7 @@ export default function GeographicObservatory({ onNavigateToHistorical }: Geogra
             {/* Floating Cursor Tooltip */}
             {tooltipData && (
               <div
-                className="pointer-events-none absolute z-30 transform -translate-x-1/2 -translate-y-full mb-3 rounded-lg border border-[#252D34] bg-[#151A1F]/95 px-3.5 py-2 text-xs shadow-xl backdrop-blur-sm"
+                className="pointer-events-none absolute z-30 transform -translate-x-1/2 -translate-y-full mb-3 rounded-xl border border-[#252D34]/90 bg-[#0B0E11]/95 px-3.5 py-2.5 text-xs shadow-2xl backdrop-blur-md"
                 style={{
                   left: tooltipData.x,
                   top: tooltipData.y - 8,
@@ -786,7 +792,7 @@ export default function GeographicObservatory({ onNavigateToHistorical }: Geogra
         {/* RIGHT: REGION DETAIL PANEL (Col 5)                                */}
         {/* ================================================================= */}
         <div className="lg:col-span-5 flex flex-col space-y-6">
-          <div className="rounded-2xl border border-[#252D34] bg-[#11161B] p-5 sm:p-6 shadow-sm space-y-6">
+          <div className="rounded-2xl border border-[#252D34]/90 bg-gradient-to-b from-[#14191E] via-[#101418] to-[#0C0F12] p-5 sm:p-6 shadow-[0_8px_32px_rgba(0,0,0,0.35)] space-y-6">
             {/* Region Title & Context Badges */}
             <div className="border-b border-[#252D34] pb-4">
               <div className="flex items-start justify-between gap-3">
@@ -821,7 +827,7 @@ export default function GeographicObservatory({ onNavigateToHistorical }: Geogra
               <div className="space-y-6">
                 {/* 3 Metric Cards */}
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                  <div className="rounded-xl border border-[#252D34] bg-[#0B0E11] p-3.5">
+                  <div className="rounded-xl border border-[#252D34]/90 bg-[#0B0E11]/80 p-3.5 transition-colors hover:border-[#F0A34A]/30">
                     <div className="font-mono text-xs uppercase tracking-wider text-[#9BA8B2]">
                       Annual Total
                     </div>
@@ -831,7 +837,7 @@ export default function GeographicObservatory({ onNavigateToHistorical }: Geogra
                     <div className="mt-1 text-xs text-[#9BA8B2]">5 km grid-cell-days (OGCD)</div>
                   </div>
 
-                  <div className="rounded-xl border border-[#252D34] bg-[#0B0E11] p-3.5">
+                  <div className="rounded-xl border border-[#252D34]/90 bg-[#0B0E11]/80 p-3.5 transition-colors hover:border-[#38BDF8]/30">
                     <div className="font-mono text-xs uppercase tracking-wider text-[#9BA8B2]">
                       Active Months
                     </div>
@@ -842,7 +848,7 @@ export default function GeographicObservatory({ onNavigateToHistorical }: Geogra
                     <div className="mt-1 text-xs text-[#9BA8B2]">Months with detections</div>
                   </div>
 
-                  <div className="col-span-2 sm:col-span-1 rounded-xl border border-[#252D34] bg-[#0B0E11] p-3.5">
+                  <div className="col-span-2 sm:col-span-1 rounded-xl border border-[#252D34]/90 bg-[#0B0E11]/80 p-3.5 transition-colors hover:border-emerald-500/30">
                     <div className="font-mono text-xs uppercase tracking-wider text-[#9BA8B2]">
                       Active Detection Days
                     </div>
@@ -856,7 +862,7 @@ export default function GeographicObservatory({ onNavigateToHistorical }: Geogra
 
                 {/* Peak Month Callout */}
                 {peakMonthInfo && (
-                  <div className="flex items-center justify-between rounded-xl border border-[#252D34] bg-[#0B0E11] px-4 py-3 text-xs">
+                  <div className="flex items-center justify-between rounded-xl border border-[#252D34] bg-[#0B0E11]/80 px-4 py-3 text-xs">
                     <div className="flex items-center gap-2">
                       <TrendingUp size={16} className="text-[#F0A34A]" />
                       <span className="text-xs text-[#9BA8B2]">Peak Burning Season:</span>
@@ -877,10 +883,10 @@ export default function GeographicObservatory({ onNavigateToHistorical }: Geogra
                     <span className="text-xs text-[#9BA8B2]">12-Month Observation Trace</span>
                   </div>
 
-                  <div className="h-44 w-full rounded-xl border border-[#252D34] bg-[#0B0E11] p-2.5">
+                  <div className="h-44 w-full rounded-xl border border-[#252D34]/90 bg-[#0B0E11]/80 p-2.5">
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={monthlyTrend} margin={{ top: 12, right: 8, left: -20, bottom: 0 }}>
-                        <CartesianGrid stroke="#252D34" strokeDasharray="3 3" vertical={false} />
+                        <CartesianGrid stroke="#1C2329" strokeDasharray="3 3" vertical={false} />
                         <XAxis
                           dataKey="shortName"
                           stroke="#9BA8B2"
@@ -900,12 +906,12 @@ export default function GeographicObservatory({ onNavigateToHistorical }: Geogra
                             if (active && payload && payload.length) {
                               const d = payload[0]?.payload as MonthlyDatum
                               return (
-                                <div className="rounded-lg border border-[#252D34] bg-[#151A1F] p-2.5 text-xs shadow-xl">
+                                <div className="rounded-xl border border-[#252D34]/90 bg-[#0B0E11]/95 p-3 text-xs shadow-2xl backdrop-blur-md">
                                   <div className="font-mono font-medium text-xs text-[#E8EDF0]">
                                     {d.fullName} {year}
                                   </div>
                                   {d.hasRecord ? (
-                                    <div className="mt-1 space-y-0.5">
+                                    <div className="mt-1.5 space-y-0.5">
                                       <div className="font-semibold text-xs text-[#F0A34A]">
                                         {formatNumber(d.ogcd ?? 0)} OGCD
                                       </div>
@@ -975,7 +981,7 @@ export default function GeographicObservatory({ onNavigateToHistorical }: Geogra
                   e.preventDefault()
                   onNavigateToHistorical?.(selectedRegion)
                 }}
-                className="inline-flex items-center gap-2 rounded-xl bg-[#0B0E11] border border-[#252D34] px-4 py-2 text-xs font-semibold text-[#F0A34A] transition hover:border-[#F0A34A]/50 hover:bg-[#181E24] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F0A34A]"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#0B0E11] border border-[#252D34] px-4 py-2 text-xs font-semibold text-[#F0A34A] transition hover:border-[#F0A34A]/50 hover:bg-[#181E24] hover:shadow-[0_0_16px_rgba(240,163,74,0.15)] active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F0A34A]"
               >
                 <span>Analyze in Historical Patterns</span>
                 <ArrowRight size={14} />

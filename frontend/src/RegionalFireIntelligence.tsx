@@ -79,7 +79,17 @@ export default function RegionalFireIntelligence() {
     return [...totals].map(([name, value]) => ({ region: name, ogcd: value.total, months: value.months }))
       .sort((a, b) => b.ogcd - a.ogcd).slice(0, 10)
   }, [sensorRecords, year])
-  const tooltipStyle = { background: '#151A1F', border: '1px solid #252D34', borderRadius: 8, color: '#E8EDF0' }
+  const tooltipStyle = {
+    background: 'rgba(11, 14, 17, 0.95)',
+    backdropFilter: 'blur(12px)',
+    border: '1px solid #252D34',
+    borderRadius: 12,
+    color: '#E8EDF0',
+    boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+    fontSize: 12,
+  }
+  const tooltipLabelStyle = { color: '#9BA8B2', fontWeight: 600, marginBottom: 4 }
+  const tooltipItemStyle = { color: '#E8EDF0' }
 
   return (
     <div className="mt-12 space-y-6">
@@ -109,11 +119,11 @@ export default function RegionalFireIntelligence() {
 
       {data && !loading && !error && (
         <>
-          <div className="grid gap-4 rounded-2xl border border-[#252D34] bg-[#151A1F] p-5 sm:grid-cols-3">
+          <div className="grid gap-4 rounded-2xl border border-[#252D34]/90 bg-gradient-to-b from-[#14191E] to-[#0E1216] p-5 sm:grid-cols-3 shadow-sm">
             <label className="text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">
               Region
               <select
-                className="mt-2 block w-full rounded-lg border border-[#252D34] bg-[#0B0E11] p-2.5 text-sm font-sans normal-case text-[#E8EDF0] focus:border-[#F0A34A] focus:outline-none"
+                className="mt-2 block w-full rounded-lg border border-[#252D34] bg-[#0B0E11] p-2.5 text-sm font-sans normal-case text-[#E8EDF0] focus:border-[#F0A34A] focus:outline-none transition-colors hover:border-[#38BDF8]/40 cursor-pointer"
                 value={region}
                 onChange={e => setRegion(e.target.value)}
               >
@@ -127,7 +137,7 @@ export default function RegionalFireIntelligence() {
             <label className="text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">
               Satellite Sensor
               <select
-                className="mt-2 block w-full rounded-lg border border-[#252D34] bg-[#0B0E11] p-2.5 text-sm font-sans normal-case text-[#E8EDF0] focus:border-[#F0A34A] focus:outline-none"
+                className="mt-2 block w-full rounded-lg border border-[#252D34] bg-[#0B0E11] p-2.5 text-sm font-sans normal-case text-[#E8EDF0] focus:border-[#F0A34A] focus:outline-none transition-colors hover:border-[#38BDF8]/40 cursor-pointer"
                 value={sensor}
                 onChange={e => {
                   const next = e.target.value as Sensor
@@ -142,7 +152,7 @@ export default function RegionalFireIntelligence() {
             <label className="text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">
               Observation Year
               <select
-                className="mt-2 block w-full rounded-lg border border-[#252D34] bg-[#0B0E11] p-2.5 text-sm font-sans normal-case text-[#E8EDF0] focus:border-[#F0A34A] focus:outline-none"
+                className="mt-2 block w-full rounded-lg border border-[#252D34] bg-[#0B0E11] p-2.5 text-sm font-sans normal-case text-[#E8EDF0] focus:border-[#F0A34A] focus:outline-none transition-colors hover:border-[#38BDF8]/40 cursor-pointer"
                 value={year}
                 onChange={e => setYear(e.target.value)}
               >
@@ -156,19 +166,19 @@ export default function RegionalFireIntelligence() {
           </div>
 
           <div className="grid gap-4 sm:grid-cols-3">
-            <div className="rounded-xl border border-[#252D34] bg-[#151A1F] p-5">
+            <div className="rounded-xl border border-[#252D34]/90 bg-gradient-to-b from-[#14191E] to-[#0E1216] p-5 transition-colors hover:border-[#F0A34A]/30">
               <p className="text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">Recorded OGCD · {year}</p>
-              <p className="mt-2 text-2xl font-semibold text-[#E8EDF0]">
+              <p className="mt-2 text-2xl font-semibold text-[#F0A34A]">
                 {selectedYearTotal === null ? 'Unavailable' : format(selectedYearTotal)}
               </p>
             </div>
-            <div className="rounded-xl border border-[#252D34] bg-[#151A1F] p-5">
+            <div className="rounded-xl border border-[#252D34]/90 bg-gradient-to-b from-[#14191E] to-[#0E1216] p-5 transition-colors hover:border-[#38BDF8]/30">
               <p className="text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">Months with detections · {year}</p>
               <p className="mt-2 text-2xl font-semibold text-[#E8EDF0]">{observedMonths} / 12</p>
             </div>
-            <div className="rounded-xl border border-[#252D34] bg-[#151A1F] p-5">
+            <div className="rounded-xl border border-[#252D34]/90 bg-gradient-to-b from-[#14191E] to-[#0E1216] p-5 transition-colors hover:border-emerald-500/30">
               <p className="text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">Region coverage · {sensor}</p>
-              <p className="mt-2 text-2xl font-semibold text-[#E8EDF0]">
+              <p className="mt-2 text-2xl font-semibold text-emerald-400">
                 {regionRecords.length ? `${regionRecords.length} months` : 'No matched detections'}
               </p>
             </div>
@@ -181,7 +191,7 @@ export default function RegionalFireIntelligence() {
             </div>
           )}
 
-          <div className="rounded-2xl border border-[#252D34] bg-[#151A1F] p-5 sm:p-6">
+          <div className="rounded-2xl border border-[#252D34]/90 bg-gradient-to-b from-[#14191E] via-[#101418] to-[#0E1216] p-5 sm:p-6 shadow-sm">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <h4 className="flex items-center gap-2 text-lg font-semibold text-[#E8EDF0]">
@@ -191,15 +201,17 @@ export default function RegionalFireIntelligence() {
                   {region} · {sensor} · {year}
                 </p>
               </div>
-              <div className="flex rounded-lg border border-[#252D34] bg-[#0B0E11] p-1" role="group" aria-label="Regional chart mode">
+              <div className="flex rounded-xl border border-[#252D34] bg-[#0B0E11] p-1 shadow-inner" role="group" aria-label="Regional chart mode">
                 {(['activity', 'anomaly'] as View[]).map(v => (
                   <button
                     key={v}
                     type="button"
                     onClick={() => setView(v)}
                     aria-pressed={view === v}
-                    className={`rounded-md px-3.5 py-1 text-sm font-medium transition ${
-                      view === v ? 'bg-[#F0A34A] text-[#0B0E11] font-semibold' : 'text-[#9BA8B2] hover:text-[#E8EDF0]'
+                    className={`rounded-lg px-3.5 py-1 text-sm font-medium transition-all duration-150 active:scale-95 ${
+                      view === v
+                        ? 'bg-[#F0A34A] text-[#0B0E11] font-semibold shadow-[0_0_12px_rgba(240,163,74,0.3)]'
+                        : 'text-[#9BA8B2] hover:text-[#E8EDF0]'
                     }`}
                   >
                     {v === 'activity' ? 'Activity' : 'Anomaly'}
@@ -211,7 +223,7 @@ export default function RegionalFireIntelligence() {
             <div className="mt-6 h-72 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={monthRows} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
-                  <CartesianGrid stroke="#252D34" strokeDasharray="3 3" />
+                  <CartesianGrid stroke="#1C2329" strokeDasharray="3 3" />
                   <XAxis
                     dataKey="month"
                     type="category"
@@ -230,6 +242,8 @@ export default function RegionalFireIntelligence() {
                   />
                   <Tooltip
                     contentStyle={tooltipStyle}
+                    labelStyle={tooltipLabelStyle}
+                    itemStyle={tooltipItemStyle}
                     formatter={(value, name) => [
                       value == null ? 'No data' : view === 'anomaly' ? `${Number(value).toFixed(1)}%` : format(Number(value)),
                       name === 'anomaly' ? 'Seasonal anomaly' : 'OGCD',
@@ -252,16 +266,16 @@ export default function RegionalFireIntelligence() {
           </div>
 
           <div className="grid gap-6 lg:grid-cols-2">
-            <div className="rounded-2xl border border-[#252D34] bg-[#151A1F] p-5 sm:p-6">
+            <div className="rounded-2xl border border-[#252D34]/90 bg-gradient-to-b from-[#14191E] via-[#101418] to-[#0E1216] p-5 sm:p-6 shadow-sm">
               <h4 className="text-lg font-semibold text-[#E8EDF0]">Historical annual activity</h4>
               <p className="mt-1 text-sm text-[#9BA8B2]">{region} · {sensor} · observed months only</p>
               <div className="mt-5 h-64">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={annual} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
-                    <CartesianGrid stroke="#252D34" strokeDasharray="3 3" />
+                    <CartesianGrid stroke="#1C2329" strokeDasharray="3 3" />
                     <XAxis dataKey="year" stroke="#9BA8B2" tick={{ fontSize: 11 }} minTickGap={16} />
                     <YAxis stroke="#9BA8B2" tick={{ fontSize: 11 }} tickFormatter={format} />
-                    <Tooltip contentStyle={tooltipStyle} formatter={v => (v == null ? 'No matched detections' : format(Number(v)))} />
+                    <Tooltip contentStyle={tooltipStyle} labelStyle={tooltipLabelStyle} itemStyle={tooltipItemStyle} formatter={v => (v == null ? 'No matched detections' : format(Number(v)))} />
                     <Line dataKey="ogcd" name="Observed OGCD" stroke="#38BDF8" strokeWidth={2} dot={false} connectNulls={false} />
                   </LineChart>
                 </ResponsiveContainer>
@@ -269,7 +283,7 @@ export default function RegionalFireIntelligence() {
               <p className="mt-2 text-xs text-[#9BA8B2]">Annual totals are not corrected for missing observation coverage or changing satellite detection opportunities.</p>
             </div>
 
-            <div className="rounded-2xl border border-[#252D34] bg-[#151A1F] p-5 sm:p-6">
+            <div className="rounded-2xl border border-[#252D34]/90 bg-gradient-to-b from-[#14191E] via-[#101418] to-[#0E1216] p-5 sm:p-6 shadow-sm">
               <h4 className="flex items-center gap-2 text-lg font-semibold text-[#E8EDF0]">
                 <BarChart3 size={19} className="text-[#F0A34A]" /> Top regions · {year}
               </h4>
@@ -277,10 +291,10 @@ export default function RegionalFireIntelligence() {
               <div className="mt-5 h-64">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={ranking} layout="vertical" margin={{ left: 14, right: 12, top: 5, bottom: 5 }}>
-                    <CartesianGrid stroke="#252D34" strokeDasharray="3 3" />
+                    <CartesianGrid stroke="#1C2329" strokeDasharray="3 3" />
                     <XAxis type="number" stroke="#9BA8B2" tick={{ fontSize: 11 }} tickFormatter={format} />
                     <YAxis type="category" dataKey="region" width={110} stroke="#9BA8B2" tick={{ fontSize: 10 }} />
-                    <Tooltip contentStyle={tooltipStyle} formatter={v => (v == null ? 'No data' : format(Number(v)))} />
+                    <Tooltip contentStyle={tooltipStyle} labelStyle={tooltipLabelStyle} itemStyle={tooltipItemStyle} formatter={v => (v == null ? 'No data' : format(Number(v)))} />
                     <Bar dataKey="ogcd" name="Observed OGCD" fill="#F0A34A" radius={[0, 4, 4, 0]} />
                   </BarChart>
                 </ResponsiveContainer>

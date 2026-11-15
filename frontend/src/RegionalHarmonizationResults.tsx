@@ -74,7 +74,17 @@ export default function RegionalHarmonizationResults() {
   const national = data?.test_metrics.national_seasonal.mae ?? 0
   const regional = data?.test_metrics.regional_seasonal.mae ?? 0
   const reduction = national > 0 ? ((national - regional) / national) * 100 : null
-  const tooltipStyle = { background: '#151A1F', border: '1px solid #252D34', borderRadius: 8, color: '#E8EDF0' }
+  const tooltipStyle = {
+    background: 'rgba(11, 14, 17, 0.95)',
+    backdropFilter: 'blur(12px)',
+    border: '1px solid #252D34',
+    borderRadius: 12,
+    color: '#E8EDF0',
+    boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+    fontSize: 12,
+  }
+  const tooltipLabelStyle = { color: '#9BA8B2', fontWeight: 600, marginBottom: 4 }
+  const tooltipItemStyle = { color: '#E8EDF0' }
 
   return (
     <div className="mt-12 space-y-6">
@@ -105,7 +115,7 @@ export default function RegionalHarmonizationResults() {
       {data && !loading && !error && (
         <>
           <div className="grid gap-4 sm:grid-cols-3">
-            <div className="rounded-2xl border border-[#252D34] bg-[#151A1F] p-5">
+            <div className="rounded-xl border border-[#252D34]/90 bg-gradient-to-b from-[#14191E] to-[#0E1216] p-5 shadow-sm transition-colors hover:border-emerald-500/30">
               <p className="text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">Test MAE reduction vs national seasonal</p>
               <p className="mt-2 text-3xl font-semibold text-emerald-400">
                 {reduction === null ? 'N/A' : `${reduction.toFixed(1)}%`}
@@ -114,14 +124,14 @@ export default function RegionalHarmonizationResults() {
                 {fmt(national)} → {fmt(regional)} OGCD per paired region-month
               </p>
             </div>
-            <div className="rounded-2xl border border-[#252D34] bg-[#151A1F] p-5">
+            <div className="rounded-xl border border-[#252D34]/90 bg-gradient-to-b from-[#14191E] to-[#0E1216] p-5 shadow-sm transition-colors hover:border-[#38BDF8]/30">
               <p className="text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">Regions with ≥12 paired test months</p>
               <p className="mt-2 text-3xl font-semibold text-[#E8EDF0]">
                 {supported.length} / {data.per_region_test.length}
               </p>
               <p className="mt-2 text-xs text-[#9BA8B2]">Others flagged as sparse</p>
             </div>
-            <div className="rounded-2xl border border-[#252D34] bg-[#151A1F] p-5">
+            <div className="rounded-xl border border-[#252D34]/90 bg-gradient-to-b from-[#14191E] to-[#0E1216] p-5 shadow-sm transition-colors hover:border-[#F0A34A]/30">
               <p className="text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">Supported regions improved vs national seasonal</p>
               <p className="mt-2 text-3xl font-semibold text-[#E8EDF0]">
                 {improved} / {supported.length}
@@ -130,21 +140,23 @@ export default function RegionalHarmonizationResults() {
             </div>
           </div>
 
-          <div className="rounded-2xl border border-[#252D34] bg-[#151A1F] p-5 sm:p-6">
+          <div className="rounded-2xl border border-[#252D34]/90 bg-gradient-to-b from-[#14191E] via-[#101418] to-[#0E1216] p-5 sm:p-6 shadow-sm">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <h4 className="text-lg font-semibold text-[#E8EDF0]">Five-method comparison</h4>
                 <p className="mt-1 text-sm text-[#9BA8B2]">Lower error is better; 623 paired region-months in the held-out test</p>
               </div>
-              <div className="flex rounded-lg border border-[#252D34] bg-[#0B0E11] p-1" role="group" aria-label="Error metric">
+              <div className="flex rounded-xl border border-[#252D34] bg-[#0B0E11] p-1 shadow-inner" role="group" aria-label="Error metric">
                 {(['mae', 'rmse'] as const).map(m => (
                   <button
                     key={m}
                     type="button"
                     aria-pressed={metric === m}
                     onClick={() => setMetric(m)}
-                    className={`rounded-md px-3.5 py-1 text-sm font-medium transition ${
-                      metric === m ? 'bg-[#F0A34A] text-[#0B0E11] font-semibold' : 'text-[#9BA8B2] hover:text-[#E8EDF0]'
+                    className={`rounded-lg px-3.5 py-1.5 text-sm font-medium transition-all duration-150 active:scale-95 ${
+                      metric === m
+                        ? 'bg-[#F0A34A] text-[#0B0E11] font-semibold shadow-[0_0_12px_rgba(240,163,74,0.3)]'
+                        : 'text-[#9BA8B2] hover:text-[#E8EDF0]'
                     }`}
                   >
                     {m.toUpperCase()}
@@ -156,10 +168,10 @@ export default function RegionalHarmonizationResults() {
             <div className="mt-6 h-80">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={rows} margin={{ left: 8, right: 8, bottom: 30, top: 10 }}>
-                  <CartesianGrid stroke="#252D34" strokeDasharray="3 3" />
+                  <CartesianGrid stroke="#1C2329" strokeDasharray="3 3" />
                   <XAxis dataKey="name" interval={0} angle={-18} textAnchor="end" height={65} stroke="#9BA8B2" tick={{ fontSize: 11 }} />
                   <YAxis stroke="#9BA8B2" tick={{ fontSize: 11 }} tickFormatter={fmt} />
-                  <Tooltip contentStyle={tooltipStyle} formatter={v => fmt(Number(v))} />
+                  <Tooltip contentStyle={tooltipStyle} labelStyle={tooltipLabelStyle} itemStyle={tooltipItemStyle} formatter={v => fmt(Number(v))} />
                   <Bar dataKey="validation" name="Validation 2022–2023" fill="#38BDF8" radius={[4, 4, 0, 0]} />
                   <Bar dataKey="test" name="Test 2024–2025" fill="#F0A34A" radius={[4, 4, 0, 0]} />
                 </BarChart>
@@ -170,14 +182,14 @@ export default function RegionalHarmonizationResults() {
             </p>
           </div>
 
-          <div className="rounded-2xl border border-[#252D34] bg-[#151A1F] p-5 sm:p-6">
+          <div className="rounded-2xl border border-[#252D34]/90 bg-gradient-to-b from-[#14191E] via-[#101418] to-[#0E1216] p-5 sm:p-6 shadow-sm">
             <h4 className="text-lg font-semibold text-[#E8EDF0]">Explore a region's held-out results</h4>
             <label className="mt-3 block max-w-lg text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">
               Region
               <select
                 value={region}
                 onChange={e => setRegion(e.target.value)}
-                className="mt-2 block w-full rounded-lg border border-[#252D34] bg-[#0B0E11] p-2.5 text-sm font-sans normal-case text-[#E8EDF0] focus:border-[#F0A34A] focus:outline-none"
+                className="mt-2 block w-full rounded-lg border border-[#252D34] bg-[#0B0E11] p-2.5 text-sm font-sans normal-case text-[#E8EDF0] focus:border-[#F0A34A] focus:outline-none transition-colors hover:border-[#38BDF8]/40 cursor-pointer"
               >
                 {[...data.per_region_test]
                   .sort((a, b) => a.region.localeCompare(b.region))
@@ -210,7 +222,7 @@ export default function RegionalHarmonizationResults() {
                     </thead>
                     <tbody>
                       {MODELS.map(m => (
-                        <tr key={m.key} className="border-b border-[#252D34]/50">
+                        <tr key={m.key} className="border-b border-[#252D34]/50 transition-colors hover:bg-[#151A1F]/50">
                           <td className="py-2.5 pr-3 text-[#E8EDF0]">
                             {m.label}
                             {data.selected_model === m.key ? ' · selected' : ''}
@@ -229,10 +241,10 @@ export default function RegionalHarmonizationResults() {
             )}
           </div>
 
-          <div className="rounded-2xl border border-[#252D34] bg-[#151A1F] p-5 sm:p-6">
+          <div className="rounded-2xl border border-[#252D34]/90 bg-gradient-to-b from-[#14191E] via-[#101418] to-[#0E1216] p-5 sm:p-6 shadow-sm">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <h4 className="text-lg font-semibold text-[#E8EDF0]">Region-by-region test evidence</h4>
-              <label className="flex items-center gap-2 text-sm text-[#9BA8B2]">
+              <label className="flex items-center gap-2 text-sm text-[#9BA8B2] cursor-pointer">
                 <input
                   type="checkbox"
                   checked={onlyWellSupported}
@@ -244,7 +256,7 @@ export default function RegionalHarmonizationResults() {
             </div>
             <div className="mt-4 max-h-96 overflow-auto">
               <table className="w-full min-w-[540px] text-left text-sm">
-                <thead className="sticky top-0 bg-[#1B2127] text-xs font-mono uppercase text-[#9BA8B2]">
+                <thead className="sticky top-0 bg-[#161C22] text-xs font-mono uppercase text-[#9BA8B2]">
                   <tr>
                     <th className="px-3 py-2.5">Region</th>
                     <th className="px-3 py-2.5">Pairs</th>
@@ -255,7 +267,7 @@ export default function RegionalHarmonizationResults() {
                 </thead>
                 <tbody>
                   {displayedRegions.map(r => (
-                    <tr key={r.region} className="border-t border-[#252D34]">
+                    <tr key={r.region} className="border-t border-[#252D34] transition-colors hover:bg-[#151A1F]/50">
                       <td className="px-3 py-2.5 text-[#E8EDF0]">
                         {r.region}
                         {r.sparse_test ? ' · sparse' : ''}
@@ -273,8 +285,8 @@ export default function RegionalHarmonizationResults() {
             </div>
           </div>
 
-          <div className="flex items-start gap-3 rounded-xl border border-[#252D34] bg-[#151A1F] p-4 text-xs leading-6 text-[#9BA8B2]">
-            <Info size={18} className="mt-1 shrink-0 text-sky-400" />
+          <div className="flex items-start gap-3 rounded-xl border border-[#38BDF8]/25 bg-[#38BDF8]/5 p-4 text-xs leading-6 text-[#9BA8B2]">
+            <Info size={18} className="mt-1 shrink-0 text-[#38BDF8]" />
             <p>
               <strong className="text-[#E8EDF0]">Interpretation & Limitations:</strong> The regional seasonal model was selected on validation data, not test data. This is an empirical adjustment of monthly sensor activity, not physical calibration or validation against ground-truth fires. Metrics use only paired region-months with matched detections for both sensors; absence of detections does not establish observation coverage. Regional MAEs depend on the size and activity of each region, so they should not be interpreted as comparable fire risk. Sparse regions require particular caution.
             </p>

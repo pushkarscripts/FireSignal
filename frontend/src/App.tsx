@@ -190,15 +190,15 @@ function App() {
       </a>
 
       {/* Header — Brand & Responsive View Navigation */}
-      <header className="sticky top-0 z-40 border-b border-[#252D34] bg-[#0B0E11]/90 backdrop-blur-md">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3.5 sm:px-6 sm:py-4 lg:px-8">
+      <header className="sticky top-0 z-40 border-b border-[#252D34]/80 bg-[#0B0E11]/85 backdrop-blur-xl shadow-[0_4px_24px_rgba(0,0,0,0.45)]">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 sm:py-3.5 lg:px-8">
           <a
             href="#observatory"
             onClick={(e) => handleNavClick('observatory', e)}
             className="group flex items-center gap-3 rounded-xl p-1 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F0A34A] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0B0E11]"
             aria-label="FireSignal Home"
           >
-            <FireSignalIcon size={38} className="transition group-hover:scale-105" />
+            <FireSignalIcon size={38} className="transition-transform duration-300 group-hover:scale-105" />
             <div className="flex flex-col">
               <span className="text-xl font-bold tracking-tight text-[#E8EDF0] leading-tight">
                 Fire<span className="text-[#F0A34A]">Signal</span>
@@ -219,10 +219,10 @@ function App() {
                   href={link.href}
                   onClick={(e) => handleNavClick(link.id, e)}
                   aria-current={isActive ? 'page' : undefined}
-                  className={`rounded-lg px-3.5 py-2 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F0A34A] ${
+                  className={`rounded-lg px-3.5 py-2 text-sm font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F0A34A] ${
                     isActive
-                      ? 'border border-[#252D34] bg-[#151A1F] text-[#F0A34A] shadow-sm font-semibold'
-                      : 'border border-transparent text-[#9BA8B2] hover:bg-[#151A1F]/60 hover:text-[#E8EDF0]'
+                      ? 'border border-[#F0A34A]/40 bg-[#151A1F] text-[#F0A34A] shadow-[0_2px_8px_rgba(240,163,74,0.15)] font-semibold'
+                      : 'border border-transparent text-[#9BA8B2] hover:bg-[#151A1F]/70 hover:text-[#E8EDF0]'
                   }`}
                 >
                   {link.label}
@@ -233,7 +233,7 @@ function App() {
               href="https://github.com/pushkarscripts/FireSignal/blob/main/METHODOLOGY.md"
               target="_blank"
               rel="noopener noreferrer"
-              className="ml-2 inline-flex items-center gap-1.5 rounded-lg border border-[#252D34] bg-[#151A1F] px-3 py-1.5 text-xs font-medium text-[#9BA8B2] transition hover:border-[#F0A34A]/50 hover:text-[#E8EDF0] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F0A34A]"
+              className="ml-2 inline-flex items-center gap-1.5 rounded-lg border border-[#252D34] bg-[#151A1F]/80 px-3 py-1.5 text-xs font-medium text-[#9BA8B2] transition-all hover:border-[#F0A34A]/50 hover:bg-[#151A1F] hover:text-[#E8EDF0] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F0A34A]"
             >
               <span>Methodology</span>
               <ExternalLink size={12} />
@@ -304,14 +304,18 @@ function App() {
         {/* VIEW 1: OBSERVATORY (LANDING VIEW: HERO, CONTEXT STRIP, SUITE OVERVIEW)   */}
         {/* ========================================================================= */}
         {currentView === 'observatory' && (
-          <section id="observatory" aria-labelledby="observatory-heading" className="space-y-12 sm:space-y-16">
+          <section id="observatory" aria-labelledby="observatory-heading" className="space-y-12 sm:space-y-16 animate-view-fade">
             {/* HERO SECTION */}
-            <div className="relative overflow-hidden rounded-3xl border border-[#252D34] bg-gradient-to-b from-[#151A1F] via-[#12171C] to-[#0E1216] p-6 sm:p-10 lg:p-14 xl:p-16">
-              <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-12">
+            <div className="relative overflow-hidden rounded-3xl border border-[#252D34] bg-gradient-to-b from-[#151A1F] via-[#11161B] to-[#0B0E11] p-6 sm:p-10 lg:p-14 xl:p-16 shadow-[0_8px_32px_rgba(0,0,0,0.45)]">
+              {/* Subtle ambient lighting glows */}
+              <div className="pointer-events-none absolute -top-32 -left-32 h-80 w-80 rounded-full bg-[#F0A34A]/5 blur-3xl" aria-hidden="true" />
+              <div className="pointer-events-none absolute -bottom-32 -right-32 h-80 w-80 rounded-full bg-[#38BDF8]/5 blur-3xl" aria-hidden="true" />
+
+              <div className="relative z-10 grid items-center gap-10 lg:grid-cols-12 lg:gap-12">
                 {/* Left Column: Editorial Headline & Actions */}
                 <div className="lg:col-span-7 xl:col-span-7">
-                  <div className="inline-flex items-center gap-2.5 rounded-full border border-[#252D34] bg-[#0B0E11]/80 px-3.5 py-1 text-xs font-mono tracking-widest text-[#9BA8B2]">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#F0A34A]" />
+                  <div className="inline-flex items-center gap-2.5 rounded-full border border-[#252D34] bg-[#0B0E11]/90 px-3.5 py-1 text-xs font-mono tracking-widest text-[#9BA8B2] shadow-sm">
+                    <span className="h-2 w-2 rounded-full bg-[#F0A34A] shadow-[0_0_8px_rgba(240,163,74,0.7)]" />
                     <span className="font-semibold text-[#F0A34A]">FIRESIGNAL</span>
                     <span className="text-[#252D34]">/</span>
                     <span>EARTH OBSERVATION</span>
@@ -340,7 +344,7 @@ function App() {
                     <a
                       href="#historical-patterns"
                       onClick={(e) => handleNavClick('historical-patterns', e)}
-                      className="inline-flex items-center gap-2.5 rounded-xl bg-[#F0A34A] px-6 py-3.5 text-sm font-semibold text-[#0B0E11] transition hover:bg-[#F5B56E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F0A34A] focus-visible:ring-offset-2 focus-visible:ring-offset-[#151A1F]"
+                      className="inline-flex items-center gap-2.5 rounded-xl bg-[#F0A34A] px-6 py-3.5 text-sm font-semibold text-[#0B0E11] transition-all hover:bg-[#F5B56E] hover:shadow-[0_4px_20px_rgba(240,163,74,0.35)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F0A34A] focus-visible:ring-offset-2 focus-visible:ring-offset-[#151A1F]"
                     >
                       <span>Explore Historical Patterns</span>
                       <ArrowRight size={16} />
@@ -348,7 +352,7 @@ function App() {
                     <a
                       href="#sensor-laboratory"
                       onClick={(e) => handleNavClick('sensor-laboratory', e)}
-                      className="inline-flex items-center gap-2 rounded-xl border border-[#252D34] bg-[#0B0E11] px-5 py-3.5 text-sm font-medium text-[#E8EDF0] transition hover:border-[#F0A34A]/50 hover:text-[#F0A34A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F0A34A]"
+                      className="inline-flex items-center gap-2 rounded-xl border border-[#252D34] bg-[#0B0E11]/80 backdrop-blur-sm px-5 py-3.5 text-sm font-medium text-[#E8EDF0] transition-all hover:border-[#F0A34A]/50 hover:bg-[#151A1F] hover:text-[#F0A34A] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F0A34A]"
                     >
                       <span>Sensor Laboratory</span>
                     </a>
@@ -458,11 +462,12 @@ function App() {
             </div>
 
             {/* VERIFIED ARCHIVE CONTEXT STRIP */}
-            <div className="rounded-2xl border border-[#252D34] bg-[#11161B] p-5 sm:p-6 shadow-sm">
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 sm:divide-y-0 sm:gap-6 lg:divide-x divide-[#252D34]">
+            <div className="rounded-2xl border border-[#252D34] bg-gradient-to-b from-[#151A1F] to-[#101418] p-5 sm:p-6 shadow-[0_4px_24px_rgba(0,0,0,0.3)]">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 sm:divide-y-0 sm:gap-6 lg:divide-x divide-[#252D34]/80">
                 <div className="flex flex-col justify-between">
                   <div>
-                    <div className="flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">
+                    <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#38BDF8] shadow-[0_0_6px_rgba(56,189,248,0.7)]" />
                       <Satellite size={14} className="text-[#38BDF8]" />
                       <span>MODIS Archive</span>
                     </div>
@@ -475,7 +480,8 @@ function App() {
 
                 <div className="flex flex-col justify-between pt-4 sm:pt-0 lg:pl-6">
                   <div>
-                    <div className="flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">
+                    <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#F0A34A] shadow-[0_0_6px_rgba(240,163,74,0.7)]" />
                       <Flame size={14} className="text-[#F0A34A]" />
                       <span>VIIRS Archive</span>
                     </div>
@@ -488,7 +494,8 @@ function App() {
 
                 <div className="flex flex-col justify-between pt-4 sm:pt-0 lg:pl-6">
                   <div>
-                    <div className="flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">
+                    <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.7)]" />
                       <Globe2 size={14} className="text-emerald-400" />
                       <span>Geographic Scope</span>
                     </div>
@@ -501,7 +508,8 @@ function App() {
 
                 <div className="flex flex-col justify-between pt-4 sm:pt-0 lg:pl-6">
                   <div>
-                    <div className="flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">
+                    <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#F0A34A] shadow-[0_0_6px_rgba(240,163,74,0.7)]" />
                       <Layers size={14} className="text-[#F0A34A]" />
                       <span>Primary Measurement</span>
                     </div>
@@ -553,7 +561,7 @@ function App() {
                   </p>
 
                   <div className="mt-8 grid gap-6 sm:grid-cols-3">
-                    <div className="rounded-xl border border-[#252D34] bg-[#0B0E11] p-5">
+                    <div className="rounded-xl border border-[#252D34]/90 bg-gradient-to-b from-[#14191E] to-[#0B0E11] p-5 shadow-sm transition-colors hover:border-[#F0A34A]/30">
                       <div className="text-xs font-mono uppercase tracking-wider text-[#F0A34A]">1. Standard Grid Metric</div>
                       <h3 className="mt-2 text-lg font-semibold text-[#E8EDF0]">Occupied Grid-Cell-Days</h3>
                       <p className="mt-2 text-xs leading-relaxed text-[#9BA8B2]">
@@ -561,7 +569,7 @@ function App() {
                       </p>
                     </div>
 
-                    <div className="rounded-xl border border-[#252D34] bg-[#0B0E11] p-5">
+                    <div className="rounded-xl border border-[#252D34]/90 bg-gradient-to-b from-[#14191E] to-[#0B0E11] p-5 shadow-sm transition-colors hover:border-[#38BDF8]/30">
                       <div className="text-xs font-mono uppercase tracking-wider text-[#38BDF8]">2. Sensor Divergence</div>
                       <h3 className="mt-2 text-lg font-semibold text-[#E8EDF0]">Two Distinct Optical Lenses</h3>
                       <p className="mt-2 text-xs leading-relaxed text-[#9BA8B2]">
@@ -569,7 +577,7 @@ function App() {
                       </p>
                     </div>
 
-                    <div className="rounded-xl border border-[#252D34] bg-[#0B0E11] p-5">
+                    <div className="rounded-xl border border-[#252D34]/90 bg-gradient-to-b from-[#14191E] to-[#0B0E11] p-5 shadow-sm transition-colors hover:border-emerald-500/30">
                       <div className="text-xs font-mono uppercase tracking-wider text-emerald-400">3. Calibration Status</div>
                       <h3 className="mt-2 text-lg font-semibold text-[#E8EDF0]">Empirical Harmonization</h3>
                       <p className="mt-2 text-xs leading-relaxed text-[#9BA8B2]">
@@ -600,7 +608,7 @@ function App() {
                 <a
                   href="#historical-patterns"
                   onClick={(e) => handleNavClick('historical-patterns', e)}
-                  className="group flex flex-col justify-between rounded-2xl border border-[#252D34] bg-[#151A1F] p-6 transition hover:border-[#F0A34A]/50 hover:bg-[#181E24] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F0A34A]"
+                  className="group flex flex-col justify-between rounded-2xl border border-[#252D34]/90 bg-gradient-to-b from-[#14191E] via-[#111519] to-[#0E1216] p-6 shadow-sm transition-all duration-200 hover:border-[#F0A34A]/50 hover:bg-[#181E24] hover:shadow-[0_8px_24px_rgba(240,163,74,0.12)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F0A34A]"
                 >
                   <div>
                     <div className="flex items-center justify-between">
@@ -631,7 +639,7 @@ function App() {
                 <a
                   href="#sensor-laboratory"
                   onClick={(e) => handleNavClick('sensor-laboratory', e)}
-                  className="group flex flex-col justify-between rounded-2xl border border-[#252D34] bg-[#151A1F] p-6 transition hover:border-[#F0A34A]/50 hover:bg-[#181E24] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F0A34A]"
+                  className="group flex flex-col justify-between rounded-2xl border border-[#252D34]/90 bg-gradient-to-b from-[#14191E] via-[#111519] to-[#0E1216] p-6 shadow-sm transition-all duration-200 hover:border-[#38BDF8]/50 hover:bg-[#181E24] hover:shadow-[0_8px_24px_rgba(56,189,248,0.12)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F0A34A]"
                 >
                   <div>
                     <div className="flex items-center justify-between">
@@ -662,7 +670,7 @@ function App() {
                 <a
                   href="#research-methods"
                   onClick={(e) => handleNavClick('research-methods', e)}
-                  className="group flex flex-col justify-between rounded-2xl border border-[#252D34] bg-[#151A1F] p-6 transition hover:border-[#F0A34A]/50 hover:bg-[#181E24] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F0A34A]"
+                  className="group flex flex-col justify-between rounded-2xl border border-[#252D34]/90 bg-gradient-to-b from-[#14191E] via-[#111519] to-[#0E1216] p-6 shadow-sm transition-all duration-200 hover:border-emerald-500/50 hover:bg-[#181E24] hover:shadow-[0_8px_24px_rgba(52,211,153,0.12)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F0A34A]"
                 >
                   <div>
                     <div className="flex items-center justify-between">
@@ -697,7 +705,7 @@ function App() {
         {/* VIEW 2: HISTORICAL PATTERNS (CALENDAR + REGIONAL FIRE INTELLIGENCE)        */}
         {/* ========================================================================= */}
         {currentView === 'historical-patterns' && (
-          <section id="historical-patterns" aria-labelledby="historical-heading" className="space-y-12">
+          <section id="historical-patterns" aria-labelledby="historical-heading" className="space-y-12 animate-view-fade">
             <div>
               <div className="inline-flex items-center gap-2 rounded-full border border-[#252D34] bg-[#151A1F] px-3 py-1 font-mono text-xs tracking-widest text-[#F0A34A]">
                 02 / MULTI-DECADE ARCHIVES · 2003–2025
@@ -736,7 +744,7 @@ function App() {
         {/* VIEW 3: SENSOR LABORATORY (BASELINE + ANALYZER + HARMONIZATION MODELS)     */}
         {/* ========================================================================= */}
         {currentView === 'sensor-laboratory' && (
-          <section id="sensor-laboratory" aria-labelledby="sensor-lab-heading" className="space-y-14">
+          <section id="sensor-laboratory" aria-labelledby="sensor-lab-heading" className="space-y-14 animate-view-fade">
             <div>
               <div className="inline-flex items-center gap-2 rounded-full border border-[#252D34] bg-[#151A1F] px-3 py-1 font-mono text-xs tracking-widest text-[#F0A34A]">
                 03 / CROSS-SENSOR HARMONIZATION & DIAGNOSTICS
@@ -825,7 +833,7 @@ function App() {
                       <div className="mt-6 h-80 w-full">
                         <ResponsiveContainer width="100%" height="100%">
                           <LineChart data={records} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
-                            <CartesianGrid stroke="#252D34" strokeDasharray="3 3" />
+                            <CartesianGrid stroke="#1C2329" strokeDasharray="3 3" />
                             <XAxis
                               dataKey="date"
                               stroke="#9BA8B2"
@@ -838,11 +846,16 @@ function App() {
                             />
                             <Tooltip
                               contentStyle={{
-                                background: '#151A1F',
+                                background: 'rgba(11, 14, 17, 0.95)',
+                                backdropFilter: 'blur(12px)',
                                 border: '1px solid #252D34',
-                                borderRadius: 8,
+                                borderRadius: 12,
+                                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5)',
                                 color: '#E8EDF0',
+                                fontSize: 12,
                               }}
+                              labelStyle={{ color: '#9BA8B2', fontWeight: 600, marginBottom: 4 }}
+                              itemStyle={{ color: '#E8EDF0' }}
                             />
                             <Legend wrapperStyle={{ color: '#9BA8B2', fontSize: 12 }} />
                             <Line
@@ -850,7 +863,7 @@ function App() {
                               dataKey="modis"
                               name="MODIS (Terra + Aqua)"
                               stroke="#38BDF8"
-                              strokeWidth={2}
+                              strokeWidth={2.25}
                               dot={false}
                             />
                             <Line
@@ -858,7 +871,7 @@ function App() {
                               dataKey="viirs"
                               name="VIIRS (Suomi-NPP)"
                               stroke="#F0A34A"
-                              strokeWidth={2}
+                              strokeWidth={2.25}
                               dot={false}
                             />
                           </LineChart>
@@ -897,7 +910,7 @@ function App() {
         {/* VIEW 4: RESEARCH & METHODS (METHODOLOGY CARDS + GITHUB WORKING LINK)       */}
         {/* ========================================================================= */}
         {currentView === 'research-methods' && (
-          <section id="research-methods" aria-labelledby="methods-heading" className="space-y-12">
+          <section id="research-methods" aria-labelledby="methods-heading" className="space-y-12 animate-view-fade">
             <div>
               <div className="inline-flex items-center gap-2 rounded-full border border-[#252D34] bg-[#151A1F] px-3 py-1 font-mono text-xs tracking-widest text-[#F0A34A]">
                 04 / RESEARCH & METHODS

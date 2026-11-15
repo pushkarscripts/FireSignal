@@ -198,7 +198,7 @@ export default function HistoricalCalendar() {
           type="button"
           onClick={downloadCSV}
           disabled={records.length === 0}
-          className="flex items-center gap-2 rounded-lg border border-[#252D34] bg-[#151A1F] px-4 py-2 text-sm font-medium text-[#E8EDF0] transition hover:border-[#F0A34A]/50 hover:text-[#F0A34A] disabled:opacity-40"
+          className="flex items-center gap-2 rounded-xl border border-[#252D34] bg-[#151A1F] px-4 py-2 text-sm font-medium text-[#E8EDF0] transition hover:border-[#F0A34A]/50 hover:text-[#F0A34A] hover:shadow-[0_0_16px_rgba(240,163,74,0.15)] active:scale-95 disabled:opacity-40"
         >
           <Download size={16} /> Export monthly CSV
         </button>
@@ -218,12 +218,12 @@ export default function HistoricalCalendar() {
 
       {!loading && !error && records.length > 0 && (
         <>
-          <div className="rounded-2xl border border-[#252D34] bg-[#151A1F] p-5 sm:p-7">
+          <div className="rounded-2xl border border-[#252D34]/90 bg-gradient-to-b from-[#14191E] via-[#101418] to-[#0E1216] p-5 sm:p-7 shadow-sm">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-2 text-sm text-[#9BA8B2]">
                 <Satellite size={17} className="text-[#F0A34A]" /> Select series view
               </div>
-              <div className="flex flex-wrap rounded-lg border border-[#252D34] bg-[#0B0E11] p-1" role="group" aria-label="Satellite series mode">
+              <div className="flex flex-wrap rounded-xl border border-[#252D34] bg-[#0B0E11] p-1 shadow-inner" role="group" aria-label="Satellite series mode">
                 {(
                   [
                     ['harmonized', 'Harmonized (Unified)'],
@@ -236,9 +236,9 @@ export default function HistoricalCalendar() {
                     type="button"
                     onClick={() => setSensor(item)}
                     aria-pressed={sensor === item}
-                    className={`rounded-md px-3.5 py-1.5 text-xs sm:text-sm font-medium transition ${
+                    className={`rounded-lg px-3.5 py-1.5 text-xs sm:text-sm font-medium transition-all duration-150 active:scale-95 ${
                       sensor === item
-                        ? 'bg-[#F0A34A] text-[#0B0E11] font-semibold'
+                        ? 'bg-[#F0A34A] text-[#0B0E11] font-semibold shadow-[0_0_12px_rgba(240,163,74,0.3)]'
                         : 'text-[#9BA8B2] hover:text-[#E8EDF0]'
                     }`}
                   >
@@ -255,9 +255,9 @@ export default function HistoricalCalendar() {
                   type="button"
                   aria-pressed={viewMode === mode}
                   onClick={() => setViewMode(mode)}
-                  className={`rounded-lg border px-3.5 py-1.5 text-sm font-medium transition ${
+                  className={`rounded-xl border px-3.5 py-1.5 text-sm font-medium transition-all duration-150 active:scale-95 ${
                     viewMode === mode
-                      ? 'border-[#F0A34A] bg-[#F0A34A]/10 text-[#F0A34A]'
+                      ? 'border-[#F0A34A] bg-[#F0A34A]/15 text-[#F0A34A] shadow-[0_0_12px_rgba(240,163,74,0.15)]'
                       : 'border-[#252D34] bg-[#0B0E11] text-[#9BA8B2] hover:text-[#E8EDF0]'
                   }`}
                 >
@@ -291,10 +291,18 @@ export default function HistoricalCalendar() {
                     return (
                       <div key={year}>
                         {isTransitionBoundary && (
-                          <div className="my-2.5 flex items-center gap-2 border-y border-[#F0A34A]/30 bg-[#F0A34A]/5 py-1 px-2 text-[11px] font-mono text-[#F0A34A]">
-                            <span className="font-semibold uppercase tracking-wider">▲ 2003–2012: Observed MODIS</span>
-                            <span className="text-[#9BA8B2]">|</span>
-                            <span className="font-semibold uppercase tracking-wider">▼ 2013–2025: Harmonized VIIRS (S-NPP 375 m scaled to MODIS scale)</span>
+                          <div className="my-3.5 flex items-center justify-between rounded-xl border border-[#F0A34A]/40 bg-gradient-to-r from-[#F0A34A]/12 via-[#F0A34A]/5 to-transparent px-3.5 py-2 text-[11px] font-mono text-[#F0A34A] shadow-[0_0_16px_rgba(240,163,74,0.12)]">
+                            <div className="flex items-center gap-2.5">
+                              <span className="h-2 w-2 rounded-full bg-[#F0A34A] shadow-[0_0_8px_rgba(240,163,74,0.8)]" />
+                              <span className="font-semibold uppercase tracking-wider text-[#E8EDF0]">Jan 2013 Sensor Transition:</span>
+                              <span className="text-[#9BA8B2]">▲ 2003–2012 Observed MODIS</span>
+                              <span className="text-[#9BA8B2]/40">│</span>
+                              <span className="text-[#F0A34A] font-medium">▼ 2013–2025 Harmonized VIIRS</span>
+                              <span className="hidden sm:inline text-xs text-[#9BA8B2] font-normal">(S-NPP 375 m scaled to MODIS scale)</span>
+                            </div>
+                            <span className="rounded bg-[#0B0E11] border border-[#F0A34A]/30 px-2 py-0.5 text-[10px] text-[#F0A34A] uppercase tracking-widest hidden md:inline font-mono">
+                              Unified Series Splice
+                            </span>
                           </div>
                         )}
                         <div className="grid grid-cols-[56px_repeat(12,minmax(0,1fr))] gap-1.5">
@@ -347,10 +355,10 @@ export default function HistoricalCalendar() {
                                 title={tooltipText}
                                 aria-label={tooltipText}
                                 aria-pressed={active}
-                                className={`h-6 rounded-[4px] border transition ${
+                                className={`h-6 rounded-[4px] border transition-all duration-150 ${
                                   active
-                                    ? 'border-[#E8EDF0] ring-2 ring-[#F0A34A] ring-offset-1 ring-offset-[#0B0E11]'
-                                    : 'border-[#252D34]'
+                                    ? 'border-[#E8EDF0] ring-2 ring-[#F0A34A] ring-offset-1 ring-offset-[#0B0E11] scale-105 z-10 shadow-md'
+                                    : 'border-[#252D34] hover:scale-105 hover:z-10 focus-visible:ring-2 focus-visible:ring-[#F0A34A] focus-visible:ring-offset-1 focus-visible:ring-offset-[#0B0E11] focus-visible:z-20 focus-visible:outline-none'
                                 } ${value === null ? 'cursor-not-allowed bg-[#1B2127]/60' : 'hover:brightness-125'}`}
                                 style={band === null ? undefined : { backgroundColor: viewMode === 'activity' ? ACTIVITY_COLORS[band] : ANOMALY_COLORS[band] }}
                               />
@@ -383,7 +391,7 @@ export default function HistoricalCalendar() {
           </div>
 
           <div className="grid gap-4 md:grid-cols-3">
-            <div className="rounded-2xl border border-[#252D34] bg-[#151A1F] p-5">
+            <div className="rounded-2xl border border-[#252D34]/90 bg-gradient-to-b from-[#14191E] to-[#0E1216] p-5 shadow-sm transition-colors hover:border-[#F0A34A]/30">
               <p className="text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">Selected month</p>
               <p className="mt-2 text-xl font-semibold text-[#E8EDF0]">{MONTHS[Number(selected.slice(5)) - 1]} {selectedYear}</p>
               <p className="mt-3 text-3xl font-semibold text-[#F0A34A]">
@@ -411,7 +419,7 @@ export default function HistoricalCalendar() {
               )}
             </div>
 
-            <div className="rounded-2xl border border-[#252D34] bg-[#151A1F] p-5">
+            <div className="rounded-2xl border border-[#252D34]/90 bg-gradient-to-b from-[#14191E] to-[#0E1216] p-5 shadow-sm transition-colors hover:border-[#38BDF8]/30">
               <p className="text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">{selectedYear} annual activity</p>
               <p className="mt-5 text-3xl font-semibold text-[#E8EDF0]">{yearTotal === null ? 'N/A' : format(yearTotal)}</p>
               <p className="mt-1 text-xs text-[#9BA8B2]">
@@ -423,7 +431,7 @@ export default function HistoricalCalendar() {
               </p>
             </div>
 
-            <div className="rounded-2xl border border-[#252D34] bg-[#151A1F] p-5">
+            <div className="rounded-2xl border border-[#252D34]/90 bg-gradient-to-b from-[#14191E] to-[#0E1216] p-5 shadow-sm transition-colors hover:border-emerald-500/30">
               <p className="text-xs font-mono uppercase tracking-wider text-[#9BA8B2]">Months with detections</p>
               <p className="mt-5 text-3xl font-semibold text-[#E8EDF0]">
                 {availableMonths} <span className="text-lg text-[#9BA8B2]">/ {records.length}</span>
@@ -438,10 +446,10 @@ export default function HistoricalCalendar() {
 
           {/* SCIENTIFIC PROVENANCE CARD FOR SELECTED MONTH */}
           {sensor === 'harmonized' && selectedUnified && (
-            <div className="rounded-2xl border border-[#252D34] bg-[#151A1F] p-5 sm:p-6 space-y-4">
+            <div className="rounded-2xl border border-[#252D34]/90 bg-gradient-to-b from-[#14191E] via-[#101418] to-[#0B0E11] p-5 sm:p-6 shadow-[0_8px_32px_rgba(0,0,0,0.35)] space-y-4">
               <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#252D34] pb-3">
                 <div className="flex items-center gap-2">
-                  <span className="rounded-md border border-[#F0A34A]/40 bg-[#F0A34A]/10 px-2.5 py-0.5 text-xs font-mono font-semibold text-[#F0A34A]">
+                  <span className="rounded-md border border-[#F0A34A]/40 bg-[#F0A34A]/10 px-2.5 py-0.5 text-xs font-mono font-semibold text-[#F0A34A] shadow-[0_0_8px_rgba(240,163,74,0.15)]">
                     {selectedUnified.provenance === 'OBSERVED_MODIS' ? 'OBSERVED MODIS' : 'HARMONIZED VIIRS'}
                   </span>
                   <span className="text-sm font-semibold text-[#E8EDF0]">
@@ -461,7 +469,7 @@ export default function HistoricalCalendar() {
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 text-xs">
-                <div className="rounded-xl border border-[#252D34] bg-[#0B0E11] p-3.5">
+                <div className="rounded-xl border border-[#252D34]/90 bg-[#0B0E11]/80 p-3.5 transition-colors hover:border-[#F0A34A]/30">
                   <p className="text-[#9BA8B2] uppercase font-mono tracking-wider">Harmonized Value</p>
                   <p className="mt-1.5 text-lg font-semibold text-[#F0A34A] tabular-nums">
                     {format(Math.round(selectedUnified.harmonized))} <span className="text-xs text-[#9BA8B2]">OGCD</span>
@@ -471,7 +479,7 @@ export default function HistoricalCalendar() {
                   </p>
                 </div>
 
-                <div className="rounded-xl border border-[#252D34] bg-[#0B0E11] p-3.5">
+                <div className="rounded-xl border border-[#252D34]/90 bg-[#0B0E11]/80 p-3.5 transition-colors hover:border-[#38BDF8]/30">
                   <p className="text-[#9BA8B2] uppercase font-mono tracking-wider">Observed MODIS</p>
                   <p className="mt-1.5 text-lg font-semibold text-[#E8EDF0] tabular-nums">
                     {selectedUnified.modis !== null ? format(selectedUnified.modis) : 'Unavailable'}{' '}
@@ -482,7 +490,7 @@ export default function HistoricalCalendar() {
                   </p>
                 </div>
 
-                <div className="rounded-xl border border-[#252D34] bg-[#0B0E11] p-3.5">
+                <div className="rounded-xl border border-[#252D34]/90 bg-[#0B0E11]/80 p-3.5 transition-colors hover:border-[#F0A34A]/30">
                   <p className="text-[#9BA8B2] uppercase font-mono tracking-wider">Observed VIIRS</p>
                   <p className="mt-1.5 text-lg font-semibold text-[#E8EDF0] tabular-nums">
                     {selectedUnified.viirs !== null ? format(selectedUnified.viirs) : 'N/A'}{' '}
@@ -495,7 +503,7 @@ export default function HistoricalCalendar() {
                   </p>
                 </div>
 
-                <div className="rounded-xl border border-[#252D34] bg-[#0B0E11] p-3.5">
+                <div className="rounded-xl border border-[#252D34]/90 bg-[#0B0E11]/80 p-3.5 transition-colors hover:border-emerald-500/30">
                   <p className="text-[#9BA8B2] uppercase font-mono tracking-wider">Co-observation Residual</p>
                   <p className="mt-1.5 text-lg font-semibold tabular-nums text-[#E8EDF0]">
                     {selectedUnified.coObservationResidual !== null ? (
@@ -535,7 +543,7 @@ export default function HistoricalCalendar() {
             </div>
           )}
 
-          <div className="rounded-2xl border border-[#252D34] bg-[#151A1F] p-5 sm:p-7">
+          <div className="rounded-2xl border border-[#252D34]/90 bg-gradient-to-b from-[#14191E] to-[#0E1216] p-5 sm:p-7 shadow-sm">
             <div className="flex items-center gap-2">
               <TrendingUp size={19} className="text-[#F0A34A]" />
               <h4 className="text-lg font-semibold text-[#E8EDF0]">Annual hotspot activity</h4>
@@ -548,11 +556,21 @@ export default function HistoricalCalendar() {
             <div className="mt-6 h-64 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={annual} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
-                  <CartesianGrid stroke="#252D34" strokeDasharray="3 3" />
+                  <CartesianGrid stroke="#1C2329" strokeDasharray="3 3" />
                   <XAxis dataKey="year" stroke="#9BA8B2" tick={{ fontSize: 11 }} minTickGap={20} />
                   <YAxis stroke="#9BA8B2" tick={{ fontSize: 11 }} tickFormatter={n => `${Math.round(Number(n) / 1000)}k`} />
                   <Tooltip
-                    contentStyle={{ background: '#151A1F', border: '1px solid #252D34', borderRadius: 8, color: '#E8EDF0' }}
+                    contentStyle={{
+                      background: 'rgba(11, 14, 17, 0.95)',
+                      backdropFilter: 'blur(12px)',
+                      border: '1px solid #252D34',
+                      borderRadius: 12,
+                      color: '#E8EDF0',
+                      boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+                      fontSize: 12,
+                    }}
+                    labelStyle={{ color: '#9BA8B2', fontWeight: 600, marginBottom: 4 }}
+                    itemStyle={{ color: '#E8EDF0' }}
                     formatter={(value) => [typeof value === 'number' ? format(value) : 'N/A', sensor === 'harmonized' ? 'Annual Harmonized OGCD' : 'Annual OGCD']}
                   />
                   <Line dataKey="total" name={sensor === 'harmonized' ? 'Harmonized OGCD' : 'Annual OGCD'} stroke="#F0A34A" strokeWidth={2.5} dot={{ r: 2, fill: '#F0A34A' }} connectNulls={false} />
