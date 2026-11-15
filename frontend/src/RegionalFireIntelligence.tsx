@@ -98,7 +98,7 @@ export default function RegionalFireIntelligence() {
           <MapPinned size={22} />
         </div>
         <div>
-          <h3 className="text-xl font-semibold text-[#E8EDF0]">Regional Fire Intelligence</h3>
+          <h3 className="text-xl sm:text-2xl font-display tracking-tight text-[#E8EDF0]">Regional Fire Intelligence</h3>
           <p className="mt-1 max-w-3xl text-sm leading-6 text-[#9BA8B2]">
             Explore monthly satellite hotspot activity within historical administrative boundaries. Values are occupied 5 km grid-cell-days (OGCD), not fire counts or burned area.
           </p>

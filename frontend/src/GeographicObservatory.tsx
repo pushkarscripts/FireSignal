@@ -408,7 +408,7 @@ export default function GeographicObservatory({ onNavigateToHistorical }: Geogra
             <Compass size={13} className="text-[#F0A34A]" />
             <span>OBSERVATORY INSTRUMENT · SPATIAL INTELLIGENCE</span>
           </div>
-          <h2 className="mt-3 text-2xl sm:text-3xl font-semibold tracking-tight text-[#E8EDF0]">
+          <h2 className="mt-3 font-display text-3xl sm:text-4xl lg:text-5xl tracking-tight text-[#E8EDF0]">
             Geographic Observatory
           </h2>
           <p className="mt-2 max-w-2xl text-sm sm:text-base leading-relaxed text-[#9BA8B2]">
@@ -709,6 +709,15 @@ export default function GeographicObservatory({ onNavigateToHistorical }: Geogra
                       strokeDasharray="2 2"
                       opacity="0.8"
                     />
+                    <circle
+                      cx={sel.centroid[0]}
+                      cy={sel.centroid[1]}
+                      r={6}
+                      fill="none"
+                      stroke="#F0A34A"
+                      strokeWidth={1.5}
+                      className="obs-beacon-ring"
+                    />
                     <circle cx={sel.centroid[0]} cy={sel.centroid[1]} r={2.5} fill="#F0A34A" />
                   </g>
                 )
@@ -824,7 +833,7 @@ export default function GeographicObservatory({ onNavigateToHistorical }: Geogra
             {/* KPI STATS OR EXPLICIT NO-OBSERVATIONS ALERT                    */}
             {/* -------------------------------------------------------------- */}
             {selectedStats && selectedStats.totalOgcd > 0 ? (
-              <div className="space-y-6">
+              <div key={`${selectedRegion}-${sensor}-${year}`} className="animate-detail-fade space-y-6">
                 {/* 3 Metric Cards */}
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                   <div className="rounded-xl border border-[#252D34]/90 bg-[#0B0E11]/80 p-3.5 transition-colors hover:border-[#F0A34A]/30">

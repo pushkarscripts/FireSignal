@@ -93,7 +93,7 @@ export default function RegionalHarmonizationResults() {
           <BarChart3 size={22} />
         </div>
         <div>
-          <h3 className="text-xl font-semibold text-[#E8EDF0]">Regional Harmonization Evaluation</h3>
+          <h3 className="text-xl sm:text-2xl font-display tracking-tight text-[#E8EDF0]">Regional Harmonization Evaluation</h3>
           <p className="mt-1 max-w-3xl text-sm leading-6 text-[#9BA8B2]">
             Empirical VIIRS-to-MODIS monthly 5 km occupied grid-cell-day agreement. Trained on 2013–2021, selected using 2022–2023, tested on 2024–2025.
           </p>

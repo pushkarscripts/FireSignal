@@ -187,7 +187,9 @@ export default function HistoricalCalendar() {
             <div className="rounded-lg border border-[#F0A34A]/30 bg-[#F0A34A]/10 p-2 text-[#F0A34A]">
               <CalendarDays size={22} />
             </div>
-            <h3 className="text-xl font-semibold text-[#E8EDF0]">Historical Burning Calendar</h3>
+            <h3 className="text-xl sm:text-2xl font-display tracking-tight text-[#E8EDF0]">
+              Historical Burning Calendar
+            </h3>
           </div>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-[#9BA8B2]">
             India · 2003–2025 · NASA FIRMS · occupied 5 km equal-area grid-cell-days (OGCD).
@@ -218,7 +220,7 @@ export default function HistoricalCalendar() {
 
       {!loading && !error && records.length > 0 && (
         <>
-          <div className="rounded-2xl border border-[#252D34]/90 bg-gradient-to-b from-[#14191E] via-[#101418] to-[#0E1216] p-5 sm:p-7 shadow-sm">
+          <div className="rounded-2xl border border-[#252D34]/90 bg-gradient-to-b from-[#14191E] via-[#101418] to-[#0E1216] p-5 sm:p-7 shadow-sm animate-calendar-reveal">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-2 text-sm text-[#9BA8B2]">
                 <Satellite size={17} className="text-[#F0A34A]" /> Select series view
@@ -291,17 +293,20 @@ export default function HistoricalCalendar() {
                     return (
                       <div key={year}>
                         {isTransitionBoundary && (
-                          <div className="my-3.5 flex items-center justify-between rounded-xl border border-[#F0A34A]/40 bg-gradient-to-r from-[#F0A34A]/12 via-[#F0A34A]/5 to-transparent px-3.5 py-2 text-[11px] font-mono text-[#F0A34A] shadow-[0_0_16px_rgba(240,163,74,0.12)]">
-                            <div className="flex items-center gap-2.5">
+                          <div className="my-3.5 flex flex-wrap items-center justify-between gap-2.5 rounded-xl border border-[#F0A34A]/40 bg-gradient-to-r from-[#38BDF8]/10 via-[#151A1F] to-[#F0A34A]/10 px-3.5 py-2.5 text-[11px] font-mono shadow-[0_0_16px_rgba(240,163,74,0.12)]">
+                            <div className="flex flex-wrap items-center gap-2">
                               <span className="h-2 w-2 rounded-full bg-[#F0A34A] shadow-[0_0_8px_rgba(240,163,74,0.8)]" />
                               <span className="font-semibold uppercase tracking-wider text-[#E8EDF0]">Jan 2013 Sensor Transition:</span>
-                              <span className="text-[#9BA8B2]">▲ 2003–2012 Observed MODIS</span>
-                              <span className="text-[#9BA8B2]/40">│</span>
-                              <span className="text-[#F0A34A] font-medium">▼ 2013–2025 Harmonized VIIRS</span>
-                              <span className="hidden sm:inline text-xs text-[#9BA8B2] font-normal">(S-NPP 375 m scaled to MODIS scale)</span>
+                              <span className="inline-flex items-center gap-1 rounded bg-[#38BDF8]/15 border border-[#38BDF8]/40 px-2 py-0.5 text-[#38BDF8] font-medium">
+                                ▲ 2003–2012: Observed MODIS (1 km)
+                              </span>
+                              <span className="text-[#9BA8B2] font-sans">➔</span>
+                              <span className="inline-flex items-center gap-1 rounded bg-[#F0A34A]/15 border border-[#F0A34A]/40 px-2 py-0.5 text-[#F0A34A] font-medium">
+                                ▼ 2013–2025: Harmonized VIIRS (375 m)
+                              </span>
                             </div>
-                            <span className="rounded bg-[#0B0E11] border border-[#F0A34A]/30 px-2 py-0.5 text-[10px] text-[#F0A34A] uppercase tracking-widest hidden md:inline font-mono">
-                              Unified Series Splice
+                            <span className="rounded bg-[#0B0E11] border border-[#252D34] px-2.5 py-0.5 text-[10px] text-[#9BA8B2] uppercase tracking-widest hidden md:inline font-mono">
+                              Statistical Calibration Splice
                             </span>
                           </div>
                         )}

@@ -96,7 +96,7 @@ export default function SensorShiftAnalyzer() {
           <Layers3 size={22} />
         </div>
         <div>
-          <h3 className="text-xl font-semibold text-[#E8EDF0]">Sensor Shift Analyzer</h3>
+          <h3 className="text-xl sm:text-2xl font-display tracking-tight text-[#E8EDF0]">Sensor Shift Analyzer</h3>
           <p className="mt-1 max-w-3xl text-sm leading-6 text-[#9BA8B2]">
             Explore how spatial aggregation, observation conditions, and temporal comparisons change the apparent differences between MODIS and VIIRS.
           </p>

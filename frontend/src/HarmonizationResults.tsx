@@ -77,7 +77,7 @@ export default function HarmonizationResults() {
           <Activity size={22} />
         </div>
         <div>
-          <h3 className="text-xl font-semibold text-[#E8EDF0]">National Harmonization Evaluation</h3>
+          <h3 className="text-xl sm:text-2xl font-display tracking-tight text-[#E8EDF0]">National Harmonization Evaluation</h3>
           <p className="mt-1 max-w-3xl text-sm leading-6 text-[#9BA8B2]">
             India-wide monthly occupied 5 km grid-cell-days (OGCD). VIIRS is statistically adjusted to predict MODIS-scale activity; the evaluation uses chronologically held-out observations.
           </p>

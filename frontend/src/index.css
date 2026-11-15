@@ -1,6 +1,10 @@
 @import "tailwindcss";
 
 @theme {
+  --font-serif: "Instrument Serif", Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-display: "Instrument Serif", Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-sans: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   --color-obs-bg: #0B0E11;
   --color-obs-surface: #151A1F;
   --color-obs-surface-elevated: #1B2127;
@@ -102,6 +106,13 @@ body {
   background: #36414B;
 }
 
+/* Editorial display typography */
+.font-display {
+  font-family: "Instrument Serif", Georgia, Cambria, "Times New Roman", Times, serif;
+  font-optical-sizing: auto;
+  letter-spacing: -0.012em;
+}
+
 /* Subtle view transition animation */
 @keyframes viewFadeIn {
   from {
@@ -118,8 +129,124 @@ body {
   animation: viewFadeIn 220ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* Inspector detail panel quick fade */
+@keyframes detailFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-detail-fade {
+  animation: detailFadeIn 180ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Calendar one-time reveal */
+@keyframes calendarReveal {
+  from {
+    opacity: 0.88;
+    transform: scale(0.996);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-calendar-reveal {
+  animation: calendarReveal 280ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Satellite orbital dash tracks */
+@keyframes orbitTrackModis {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -40;
+  }
+}
+
+@keyframes orbitTrackViirs {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: 40;
+  }
+}
+
+.obs-orbit-modis {
+  animation: orbitTrackModis 6s linear infinite;
+}
+
+.obs-orbit-viirs {
+  animation: orbitTrackViirs 6s linear infinite;
+}
+
+/* Radar scan sweep beam */
+@keyframes scanSweep {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.obs-scan-sweep {
+  transform-origin: 260px 260px;
+  animation: scanSweep 20s linear infinite;
+}
+
+/* Dial ring subtle slow rotation */
+@keyframes reticleRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.obs-reticle-dial {
+  transform-origin: 260px 260px;
+  animation: reticleRotate 120s linear infinite;
+}
+
+/* Radar beacon pulse for selected region */
+@keyframes beaconPulse {
+  0% {
+    r: 6px;
+    opacity: 0.85;
+  }
+  75% {
+    r: 16px;
+    opacity: 0;
+  }
+  100% {
+    r: 16px;
+    opacity: 0;
+  }
+}
+
+.obs-beacon-ring {
+  animation: beaconPulse 2.5s cubic-bezier(0.2, 0.8, 0.4, 1) infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .animate-view-fade {
+  .animate-view-fade,
+  .animate-detail-fade,
+  .animate-calendar-reveal,
+  .obs-orbit-modis,
+  .obs-orbit-viirs,
+  .obs-scan-sweep,
+  .obs-reticle-dial,
+  .obs-beacon-ring {
     animation: none !important;
   }
 }

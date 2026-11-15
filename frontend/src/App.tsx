@@ -326,14 +326,14 @@ function App() {
                     ref={viewHeadingRef}
                     tabIndex={-1}
                     onBlur={() => setShowHeadingFocus(false)}
-                    className={`mt-6 text-3xl font-semibold tracking-tight text-[#E8EDF0] sm:text-5xl lg:text-5xl xl:text-6xl leading-[1.12] outline-none rounded-lg transition-shadow w-fit ${
+                    className={`mt-6 font-display text-4xl sm:text-6xl lg:text-7xl xl:text-[5.25rem] tracking-tight text-[#E8EDF0] leading-[1.04] outline-none rounded-lg transition-shadow max-w-2xl ${
                       showHeadingFocus
                         ? 'ring-2 ring-[#F0A34A] ring-offset-4 ring-offset-[#0B0E11]'
                         : ''
                     }`}
                   >
-                    Fire activity,{' '}
-                    <span className="text-[#9BA8B2] font-normal">through two different lenses<span className="text-[#F0A34A]">.</span></span>
+                    Fire activity,<br />
+                    <span className="italic font-normal text-[#9BA8B2]">through two different lenses<span className="text-[#F0A34A]">.</span></span>
                   </h1>
 
                   <p className="mt-5 max-w-2xl text-base leading-relaxed text-[#9BA8B2] sm:text-lg">
@@ -361,7 +361,10 @@ function App() {
 
                 {/* Right Column: High-Precision Abstract Earth-Observation Instrument Graphic */}
                 <div className="flex justify-center lg:col-span-5 xl:col-span-5" aria-hidden="true">
-                  <div className="relative h-72 w-72 sm:h-84 sm:w-84 md:h-96 md:w-96 lg:h-[400px] lg:w-[400px]">
+                  <div className="relative h-80 w-80 sm:h-96 sm:w-96 md:h-[420px] md:w-[420px] lg:h-[450px] lg:w-[450px] xl:h-[480px] xl:w-[480px]">
+                    {/* Subtle radial ambient atmosphere behind instrument */}
+                    <div className="pointer-events-none absolute inset-0 -m-8 rounded-full bg-gradient-to-tr from-[#38BDF8]/10 via-transparent to-[#F0A34A]/10 blur-2xl" />
+
                     <svg
                       viewBox="0 0 520 520"
                       fill="none"
@@ -370,7 +373,7 @@ function App() {
                     >
                       <defs>
                         <radialGradient id="focalGlow" cx="50%" cy="50%" r="50%">
-                          <stop offset="0%" stopColor="#F0A34A" stopOpacity="0.25" />
+                          <stop offset="0%" stopColor="#F0A34A" stopOpacity="0.3" />
                           <stop offset="100%" stopColor="#F0A34A" stopOpacity="0" />
                         </radialGradient>
                         <linearGradient id="horizonGrad" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -379,14 +382,25 @@ function App() {
                           <stop offset="100%" stopColor="#252D34" stopOpacity="0.2" />
                         </linearGradient>
                         <linearGradient id="swathGrad" x1="50%" y1="0%" x2="50%" y2="100%">
-                          <stop offset="0%" stopColor="#F0A34A" stopOpacity="0.12" />
+                          <stop offset="0%" stopColor="#F0A34A" stopOpacity="0.15" />
                           <stop offset="100%" stopColor="#F0A34A" stopOpacity="0.01" />
                         </linearGradient>
+                        <linearGradient id="scanBeamGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+                          <stop offset="0%" stopColor="#38BDF8" stopOpacity="0" />
+                          <stop offset="70%" stopColor="#38BDF8" stopOpacity="0.25" />
+                          <stop offset="100%" stopColor="#38BDF8" stopOpacity="0.8" />
+                        </linearGradient>
+                        <radialGradient id="scanFanGrad" cx="260" cy="260" r="236" gradientUnits="userSpaceOnUse">
+                          <stop offset="0%" stopColor="#38BDF8" stopOpacity="0.14" />
+                          <stop offset="100%" stopColor="#38BDF8" stopOpacity="0" />
+                        </radialGradient>
                       </defs>
 
                       {/* Outer dial ring */}
-                      <circle cx="260" cy="260" r="240" stroke="#252D34" strokeWidth="1" strokeDasharray="3 6" />
-                      <circle cx="260" cy="260" r="236" stroke="#252D34" strokeWidth="0.75" />
+                      <g className="obs-reticle-dial">
+                        <circle cx="260" cy="260" r="240" stroke="#252D34" strokeWidth="1" strokeDasharray="3 6" />
+                        <circle cx="260" cy="260" r="236" stroke="#252D34" strokeWidth="0.75" />
+                      </g>
 
                       {/* Cardinal reticle indicators */}
                       <line x1="260" y1="16" x2="260" y2="28" stroke="#F0A34A" strokeWidth="1.5" />
@@ -413,9 +427,15 @@ function App() {
                       <line x1="260" y1="80" x2="120" y2="400" stroke="#F0A34A" strokeWidth="1" strokeDasharray="3 3" opacity="0.4" />
                       <line x1="260" y1="80" x2="400" y2="400" stroke="#F0A34A" strokeWidth="1" strokeDasharray="3 3" opacity="0.4" />
 
-                      {/* Sun-Synchronous Polar Satellite Flight Paths */}
-                      <path d="M 140 40 Q 240 240 380 480" stroke="#38BDF8" strokeWidth="2" strokeDasharray="6 4" opacity="0.85" />
-                      <path d="M 380 40 Q 280 240 140 480" stroke="#F0A34A" strokeWidth="2" strokeDasharray="6 4" opacity="0.85" />
+                      {/* Continuous Earth Observation Scan Sweep (Scientifically Illustrative) */}
+                      <g className="obs-scan-sweep">
+                        <line x1="260" y1="260" x2="260" y2="24" stroke="url(#scanBeamGrad)" strokeWidth="1.5" strokeLinecap="round" />
+                        <path d="M 260 260 L 260 24 A 236 236 0 0 1 315 31 Z" fill="url(#scanFanGrad)" opacity="0.35" />
+                      </g>
+
+                      {/* Sun-Synchronous Polar Satellite Flight Paths with orbital dash drift */}
+                      <path d="M 140 40 Q 240 240 380 480" stroke="#38BDF8" strokeWidth="2.25" strokeDasharray="6 4" opacity="0.85" className="obs-orbit-modis" />
+                      <path d="M 380 40 Q 280 240 140 480" stroke="#F0A34A" strokeWidth="2.25" strokeDasharray="6 4" opacity="0.85" className="obs-orbit-viirs" />
 
                       {/* Common-Grid Equal-Area Cell Indicators (EPSG:6933 representation at intersection) */}
                       <g transform="translate(260, 260) rotate(-15)">
@@ -553,7 +573,7 @@ function App() {
                   <div className="inline-flex items-center gap-2 rounded-full border border-[#252D34] bg-[#151A1F] px-3 py-1 font-mono text-xs tracking-widest text-[#F0A34A]">
                     SCIENTIFIC FOUNDATION & MEASUREMENT PRINCIPLES
                   </div>
-                  <h2 className="mt-3 text-2xl sm:text-3xl font-semibold text-[#E8EDF0]">
+                  <h2 className="mt-3 font-display text-3xl sm:text-4xl lg:text-5xl tracking-tight text-[#E8EDF0]">
                     What FireSignal Measures
                   </h2>
                   <p className="mt-2 text-sm sm:text-base leading-relaxed text-[#9BA8B2] max-w-3xl">
@@ -595,7 +615,7 @@ function App() {
                 <div className="inline-flex items-center gap-2 rounded-full border border-[#252D34] bg-[#151A1F] px-3 py-1 font-mono text-xs tracking-widest text-[#F0A34A]">
                   OBSERVATORY SUITE · ANALYTICAL VIEWS
                 </div>
-                <h2 className="mt-3 text-2xl sm:text-3xl font-semibold text-[#E8EDF0]">
+                <h2 className="mt-3 font-display text-3xl sm:text-4xl lg:text-5xl tracking-tight text-[#E8EDF0]">
                   Navigate the Scientific Observatory
                 </h2>
                 <p className="mt-1 text-sm text-[#9BA8B2] max-w-2xl">
@@ -715,7 +735,7 @@ function App() {
                 ref={viewHeadingRef}
                 tabIndex={-1}
                 onBlur={() => setShowHeadingFocus(false)}
-                className={`mt-4 text-3xl font-semibold tracking-tight text-[#E8EDF0] sm:text-4xl lg:text-5xl outline-none rounded-lg transition-shadow w-fit ${
+                className={`mt-4 font-display text-4xl sm:text-5xl lg:text-6xl tracking-tight text-[#E8EDF0] leading-[1.08] outline-none rounded-lg transition-shadow w-fit ${
                   showHeadingFocus
                     ? 'ring-2 ring-[#F0A34A] ring-offset-4 ring-offset-[#0B0E11]'
                     : ''
@@ -754,7 +774,7 @@ function App() {
                 ref={viewHeadingRef}
                 tabIndex={-1}
                 onBlur={() => setShowHeadingFocus(false)}
-                className={`mt-4 text-3xl font-semibold tracking-tight text-[#E8EDF0] sm:text-4xl lg:text-5xl outline-none rounded-lg transition-shadow w-fit ${
+                className={`mt-4 font-display text-4xl sm:text-5xl lg:text-6xl tracking-tight text-[#E8EDF0] leading-[1.08] outline-none rounded-lg transition-shadow w-fit ${
                   showHeadingFocus
                     ? 'ring-2 ring-[#F0A34A] ring-offset-4 ring-offset-[#0B0E11]'
                     : ''
@@ -773,7 +793,7 @@ function App() {
                 <span className="text-xs font-mono uppercase tracking-wider text-[#F0A34A]">
                   Dataset Scope A · Spring 2023 Controlled Experiment (92 Days)
                 </span>
-                <h2 className="mt-1 text-2xl font-semibold text-[#E8EDF0]">
+                <h2 className="mt-1 font-display text-2xl sm:text-3xl text-[#E8EDF0]">
                   Spatial Aggregation & Spring 2023 Baseline
                 </h2>
                 <p className="mt-1 max-w-3xl text-sm leading-relaxed text-[#9BA8B2]">
@@ -892,7 +912,7 @@ function App() {
                 <span className="text-xs font-mono uppercase tracking-wider text-[#38BDF8]">
                   Dataset Scope B · 2013–2025 Retrospective Harmonization (156 Months)
                 </span>
-                <h2 className="mt-1 text-2xl font-semibold text-[#E8EDF0]">
+                <h2 className="mt-1 font-display text-2xl sm:text-3xl text-[#E8EDF0]">
                   Held-Out National & Regional Harmonization
                 </h2>
                 <p className="mt-1 max-w-3xl text-sm leading-relaxed text-[#9BA8B2]">
@@ -920,7 +940,7 @@ function App() {
                 ref={viewHeadingRef}
                 tabIndex={-1}
                 onBlur={() => setShowHeadingFocus(false)}
-                className={`mt-4 text-3xl font-semibold tracking-tight text-[#E8EDF0] sm:text-4xl lg:text-5xl outline-none rounded-lg transition-shadow w-fit ${
+                className={`mt-4 font-display text-4xl sm:text-5xl lg:text-6xl tracking-tight text-[#E8EDF0] leading-[1.08] outline-none rounded-lg transition-shadow w-fit ${
                   showHeadingFocus
                     ? 'ring-2 ring-[#F0A34A] ring-offset-4 ring-offset-[#0B0E11]'
                     : ''
