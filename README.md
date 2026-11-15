@@ -37,7 +37,7 @@ FireSignal is structured around four primary client-side analytical views access
 
 Satellite remote sensing of active fires relies on thermal anomalies detected in middle- and thermal-infrared spectral channels. For over two decades, the **MODIS** sensors aboard NASA's Terra and Aqua satellites provided the global scientific standard for fire monitoring (1 km spatial resolution at nadir). In 2011, the **VIIRS** instrument aboard the Suomi-NPP satellite introduced higher spatial resolution (375 m at nadir), wider swath coverage without edge-of-scan pixel degradation, and substantially enhanced sensitivity to smaller, cooler fires.
 
-Because VIIRS has a pixel area approximately 16 times smaller than MODIS at nadir, detects fires at lower radiant heat thresholds, and passes overhead at different local solar times, **raw MODIS and VIIRS hotspot detections cannot be treated as directly interchangeable measurements**. A naive concatenation of their records introduces an artificial multi-fold jump in apparent fire activity after 2012.
+Because VIIRS has a nominal nadir footprint area approximately 7.1 times smaller than MODIS (0.1406 km² vs. 1.0 km²), exhibits distinct off-nadir pixel expansion characteristics across the swath, detects fires at lower radiant heat thresholds, and passes overhead at different local solar times, **raw MODIS and VIIRS hotspot detections cannot be treated as directly interchangeable measurements**. A naive concatenation of their records introduces an artificial multi-fold jump in apparent fire activity after 2012.
 
 FireSignal addresses this discontinuity by:
 1. Formulating a common, physically consistent analytical unit: **Occupied Grid-Cell-Days (OGCD)** on an equal-area 5 km grid (EPSG:6933).
@@ -267,7 +267,7 @@ python pipeline/historical_pipeline.py
 2. **Not Physical Calibration:** Statistical harmonization models are empirical transfer functions; they do not alter sensor optics, radiative transfer physics, or physical detection thresholds.
 3. **Not Burned Area or Severity:** OGCD measures detected hotspot spatial occupancy. It cannot be converted to burned area or wildfire severity without fuel models, fire progression analysis, and surface validation.
 4. **Cloud and Smoke Obscuration:** Optical sensors cannot detect active fires through dense convective cloud cover or thick smoke plumes. Zero OGCD does not prove zero fire activity.
-5. **Resolution Discrepancy:** The 16:1 nadir footprint ratio between MODIS (1,000 m) and VIIRS (375 m) causes VIIRS to detect fragmented agricultural fires completely missed by MODIS.
+5. **Resolution Discrepancy:** The footprint area disparity between MODIS (1,000 m at nadir, 1.0 km²) and VIIRS (375 m at nadir, ~0.1406 km²; a nominal ~7.1:1 nadir area ratio), combined with differing off-nadir pixel growth rates, causes VIIRS to detect fragmented agricultural fires completely missed by MODIS.
 6. **Selection Bias in Regional Tests:** Regional evaluations exclude months without paired observations, which may under-represent cloud-covered or low-activity months.
 7. **Sparse Data Regimes:** In states with infrequent fire activity (e.g., small coastal territories or high-altitude regions), statistical harmonization ratios are sensitive to small sample sizes.
 8. **Historical Boundary Demarcation:** Administrative boundaries reflect a 2011 Census reference snapshot from geoBoundaries/DataMeet, which may differ from current state and union territory definitions.
